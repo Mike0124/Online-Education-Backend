@@ -5,6 +5,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
@@ -20,7 +23,7 @@ public class TeacherInfo {
     private String wechatId;
     @Column
     private String name;
-    @Column(name = "phone_id")
+    @Column(name = "phone_id", nullable = false)
     private String phoneId;
     @Column
     private String sex;
@@ -30,4 +33,7 @@ public class TeacherInfo {
     private String major;
     @Column
     private String password;
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JoinColumn(name = "class_id")
+    private Set<ClassInfo> classInfos = new HashSet<ClassInfo>(0);
 }

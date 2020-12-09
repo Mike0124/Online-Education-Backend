@@ -16,4 +16,6 @@ public interface TeacherJpaRepository extends JpaRepository<TeacherInfo, Integer
 
     @Transactional
     void deleteTeacherInfoByUserId(int userId);
+
+    TeacherInfo findTeacherInfoByUserId(int userId);
 }

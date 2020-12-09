@@ -46,7 +46,7 @@ public class TeacherController {
     @PostMapping("/addTeacher")
     @ApiOperation(value = "验证码验证成功后在教师表中添加一项")
     @ResponseBody
-    public Result add_teacher(@RequestParam("phone_id") String phone_id, @RequestParam("password") String password) throws UserHasExistedException {
+    public Result add(@RequestParam("phone_id") String phone_id, @RequestParam("password") String password) throws UserHasExistedException {
         teacherService.addUser(phone_id,password);
         logger.info("添加用户成功");
         return Result.success();
@@ -55,9 +55,20 @@ public class TeacherController {
     @PostMapping("/deleteTeacherById")
     @ApiOperation(value = "删除教师")
     @ResponseBody
-    public Result delete_teacher(@RequestParam("user_id") int user_id) throws UserNotFoundException {
+    public Result delete(@RequestParam("user_id") int user_id) throws UserNotFoundException {
         teacherService.deleteTeacherById(user_id);
         logger.info("删除用户：id="+ user_id);
+        return Result.success();
+    }
+
+    @PostMapping("/completeTeacherById")
+    @ApiOperation(value = "完善教师信息")
+    @ResponseBody
+    public Result complete(@RequestParam("user_id") int user_id,@RequestParam("nickname") String nickname,
+                           @RequestParam("sex") String sex, @RequestParam("school") String school,
+                           @RequestParam("major") String major)throws UserNotFoundException{
+        teacherService.completeTeacherInfo(user_id,nickname,sex,school,major);
+        logger.info("完善教师信息：id=" + user_id);
         return Result.success();
     }
 }

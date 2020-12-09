@@ -1,0 +1,1 @@
+INSERT INTO online_education.prefer (prefer_id, prefer_content, major_id) VALUES (2, 'Java基础', 1);

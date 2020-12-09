@@ -10,11 +10,12 @@ import java.util.List;
 
 @Repository
 public interface StudentJpaRepository extends JpaRepository<StudentInfo, Integer>, JpaSpecificationExecutor<StudentInfo> {
-    List<StudentInfo> findStudentInfoByPhoneIdEquals(String phoneId);
+    boolean existsByUserId(int userId);
+
+    boolean existsByPhoneId(String phoneId);
 
     @Transactional
     void deleteStudentInfoByUserId(int userId);
 
-    boolean existsByUserId(int userId);
-
+    StudentInfo findStudentInfoByUserId(int userId);
 }

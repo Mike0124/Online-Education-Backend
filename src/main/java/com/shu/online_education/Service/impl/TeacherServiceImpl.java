@@ -17,6 +17,11 @@ public class TeacherServiceImpl implements TeacherService {
     private TeacherJpaRepository teacherJpaRepository;
 
     @Override
+    public boolean phone_valid(String phone_id) {
+        return teacherJpaRepository.existsByPhoneId(phone_id);
+    }
+
+    @Override
     public List<TeacherInfo> getAllTeachers() {
         return teacherJpaRepository.findAll();
     }
@@ -31,13 +36,21 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public boolean phone_valid(String phone_id) {
-        return teacherJpaRepository.existsByPhoneId(phone_id);
-    }
-
-    @Override
     public void deleteTeacherById(int userId) throws UserNotFoundException {
         if (!teacherJpaRepository.existsByUserId(userId)) throw new UserNotFoundException();
         teacherJpaRepository.deleteTeacherInfoByUserId(userId);
+    }
+
+    @Override
+    public void completeTeacherInfo(int userId, String name, String sex, String school, String major) throws UserNotFoundException {
+        TeacherInfo tea = teacherJpaRepository.findTeacherInfoByUserId(userId);
+        if (tea == null){
+            throw new UserNotFoundException();
+        }
+        tea.setName(name);
+        tea.setSex(sex);
+        tea.setSchool(school);
+        tea.setMajor(major);
+        teacherJpaRepository.save(tea);
     }
 }

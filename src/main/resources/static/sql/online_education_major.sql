@@ -1,0 +1,1 @@
+INSERT INTO online_education.major (major_id, major_content) VALUES (1, '计算机科学与技术');
