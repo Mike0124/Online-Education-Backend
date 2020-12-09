@@ -1,4 +1,4 @@
-package com.shu.online_education.Entity;
+package com.shu.online_education.Entity.EmbeddedId;
 
 import lombok.Data;
 

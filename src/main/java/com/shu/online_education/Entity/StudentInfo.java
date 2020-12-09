@@ -37,7 +37,7 @@ public class StudentInfo {
     private String password;
 
     //多对多关系映射
-    @ManyToMany(cascade = CascadeType.REMOVE,fetch = FetchType.LAZY)
+    @ManyToMany(cascade = CascadeType.REMOVE)
     @JoinTable(name = "relationship_stu_class_enroll",
             joinColumns = {@JoinColumn(name = "student_id",referencedColumnName = "user_id")},
             //中间表字段stu_id关联当前表的user_id)
