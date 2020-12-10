@@ -15,8 +15,7 @@ public class PreferInfo {
 	private int preferId;
 	@Column(name = "prefer_content", nullable = false)
 	private String preferContent;
-//	@ManyToOne
-//	@JoinTable(name = "major",joinColumns = {@JoinColumn(referencedColumnName = "major_id")})
-//	@Column(name = "major_id")
-//	private MajorInfo majorInfo;
+	@ManyToOne
+	@JoinColumn(name = "major_id")
+	private MajorInfo majorInfo;
 }

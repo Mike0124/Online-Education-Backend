@@ -8,6 +8,6 @@ import java.io.Serializable;
 @Embeddable
 @Data
 public class StudentPreferencePrimaryKey implements Serializable {
-	private Integer student_id;
-	private Integer prefer_id;
+	private Integer stu_id;
+	private Integer pre_id;
 }

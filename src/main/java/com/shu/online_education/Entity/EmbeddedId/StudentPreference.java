@@ -13,6 +13,4 @@ import javax.persistence.Table;
 public class StudentPreference {
 	@EmbeddedId
 	private StudentPreferencePrimaryKey studentPreferencePrimaryKey;
-	@Column(name = "student_id")
-	private int studentId;
 }

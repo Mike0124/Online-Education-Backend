@@ -92,8 +92,8 @@ public class StudentServiceImpl implements StudentService {
 		if (studentPreferenceRepository.findAllByStudentId(userId).isEmpty()) {//检查该学生是否已存入偏好
 			for (int prefer : prefersId) {
 				StudentPreferencePrimaryKey key = new StudentPreferencePrimaryKey();
-				key.setStudent_id(userId);
-				key.setPrefer_id(prefer);
+				key.setStu_id(userId);
+				key.setPre_id(prefer);
 				StudentPreference studentPreference = new StudentPreference();
 				studentPreference.setStudentPreferencePrimaryKey(key);
 				studentPreferenceRepository.save(studentPreference);

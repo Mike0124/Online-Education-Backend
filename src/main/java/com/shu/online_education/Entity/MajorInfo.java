@@ -17,7 +17,7 @@ public class MajorInfo {
 	private int majorId;
 	@Column(name = "major_content", nullable = false)
 	private String majorContent;
-	@OneToMany(cascade = CascadeType.REMOVE)
+	@OneToMany(mappedBy = "majorInfo")
 	@JsonIgnore
 	private Set<PreferInfo> ClassInfos = new HashSet<>(0);
 }
