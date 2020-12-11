@@ -1,4 +1,4 @@
-INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, major, grade, password) VALUES (1, '222', '廖颂豪', '', '男', '上海大学', '计算机工程与科学', 2, 'Mike0124');
-INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, major, grade, password) VALUES (2, null, '猪头撒', '13817707006', '男', '上海大学', '计算机工程', 2, null);
-INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, major, grade, password) VALUES (3, null, null, '123', null, null, null, 0, null);
-INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, major, grade, password) VALUES (5, null, null, '12333', null, null, null, 0, '123');
+INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, grade, password, student_pic, is_vip, major_id) VALUES (1, '222', '廖颂豪', '', '男', '上海大学', 2, 'Mike0124', 0x, 0, null);
+INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, grade, password, student_pic, is_vip, major_id) VALUES (2, null, '猪头撒', '13817707006', '男', '上海大学', 2, null, 0x, 0, null);
+INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, grade, password, student_pic, is_vip, major_id) VALUES (3, null, null, '123', null, null, 0, null, 0x, 0, null);
+INSERT INTO online_education.students (user_id, wechat_id, nickname, phone_id, sex, school, grade, password, student_pic, is_vip, major_id) VALUES (5, null, null, '12333', null, null, 0, '123', 0x, 0, null);

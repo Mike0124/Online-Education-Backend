@@ -1,2 +1,2 @@
-INSERT INTO online_education.class (class_id, name, class_num, intro, upload_time, teacher_id, prefer_id) VALUES (1, 'Java基础', 5, 'Java基础，5节课包会', '2020-12-08', 8, 1);
-INSERT INTO online_education.class (class_id, name, class_num, intro, upload_time, teacher_id, prefer_id) VALUES (2, 'Javaee', 8, 'Javaee,8节课包会', '2020-12-09', 9, 1);
+INSERT INTO online_education.class (class_id, name, class_num, intro, upload_time, teacher_id, prefer_id, class_pic, class_status, need_vip, live_address) VALUES (1, 'Java基础', 5, 'Java基础，5节课包会', '2020-12-08', 8, 1, 0x, 0, 0, null);
+INSERT INTO online_education.class (class_id, name, class_num, intro, upload_time, teacher_id, prefer_id, class_pic, class_status, need_vip, live_address) VALUES (2, 'Javaee', 8, 'Javaee,8节课包会', '2020-12-09', 9, 1, 0x, 0, 0, null);
