@@ -17,7 +17,7 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int userId;
+    private Integer userId;
     @Column(name = "wechat_id")
     private String wechatId;
     @Column
@@ -28,10 +28,14 @@ public class Teacher {
     private String sex;
     @Column
     private String school;
-    @Column
-    private String major;
+    @Column(name = "major_id")
+    private String majorId;
     @Column
     private String password;
+    @Column(name = "teacher_pic")
+    private String teacherPic;
+    @Column(name = "teacher_status")
+    private Integer teacherStatus;
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "course_id")
     private Set<Course> aCourses = new HashSet<Course>(0);

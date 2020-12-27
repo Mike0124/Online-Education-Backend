@@ -18,4 +18,5 @@ public interface TeacherService {
 
     void completeTeacherInfo(int userId, String name, String sex, String school, String major)
             throws UserNotFoundException;//完善教师信息
+    Teacher loginByPassword(String phoneId, String password) throws Exception;
 }

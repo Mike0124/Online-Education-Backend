@@ -3,6 +3,7 @@ package com.shu.onlineEducation.Service.impl;
 import com.shu.onlineEducation.Dao.TeacherJpaRepository;
 import com.shu.onlineEducation.Entity.Teacher;
 import com.shu.onlineEducation.Service.TeacherService;
+import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,19 +39,26 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void deleteTeacherById(int userId) throws UserNotFoundException {
         if (!teacherJpaRepository.existsByUserId(userId)) throw new UserNotFoundException();
-        teacherJpaRepository.deleteTeacherInfoByUserId(userId);
+        teacherJpaRepository.deleteTeacherByUserId(userId);
     }
 
     @Override
     public void completeTeacherInfo(int userId, String name, String sex, String school, String major) throws UserNotFoundException {
-        Teacher tea = teacherJpaRepository.findTeacherInfoByUserId(userId);
+        Teacher tea = teacherJpaRepository.findTeacherByUserId(userId);
         if (tea == null){
             throw new UserNotFoundException();
         }
         tea.setName(name);
         tea.setSex(sex);
         tea.setSchool(school);
-        tea.setMajor(major);
+        tea.setMajorId(major);
         teacherJpaRepository.save(tea);
+    }
+    
+    @Override
+    public Teacher loginByPassword(String phoneId, String password) throws Exception {
+        if (!teacherJpaRepository.existsByPhoneId(phoneId)) throw new UserNotFoundException();
+        if(!password.equals(teacherJpaRepository.findTeacherByPhoneId(phoneId).getPassword()))throw new PassWordErrorException();
+        return teacherJpaRepository.findTeacherByPhoneId(phoneId);
     }
 }

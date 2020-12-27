@@ -3,6 +3,7 @@ package com.shu.onlineEducation.utils;
 import com.shu.onlineEducation.utils.Enums.Result;
 import com.shu.onlineEducation.utils.Enums.ResultCode;
 import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
+import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import org.slf4j.Logger;
@@ -53,5 +54,15 @@ public class GlobalExceptionHandler {
     public Result classHasEnrolledException(CourseHasEnrolledException e){
         logger.error("该学生已报名此课程：【" + e.getMessage() + "】");
         return Result.failure(ResultCode.COURSE_HAS_ENROLLED);
+    }
+    
+    /**
+     * 密码错误
+     */
+    @ExceptionHandler(PassWordErrorException.class)
+    @ResponseBody
+    public Result classHasEnrolledException(PassWordErrorException e){
+        logger.error("登录密码错误：【" + e.getMessage() + "】");
+        return Result.failure(ResultCode.USER_LOGIN_ERROR);
     }
 }

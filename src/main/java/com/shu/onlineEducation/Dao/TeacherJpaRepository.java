@@ -8,12 +8,13 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public interface TeacherJpaRepository extends JpaRepository<Teacher, Integer>, JpaSpecificationExecutor<Teacher> {
-    boolean existsByUserId(int userId);
+    boolean existsByUserId(Integer userId);
 
     boolean existsByPhoneId(String phoneId);
-
+    
+    Teacher findTeacherByPhoneId(String phoneId);
     @Transactional
-    void deleteTeacherInfoByUserId(int userId);
+    void deleteTeacherByUserId(Integer userId);
 
-    Teacher findTeacherInfoByUserId(int userId);
+    Teacher findTeacherByUserId(Integer userId);
 }

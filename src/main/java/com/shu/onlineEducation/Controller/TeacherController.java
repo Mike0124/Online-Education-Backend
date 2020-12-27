@@ -34,7 +34,7 @@ public class TeacherController {
     @ApiOperation(value = "验证手机号是否被注册，没被注册则发送验证码")
     @ResponseBody
     public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
-        if (teacherService.phoneValid(phoneId)) {
+        if (!teacherService.phoneValid(phoneId)) {
             //TODO 向手机发送短信验证码
             return Result.success();
         } else {
@@ -50,6 +50,16 @@ public class TeacherController {
         logger.info("添加用户成功");
         return Result.success();
     }
+    
+    @PostMapping("/loginByPassword")
+    @ApiOperation(value = "验证用户名和密码是否正确")
+    @ResponseBody
+    public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
+        Teacher teacher = teacherService.loginByPassword(phoneId,password);
+        logger.info("登录成功");
+        return Result.success(teacher);
+    }
+    
 
     @PostMapping("/deleteTeacherById")
     @ApiOperation(value = "删除教师")
@@ -70,4 +80,5 @@ public class TeacherController {
         logger.info("完善教师信息：id=" + userId);
         return Result.success();
     }
+    
 }
