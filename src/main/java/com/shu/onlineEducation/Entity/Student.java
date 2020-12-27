@@ -41,14 +41,14 @@ public class Student {
     private byte[] studentPic;
 
     //多对多关系映射
-    @ManyToMany(cascade = CascadeType.REMOVE)
-    @JoinTable(name = "relationship_stu_course_enroll",
-            joinColumns = {@JoinColumn(name = "student_id",referencedColumnName = "user_id")},
-            //中间表字段stu_id关联当前表的user_id)
-            inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "course_id")}
-            )
-    @JsonIgnore
-    private Set<Course> aCourses = new HashSet<Course>(0);
+//    @ManyToMany(cascade = CascadeType.REMOVE)
+//    @JoinTable(name = "relationship_stu_course_enroll",
+//            joinColumns = {@JoinColumn(name = "student_id",referencedColumnName = "user_id")},
+//            //中间表字段stu_id关联当前表的user_id)
+//            inverseJoinColumns = {@JoinColumn(name = "course_id", referencedColumnName = "course_id")}
+//            )
+//    @JsonIgnore
+//    private Set<Course> aCourses = new HashSet<Course>(0);
 }
 
 

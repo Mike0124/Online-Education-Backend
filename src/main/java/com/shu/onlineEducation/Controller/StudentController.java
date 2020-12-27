@@ -35,7 +35,7 @@ public class StudentController {
 	@ApiOperation(value = "验证手机号是否被注册，没被注册则发送验证码")
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
-		if (studentService.phoneValid(phoneId)) {
+		if (!studentService.phoneValid(phoneId)) {
 			//TODO 向手机发送短信验证码
 			return Result.success();
 		} else {

@@ -26,7 +26,7 @@ public class Course {
     private Date uploadTime;
     @Column(name = "prefer_id",nullable = false)
     private int preferId;
-    @ManyToMany(mappedBy = "aCourses")
-    @JsonIgnore
-    private Set<Student> students = new HashSet<Student>(0);
+//    @ManyToMany(mappedBy = "aCourses")
+//    @JsonIgnore
+//    private Set<Student> students = new HashSet<Student>(0);
 }

@@ -19,5 +19,5 @@ public class Major {
 	private String majorContent;
 	@OneToMany(mappedBy = "major")
 	@JsonIgnore
-	private Set<Prefer> aClasses = new HashSet<>(0);
+	private Set<Prefer> prefers = new HashSet<>(0);
 }
