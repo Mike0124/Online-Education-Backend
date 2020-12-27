@@ -15,17 +15,17 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "course_id")
-    private int courseId;
+    private Integer courseId;
     @Column(nullable = false)
     private String name;
     @Column(name = "course_num",nullable = false)
-    private int courseNum;
+    private Integer courseNum;
     @Column(nullable = false)
     private String intro;
     @Column(nullable = false)
     private Date uploadTime;
     @Column(name = "prefer_id",nullable = false)
-    private int preferId;
+    private Integer preferId;
 //    @ManyToMany(mappedBy = "aCourses")
 //    @JsonIgnore
 //    private Set<Student> students = new HashSet<Student>(0);

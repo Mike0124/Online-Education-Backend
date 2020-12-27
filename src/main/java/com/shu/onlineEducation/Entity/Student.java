@@ -18,7 +18,7 @@ public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private int userId;
+    private Integer userId;
     @Column(name = "wechat_id")
     private String wechatId;
     @Column(name = "nickname")
@@ -30,9 +30,9 @@ public class Student {
     @Column
     private String school;
     @Column(name = "major_id")
-    private int majorId;
+    private Integer majorId;
     @Column
-    private int grade;
+    private Integer grade;
     @Column
     private String password;
     @Column(name = "is_vip")

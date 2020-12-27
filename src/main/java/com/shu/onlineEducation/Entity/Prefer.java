@@ -12,7 +12,7 @@ public class Prefer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "prefer_id")
-	private int preferId;
+	private Integer preferId;
 	@Column(name = "prefer_content", nullable = false)
 	private String preferContent;
 	@ManyToOne

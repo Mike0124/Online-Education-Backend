@@ -11,9 +11,9 @@ public interface StudentService {
 	
 	List<Student> getAllStudents();         //获取所有学生信息
 	
-	boolean phoneValid(String phone_id);       //判断手机号是否被注册
+	boolean phoneValid(String phoneId);       //判断手机号是否被注册
 	
-	void addUser(String phone_id, String password) throws UserHasExistedException;      //添加刚注册的学生
+	void addUser(String phoneId, String password) throws UserHasExistedException;      //添加刚注册的学生
 	
 	void deleteStudentById(int userId) throws UserNotFoundException;        //删除学生
 	

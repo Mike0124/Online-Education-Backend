@@ -14,7 +14,7 @@ public class Major {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "major_id")
-	private int majorId;
+	private Integer majorId;
 	@Column(name = "major_content", nullable = false)
 	private String majorContent;
 	@OneToMany(mappedBy = "major")
