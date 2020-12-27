@@ -1,0 +1,23 @@
+package com.shu.onlineEducation.Entity;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.Data;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
+
+@Data
+@Entity
+@Table(name = "major")
+public class Major {
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "major_id")
+	private int majorId;
+	@Column(name = "major_content", nullable = false)
+	private String majorContent;
+	@OneToMany(mappedBy = "major")
+	@JsonIgnore
+	private Set<Prefer> aClasses = new HashSet<>(0);
+}
