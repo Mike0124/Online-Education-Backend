@@ -11,7 +11,7 @@ public enum ResultCode {
     //    用户错误：2001-2999
     USER_HAS_EXISTED(2001, "用户已存在"),
     USER_NOT_EXIST(2002, "用户不存在"),
-    USER_LOGIN_ERROR(2003, "账号不存在或密码错误"),
+    USER_LOGIN_ERROR(2003, "密码错误"),
     //    课程错误: 3001-3999
     COURSE_NOT_EXIST(3001,"课程不存在"),
     COURSE_HAS_ENROLLED(3002,"该学生已报名该课程");

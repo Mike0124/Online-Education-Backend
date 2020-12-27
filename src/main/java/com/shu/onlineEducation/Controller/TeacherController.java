@@ -26,8 +26,8 @@ public class TeacherController {
     @GetMapping("/getTeacher")
     @ApiOperation(value = "获取所有用户详情")
     @ResponseBody
-    public Iterable<Teacher> showInfo() {
-        return teacherService.getAllTeachers();
+    public Result showInfo() {
+        return Result.success(teacherService.getAllTeachers());
     }
 
     @PostMapping("/checkByPhoneId")
@@ -52,7 +52,7 @@ public class TeacherController {
     }
     
     @PostMapping("/loginByPassword")
-    @ApiOperation(value = "验证用户名和密码是否正确")
+    @ApiOperation(value = "用户登录")
     @ResponseBody
     public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
         Teacher teacher = teacherService.loginByPassword(phoneId,password);

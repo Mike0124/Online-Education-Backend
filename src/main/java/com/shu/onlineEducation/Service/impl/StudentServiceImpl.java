@@ -9,8 +9,10 @@ import com.shu.onlineEducation.Entity.EmbeddedId.StudentCourseEnrollPrimaryKey;
 import com.shu.onlineEducation.Entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.Entity.EmbeddedId.StudentPreferencePrimaryKey;
 import com.shu.onlineEducation.Entity.Student;
+import com.shu.onlineEducation.Entity.Teacher;
 import com.shu.onlineEducation.Service.StudentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
+import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,12 +58,12 @@ public class StudentServiceImpl implements StudentService {
 		if (!studentJpaRepository.existsByUserId(userId)) {
 			throw new UserNotFoundException();
 		}
-		studentJpaRepository.deleteStudentInfoByUserId(userId);
+		studentJpaRepository.deleteStudentByUserId(userId);
 	}
 	
 	@Override
-	public void completeStudentInfo(int userId, String nickname, String sex, String school, int majorId, int grade) throws UserNotFoundException {
-		Student stu = studentJpaRepository.findStudentInfoByUserId(userId);
+	public void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade) throws UserNotFoundException {
+		Student stu = studentJpaRepository.findStudentByUserId(userId);
 		if (stu == null) {
 			throw new UserNotFoundException();
 		}
@@ -99,5 +101,12 @@ public class StudentServiceImpl implements StudentService {
 				studentPreferenceRepository.save(studentPreference);
 			}
 		}
+	}
+
+	@Override
+	public Student loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException {
+		if (!studentJpaRepository.existsByPhoneId(phoneId)) throw new UserNotFoundException();
+		if(!password.equals(studentJpaRepository.findStudentByPhoneId(phoneId).getPassword()))throw new PassWordErrorException();
+		return studentJpaRepository.findStudentByPhoneId(phoneId);
 	}
 }

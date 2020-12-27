@@ -56,7 +56,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
     
     @Override
-    public Teacher loginByPassword(String phoneId, String password) throws Exception {
+    public Teacher loginByPassword(String phoneId, String password) throws UserNotFoundException,PassWordErrorException {
         if (!teacherJpaRepository.existsByPhoneId(phoneId)) throw new UserNotFoundException();
         if(!password.equals(teacherJpaRepository.findTeacherByPhoneId(phoneId).getPassword()))throw new PassWordErrorException();
         return teacherJpaRepository.findTeacherByPhoneId(phoneId);

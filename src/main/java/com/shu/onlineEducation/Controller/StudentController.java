@@ -51,6 +51,15 @@ public class StudentController {
 		logger.info("添加用户成功");
 		return Result.success();
 	}
+
+	@PostMapping("/loginByPassword")
+	@ApiOperation(value = "用户登录")
+	@ResponseBody
+	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
+		Student student = studentService.loginByPassword(phoneId,password);
+		logger.info("登录成功");
+		return Result.success(student);
+	}
 	
 	@PostMapping("/deleteStudentById")
 	@ApiOperation(value = "删除学生")
@@ -68,7 +77,7 @@ public class StudentController {
 						   @RequestParam("sex") String sex, @RequestParam("school") String school,
 						   @RequestParam("major_id") int majorId, @RequestParam("grade") int grade)
 			throws UserNotFoundException {
-		studentService.completeStudentInfo(userId, nickname, sex, school, majorId, grade);
+		studentService.completeStudent(userId, nickname, sex, school, majorId, grade);
 		logger.info("完善学生信息：id=" + userId);
 		return Result.success();
 	}

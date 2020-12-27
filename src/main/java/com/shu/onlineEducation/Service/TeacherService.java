@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.Service;
 
 import com.shu.onlineEducation.Entity.Teacher;
+import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 
@@ -18,5 +19,5 @@ public interface TeacherService {
 
     void completeTeacherInfo(int userId, String name, String sex, String school, String major)
             throws UserNotFoundException;//完善教师信息
-    Teacher loginByPassword(String phoneId, String password) throws Exception;
+    Teacher loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException;
 }

@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.swing.*;
+
 @Repository
 public interface StudentJpaRepository extends JpaRepository<Student, Integer>, JpaSpecificationExecutor<Student> {
     boolean existsByUserId(int userId);
@@ -13,7 +15,9 @@ public interface StudentJpaRepository extends JpaRepository<Student, Integer>, J
     boolean existsByPhoneId(String phoneId);
 
     @Transactional
-    void deleteStudentInfoByUserId(int userId);
+    void deleteStudentByUserId(int userId);
 
-    Student findStudentInfoByUserId(int userId);
+    Student findStudentByUserId(int userId);
+
+    Student findStudentByPhoneId(String phoneId);
 }
