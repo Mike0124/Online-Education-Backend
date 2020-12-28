@@ -1,4 +1,4 @@
-package com.shu.onlineEducation;
+package com.shu.onlineEducation.Config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
