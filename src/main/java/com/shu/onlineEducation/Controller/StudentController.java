@@ -8,16 +8,17 @@ import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import com.shu.onlineEducation.utils.GlobalExceptionHandler;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.management.Query;
+
 @RestController
 @RequestMapping("/api/Student")
-@Api(tags = "学生模块", description = "学生相关模块接口")
+@Api(tags = "学生模块")
 public class StudentController {
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	
@@ -31,7 +32,8 @@ public class StudentController {
 		return studentService.getAllStudents();
 	}
 	
-	@PostMapping("/checkByPhoneId")
+	@GetMapping("/checkByPhoneId")
+	@ApiImplicitParam(name = "phone_id",value = "手机号", required = true,paramType = "query",dataType = "String")
 	@ApiOperation(value = "验证手机号是否被注册，没被注册则发送验证码")
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
@@ -44,6 +46,10 @@ public class StudentController {
 	}
 	
 	@PostMapping("/addStudent")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form",dataType = "String"),
+			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
+	})
 	@ApiOperation(value = "验证码验证成功后在学生表中添加一项")
 	@ResponseBody
 	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws UserHasExistedException {
@@ -53,6 +59,10 @@ public class StudentController {
 	}
 
 	@PostMapping("/loginByPassword")
+	@ApiImplicitParams({
+			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form", dataType = "String"),
+			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
+	})
 	@ApiOperation(value = "用户登录")
 	@ResponseBody
 	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
@@ -62,6 +72,7 @@ public class StudentController {
 	}
 	
 	@PostMapping("/deleteStudentById")
+	@ApiImplicitParam(name = "user_id", value = "用户标识", required = true, paramType = "form", dataType = "String")
 	@ApiOperation(value = "删除学生")
 	@ResponseBody
 	public Result delete(@RequestParam("user_id") int userId) throws UserNotFoundException {
