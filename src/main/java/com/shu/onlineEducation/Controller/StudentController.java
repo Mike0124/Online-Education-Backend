@@ -32,8 +32,8 @@ public class StudentController {
 		return studentService.getAllStudents();
 	}
 	
-	@GetMapping("/checkByPhoneId")
-	@ApiImplicitParam(name = "phone_id",value = "手机号", required = true,paramType = "query",dataType = "String")
+	@PostMapping("/checkByPhoneId")
+	@ApiImplicitParam(name = "phone_id",value = "手机号", required = true,paramType = "form",dataType = "String")
 	@ApiOperation(value = "验证手机号是否被注册，没被注册则发送验证码")
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
@@ -46,10 +46,10 @@ public class StudentController {
 	}
 	
 	@PostMapping("/addStudent")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form",dataType = "String"),
-			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
-	})
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form",dataType = "String"),
+//			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
+//	})
 	@ApiOperation(value = "验证码验证成功后在学生表中添加一项")
 	@ResponseBody
 	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws UserHasExistedException {
@@ -59,10 +59,10 @@ public class StudentController {
 	}
 
 	@PostMapping("/loginByPassword")
-	@ApiImplicitParams({
-			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form", dataType = "String"),
-			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
-	})
+//	@ApiImplicitParams({
+//			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form", dataType = "String"),
+//			@ApiImplicitParam(name = "password", value = "密码", required = true, paramType = "form", dataType = "String")
+//	})
 	@ApiOperation(value = "用户登录")
 	@ResponseBody
 	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
