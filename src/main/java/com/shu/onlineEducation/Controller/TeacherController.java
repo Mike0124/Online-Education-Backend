@@ -1,15 +1,14 @@
 package com.shu.onlineEducation.Controller;
 
 import com.shu.onlineEducation.Entity.Teacher;
-import com.shu.onlineEducation.utils.Enums.Result;
-import com.shu.onlineEducation.utils.Enums.ResultCode;
+import com.shu.onlineEducation.utils.Result.Result;
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.Service.TeacherService;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import com.shu.onlineEducation.utils.GlobalExceptionHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

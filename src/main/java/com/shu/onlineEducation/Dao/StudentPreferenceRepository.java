@@ -11,5 +11,5 @@ import java.util.List;
 @Repository
 public interface StudentPreferenceRepository extends JpaRepository<StudentPreference,StudentPreferencePrimaryKey> {
 	@Query(value = "select * from relationship_stu_prefer where student_id = ?1", nativeQuery = true)
-	List<StudentPreference> findAllByStudentId(int user_id);
+	List<StudentPreference> findAllByStudentId(int userId);
 }

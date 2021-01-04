@@ -1,7 +1,7 @@
 package com.shu.onlineEducation.utils;
 
-import com.shu.onlineEducation.utils.Enums.Result;
-import com.shu.onlineEducation.utils.Enums.ResultCode;
+import com.shu.onlineEducation.utils.Result.Result;
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
 import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;

@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.utils.Enums;
+package com.shu.onlineEducation.utils.Result;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

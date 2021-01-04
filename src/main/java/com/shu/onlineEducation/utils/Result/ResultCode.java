@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.utils.Enums;
+package com.shu.onlineEducation.utils.Result;
 
 public enum ResultCode {
     //    成功状态码

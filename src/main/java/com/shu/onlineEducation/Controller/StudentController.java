@@ -1,8 +1,8 @@
 package com.shu.onlineEducation.Controller;
 
-import com.shu.onlineEducation.utils.Enums.Result;
+import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.Entity.Student;
-import com.shu.onlineEducation.utils.Enums.ResultCode;
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.Service.StudentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
@@ -13,8 +13,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import javax.management.Query;
 
 @RestController
 @RequestMapping("/api/Student")
