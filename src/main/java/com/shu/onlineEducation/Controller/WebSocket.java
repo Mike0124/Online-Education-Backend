@@ -81,14 +81,14 @@ public class WebSocket {
 		//加入set中
 		webSocketSet.add(this);
 		try {
-			sendMessage("连接成功");
+			sendMessage(this.nickName + "已上线");
 		} catch (IOException e) {
 			logger.error("websocket IO异常");
 		}
 	}
 	
 	@OnMessage
-	public void onMessage(String message, Session session) {
+	public void onMessage(String message) {
 		//群发消息
 		for (WebSocket item : webSocketSet) {
 			try {
@@ -138,6 +138,11 @@ public class WebSocket {
 	@OnClose
 	public void onClose() {
 		logger.info("连接关闭：sid=" + sid + " 当前在线人数" + getOnlineCount());
+		try {
+			sendMessage(this.nickName + "已下线");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		webSocketSet.remove(this);
 		subOnlineCount();
 	}
@@ -171,25 +176,21 @@ public class WebSocket {
 	@ResponseBody
 	public Result userList(@RequestParam(value = "sid") String sid) {
 		Map<String, Object> map = new HashMap<>();
-		List<Student> studentList = new ArrayList<>();
-		Teacher teacher = new Teacher();
+		List<String> studentList = new ArrayList<>();
+		String teacherName = null;
 		Integer count = 0;
 		for (WebSocket item : webSocketSet) {
 			if (sid.equals(item.sid)) {
 				if (item.type.equals(0)) {
-					Student student = new Student();
-					student.setNickName(item.nickName);
-					student.setUserId(item.userId);
-					studentList.add(student);
+					studentList.add(item.nickName);
 				} else if (item.type.equals(1)) {
-					teacher.setName(item.nickName);
-					teacher.setUserId(item.userId);
+					teacherName = item.nickName;
 				}
 				count++;
 			}
 		}
 		map.put("studentList", studentList);
-		map.put("teacher", teacher);
+		map.put("teacher", teacherName);
 		map.put("count", count);
 		return Result.success(map);
 	}
