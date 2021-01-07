@@ -31,7 +31,7 @@ public class StudentController {
 	}
 	
 	@PostMapping("/checkByPhoneId")
-	@ApiImplicitParam(name = "phone_id",value = "手机号", required = true,paramType = "form",dataType = "String")
+//	@ApiImplicitParam(name = "phone_id",value = "手机号", required = true,paramType = "form",dataType = "String")
 	@ApiOperation(value = "验证手机号是否被注册，没被注册则发送验证码")
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
