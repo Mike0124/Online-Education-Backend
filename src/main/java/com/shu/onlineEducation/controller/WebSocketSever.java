@@ -31,7 +31,7 @@ import java.util.*;
  */
 @Component
 @RestController
-@Api(tags = "WebSocket")
+@Api(tags = "4-WebSocket")
 @ServerEndpoint(value = "/websocket/{sid}/{type}/{userId}/{nickName}")   //房间号、类型（1，直播聊天）、用户Id、
 public class WebSocketSever {
 	private static final Logger log = LoggerFactory.getLogger(WebSocketSever.class);

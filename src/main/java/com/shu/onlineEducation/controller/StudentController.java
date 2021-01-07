@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/Student")
-@Api(tags = "学生模块")
+@Api(tags = "1-学生模块")
 public class StudentController {
 	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	

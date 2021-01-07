@@ -23,6 +23,12 @@ public class Course {
     private Date uploadTime;
     @Column(name = "prefer_id",nullable = false)
     private Integer preferId;
+    @Column(name = "need_vip")
+    private Boolean needVip;
+    @Column(name = "course_pic")
+    private String coursePic;
+    @Column(name = "teacher_id")
+    private Integer teacherId;
     @Column(name = "course_status")
     private Integer status;
 //    @ManyToMany(mappedBy = "aCourses")
