@@ -1,11 +1,11 @@
 package com.shu.onlineEducation.controller;
 
 import javax.websocket.Session;
-import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.io.output.MsgVO;
+import com.shu.onlineEducation.moudle.livechat.StudentInfo;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;
@@ -36,13 +36,9 @@ import java.util.*;
 public class WebSocketSever {
 	private static final Logger log = LoggerFactory.getLogger(WebSocketSever.class);
 	/**
-	 * 直播号 -> 学生会话列表
-	 */
-	private static final ConcurrentHashMap<String, List<Session>> STUDENT_SESSION_MAP = new ConcurrentHashMap<>();
-	/**
 	 * 直播号 -> 学生列表
 	 */
-	private static final ConcurrentHashMap<String, Map<Integer, String>> STUDENT_MAP = new ConcurrentHashMap<>();
+	private static final ConcurrentHashMap<String, Map<Integer, StudentInfo>> STUDENT_MAP = new ConcurrentHashMap<>();
 	/**
 	 * 直播号 -> 教师会话
 	 */
@@ -56,15 +52,14 @@ public class WebSocketSever {
 	 */
 	@OnMessage
 	public void onMessage(@PathParam("sid") String sid, String message) {
-		List<Session> sessionList = STUDENT_SESSION_MAP.get(sid);
 		// json字符串转对象
 		MsgVO msg = JSON.parseObject(message, MsgVO.class);
 		// json对象转字符串
 		String text = JSON.toJSONString(msg);
 		// 先一个群组内的成员发送消息
-		sessionList.forEach(item -> {
+		STUDENT_MAP.get(sid).forEach((key, value) -> {
 			try {
-				item.getBasicRemote().sendText(text);
+				value.getSession().getBasicRemote().sendText(text);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -91,12 +86,11 @@ public class WebSocketSever {
 	public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId, @PathParam("nickName") String nickName) {
 		switch (type) {
 			case 0:
-				List<Session> sessionList = STUDENT_SESSION_MAP.computeIfAbsent(sid, k -> new ArrayList<>(30));
-				Map<Integer, String> studentIdList = STUDENT_MAP.computeIfAbsent(sid, k -> new HashMap<>(30));
-				studentIdList.put(userId, nickName);
-				sessionList.add(session);
+				Map<Integer, StudentInfo> onlineUserMap = STUDENT_MAP.computeIfAbsent(sid, k -> new HashMap<>(30));
+				StudentInfo studentInfo = new StudentInfo(userId, session, nickName, false);
+				onlineUserMap.put(userId, studentInfo);
 				log.info("Connection connected");
-				log.info("sid: {}, studentList size: {}", sid, sessionList.size());
+				log.info("sid: {}, studentList size: {}", sid, onlineUserMap.size());
 				break;
 			case 1:
 				TEACHER_SESSION_MAP.putIfAbsent(sid, session);
@@ -110,20 +104,17 @@ public class WebSocketSever {
 	/**
 	 * 关闭连接调用的方法，群成员退出
 	 *
-	 * @param session 会话
-	 * @param type    用户类型  老师/学生
-	 * @param sid     直播号
+	 * @param type 用户类型  老师/学生
+	 * @param sid  直播号
 	 */
 	@OnClose
-	public void onClose(Session session, @PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId) {
+	public void onClose(@PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId) {
 		switch (type) {
 			case 0:
-				List<Session> sessionList = STUDENT_SESSION_MAP.get(sid);
-				sessionList.remove(session);
-				Map<Integer, String> onlineUserMap = STUDENT_MAP.get(sid);
+				Map<Integer, StudentInfo> onlineUserMap = STUDENT_MAP.get(sid);
 				onlineUserMap.remove(userId);
 				log.info("Connection closed");
-				log.info("sid: {}, sessionList size: {}", sid, sessionList.size());
+				log.info("sid: {}, sessionList size: {}", sid, onlineUserMap.size());
 				break;
 			case 1:
 				TEACHER_SESSION_MAP.remove(sid);
@@ -156,6 +147,13 @@ public class WebSocketSever {
 		if (STUDENT_MAP.get(sid) == null) {
 			return Result.failure(ResultCode.PARAM_IS_INVALID);
 		}
-		return Result.success(STUDENT_MAP.get(sid));
+		Map<String, Object> map = new HashMap<>(3);
+		Map<Integer, String> student = new HashMap<>(30);
+		STUDENT_MAP.get(sid).forEach((key, value) -> {
+			student.put(key,value.getNickName());
+		});
+		map.put("student", student);
+		map.put("count", STUDENT_MAP.get(sid).size());
+		return Result.success(map);
 	}
 }
