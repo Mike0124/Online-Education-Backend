@@ -25,11 +25,11 @@ public class CourseController {
     @ResponseBody
     public Iterable<Course> showInfo(){return courseService.getAllCourses();}
 
-    @PostMapping("/getCourseByPreferId")
-    @ApiOperation(value = "获取此偏好的所有课程")
-    @ResponseBody
-    //TODO 缺少返回体Result+异常处理
-    public Iterable<Course> getCourseByPreferId(int preferId){return courseService.getAllCoursesByPreferId(preferId);}
+//    @PostMapping("/getCourseByPreferId")
+//    @ApiOperation(value = "获取此偏好的所有课程")
+//    @ResponseBody
+//    //TODO 缺少返回体Result+异常处理
+//    public Iterable<Course> getCourseByPreferId(int preferId){return courseService.getAllCoursesByPreferId(preferId);}
 
     @PostMapping("/updateCourseStatus")
     @ApiOperation(value = "更新课程状态")

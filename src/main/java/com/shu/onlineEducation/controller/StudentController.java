@@ -4,7 +4,6 @@ import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.service.StudentService;
-import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import com.shu.onlineEducation.utils.GlobalExceptionHandler;
@@ -100,13 +99,4 @@ public class StudentController {
 		return Result.success();
 	}
 	
-	
-	@PostMapping("/enrollClass")
-	@ApiOperation(value = "学生通过课程id报名课程")
-	@ResponseBody
-	public Result enroll(@RequestParam("user_id") int userId, @RequestParam("class_id") int classId)
-			throws CourseHasEnrolledException {
-		studentService.enrollCourseById(userId, classId);
-		return Result.success();
-	}
 }

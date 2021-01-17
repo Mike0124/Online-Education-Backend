@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.moudle.livechat;
+package com.shu.onlineEducation.model.livechat;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

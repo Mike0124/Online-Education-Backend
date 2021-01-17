@@ -9,6 +9,6 @@ import java.math.BigDecimal;
 
 @Repository
 public interface CourseCommentJpaRepository extends JpaRepository<CourseComment, Integer> {
-    @Query("select avg(a.commentMark) from CourseComment a where a.commentId = #{courseId}")
-    BigDecimal getCommentMarkAvg(int courseId);
+	@Query(value = "select avg(a.commentMark) from CourseComment a where a.commentId = #{courseId}", nativeQuery = true)
+	BigDecimal getCommentMarkAvg(int courseId);
 }

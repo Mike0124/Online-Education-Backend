@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.io.output.MsgVO;
-import com.shu.onlineEducation.moudle.livechat.StudentInfo;
+import com.shu.onlineEducation.model.livechat.StudentInfo;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;

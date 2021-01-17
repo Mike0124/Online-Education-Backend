@@ -56,22 +56,13 @@ public class GlobalExceptionHandler {
     /**
      * 找不到VIP课程
      */
-    @ExceptionHandler(CoursePreferNotFoundException.class)
+    @ExceptionHandler(CourseVipNotFoundException.class)
     @ResponseBody
     public Result courseVipNotFoundException(CoursePreferNotFoundException e){
         logger.error("VIP课程不存在：【" + e.getMessage() + "】");
         return Result.failure(ResultCode.COURSE_VIP_NOT_EXIST);
     }
 
-    /**
-     * 该学生已报名此课程
-     */
-    @ExceptionHandler(CourseHasEnrolledException.class)
-    @ResponseBody
-    public Result classHasEnrolledException(CourseHasEnrolledException e){
-        logger.error("该学生已报名此课程：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.COURSE_HAS_ENROLLED);
-    }
     
     /**
      * 密码错误

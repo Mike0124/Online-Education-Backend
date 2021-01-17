@@ -1,16 +1,12 @@
 package com.shu.onlineEducation.service.impl;
 
 import com.shu.onlineEducation.dao.CourseJpaRepository;
-import com.shu.onlineEducation.dao.StudentCourseJpaRepository;
 import com.shu.onlineEducation.dao.StudentJpaRepository;
 import com.shu.onlineEducation.dao.StudentPreferenceRepository;
-import com.shu.onlineEducation.entity.EmbeddedId.StudentCourseEnroll;
-import com.shu.onlineEducation.entity.EmbeddedId.StudentCourseEnrollPrimaryKey;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePrimaryKey;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.service.StudentService;
-import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
 import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
@@ -26,8 +22,6 @@ public class StudentServiceImpl implements StudentService {
 	private StudentJpaRepository studentJpaRepository;
 	@Autowired
 	private CourseJpaRepository courseJpaRepository;
-	@Autowired
-	private StudentCourseJpaRepository studentCourseJpaRepository;
 	@Autowired
 	private StudentPreferenceRepository studentPreferenceRepository;
 	
@@ -74,19 +68,7 @@ public class StudentServiceImpl implements StudentService {
 		studentJpaRepository.save(stu);
 	}
 	
-	@Override
-	public void enrollCourseById(int userId, int courseId) throws CourseHasEnrolledException {
-		StudentCourseEnrollPrimaryKey key = new StudentCourseEnrollPrimaryKey();
-		key.setStudentId(userId);
-		key.setCourseId(courseId);
-		StudentCourseEnroll studentCourseEnroll = new StudentCourseEnroll();
-		studentCourseEnroll.setStudentCourseEnrollPrimaryKey(key);
-		if (studentCourseJpaRepository.existsByStudentCourseEnrollPrimaryKey(key)) {
-			throw new CourseHasEnrolledException();
-		} else {
-			studentCourseJpaRepository.save(studentCourseEnroll);
-		}
-	}
+	
 	
 	@Override
 	public void collectPreference(int userId, int[] prefersId) {
