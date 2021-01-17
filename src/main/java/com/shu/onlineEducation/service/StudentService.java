@@ -1,10 +1,7 @@
 package com.shu.onlineEducation.service;
 
 import com.shu.onlineEducation.entity.Student;
-import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
-import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.*;
 
 import java.util.List;
 
@@ -23,6 +20,9 @@ public interface StudentService {
 	
 	//学生报名课程
 	void enrollCourseById(int userId, int courseId) throws CourseHasEnrolledException;
+
+	//学生评论课程
+	void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws CourseNotFoundException;
 	
 	void collectPreference(int userId, int[] prefersId);
 

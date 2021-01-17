@@ -1,6 +1,8 @@
 package com.shu.onlineEducation.service;
 
 
-public interface CourseCommentService {
+import java.math.BigDecimal;
 
+public interface CourseCommentService {
+    BigDecimal getCommentMarkAvg(int courseId);
 }

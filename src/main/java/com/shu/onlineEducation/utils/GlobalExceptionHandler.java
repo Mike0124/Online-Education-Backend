@@ -56,7 +56,7 @@ public class GlobalExceptionHandler {
     /**
      * 找不到VIP课程
      */
-    @ExceptionHandler(CoursePreferNotFoundException.class)
+    @ExceptionHandler(CourseVipNotFoundException.class)
     @ResponseBody
     public Result courseVipNotFoundException(CoursePreferNotFoundException e){
         logger.error("VIP课程不存在：【" + e.getMessage() + "】");
