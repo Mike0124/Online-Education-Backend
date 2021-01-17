@@ -1,11 +1,8 @@
 package com.shu.onlineEducation.utils;
 
+import com.shu.onlineEducation.utils.ExceptionUtil.*;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
-import com.shu.onlineEducation.utils.ExceptionUtil.CourseHasEnrolledException;
-import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -39,11 +36,31 @@ public class GlobalExceptionHandler {
     /**
      * 找不到课程
      */
-    @ExceptionHandler(ClassNotFoundException.class)
+    @ExceptionHandler(CourseNotFoundException.class)
     @ResponseBody
-    public Result classNotFoundException(ClassNotFoundException e){
+    public Result courseNotFoundException(CourseNotFoundException e){
         logger.error("课程不存在：【" + e.getMessage() + "】");
         return Result.failure(ResultCode.COURSE_NOT_EXIST);
+    }
+
+    /**
+     * 找不到该偏好课程
+     */
+    @ExceptionHandler(CoursePreferNotFoundException.class)
+    @ResponseBody
+    public Result coursePreferNotFoundException(CoursePreferNotFoundException e){
+        logger.error("该偏好课程不存在：【" + e.getMessage() + "】");
+        return Result.failure(ResultCode.COURSE_PREFER_NOT_EXIST);
+    }
+
+    /**
+     * 找不到VIP课程
+     */
+    @ExceptionHandler(CoursePreferNotFoundException.class)
+    @ResponseBody
+    public Result courseVipNotFoundException(CoursePreferNotFoundException e){
+        logger.error("VIP课程不存在：【" + e.getMessage() + "】");
+        return Result.failure(ResultCode.COURSE_VIP_NOT_EXIST);
     }
 
     /**

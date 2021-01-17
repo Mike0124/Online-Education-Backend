@@ -3,6 +3,8 @@ package com.shu.onlineEducation.entity;
 import lombok.Data;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.Date;
 
 @Data
@@ -20,7 +22,7 @@ public class Course {
     @Column(nullable = false)
     private String intro;
     @Column(nullable = false)
-    private Date uploadTime;
+    private Timestamp uploadTime;
     @Column(name = "prefer_id",nullable = false)
     private Integer preferId;
     @Column(name = "need_vip")
@@ -31,6 +33,10 @@ public class Course {
     private Integer teacherId;
     @Column(name = "course_status")
     private Integer status;
+    @Column(name = "course_avg_mark")
+    private BigDecimal courseAvgMark;
+    @Column(name = "course_watches")
+    private Integer courseWatches;
 //    @ManyToMany(mappedBy = "aCourses")
 //    @JsonIgnore
 //    private Set<Student> students = new HashSet<Student>(0);
