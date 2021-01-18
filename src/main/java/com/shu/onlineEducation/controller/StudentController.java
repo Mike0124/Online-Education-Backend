@@ -1,5 +1,8 @@
 package com.shu.onlineEducation.controller;
 
+import com.shu.onlineEducation.moudle.request.CourseCommentRequest;
+import com.shu.onlineEducation.service.CourseCommentService;
+import com.shu.onlineEducation.utils.ExceptionUtil.CourseNotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -75,6 +78,15 @@ public class StudentController {
 	public Result delete(@RequestParam("user_id") int userId) throws UserNotFoundException {
 		studentService.deleteStudentById(userId);
 		logger.info("删除用户：id=" + userId);
+		return Result.success();
+	}
+
+	@PostMapping("/commentCourseByCourseId")
+	@ApiOperation(value = "根据课程Id对课程进行评价")
+	@ResponseBody
+	public Result comment(@RequestBody CourseCommentRequest courseCommentRequest) throws CourseNotFoundException{
+		studentService.commentCourseByCourseId(courseCommentRequest.getComment(), courseCommentRequest.getCommentMark(),
+				courseCommentRequest.getCourseId(), courseCommentRequest.getStudentId());
 		return Result.success();
 	}
 	

@@ -1,20 +1,26 @@
 package com.shu.onlineEducation.service.impl;
 
-import com.shu.onlineEducation.dao.CourseJpaRepository;
-import com.shu.onlineEducation.dao.StudentJpaRepository;
-import com.shu.onlineEducation.dao.StudentPreferenceRepository;
+import com.shu.onlineEducation.dao.*;
+import com.shu.onlineEducation.entity.Course;
+import com.shu.onlineEducation.entity.CourseComment;
+import com.shu.onlineEducation.entity.EmbeddedId.StudentCourseEnroll;
+import com.shu.onlineEducation.entity.EmbeddedId.StudentCourseEnrollPrimaryKey;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePrimaryKey;
 import com.shu.onlineEducation.entity.Student;
+import com.shu.onlineEducation.moudle.request.CourseCommentRequest;
 import com.shu.onlineEducation.service.StudentService;
-import com.shu.onlineEducation.utils.ExceptionUtil.PassWordErrorException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.*;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.rmi.runtime.Log;
 
+import java.math.BigDecimal;
+import java.sql.Timestamp;
 import java.util.List;
 
+@Slf4j
 @Service
 public class StudentServiceImpl implements StudentService {
 	
@@ -23,7 +29,11 @@ public class StudentServiceImpl implements StudentService {
 	@Autowired
 	private CourseJpaRepository courseJpaRepository;
 	@Autowired
+	private StudentCourseJpaRepository studentCourseJpaRepository;
+	@Autowired
 	private StudentPreferenceRepository studentPreferenceRepository;
+	@Autowired
+	private CourseCommentJpaRepository courseCommentJpaRepository;
 	
 	@Override
 	public List<Student> getAllStudents() {
@@ -68,8 +78,39 @@ public class StudentServiceImpl implements StudentService {
 		studentJpaRepository.save(stu);
 	}
 	
-	
-	
+	@Override
+	public void enrollCourseById(int userId, int courseId) throws CourseHasEnrolledException {
+		StudentCourseEnrollPrimaryKey key = new StudentCourseEnrollPrimaryKey();
+		key.setStudentId(userId);
+		key.setCourseId(courseId);
+		StudentCourseEnroll studentCourseEnroll = new StudentCourseEnroll();
+		studentCourseEnroll.setStudentCourseEnrollPrimaryKey(key);
+		if (studentCourseJpaRepository.existsByStudentCourseEnrollPrimaryKey(key)) {
+			throw new CourseHasEnrolledException();
+		} else {
+			studentCourseJpaRepository.save(studentCourseEnroll);
+		}
+	}
+
+	@Override
+	public void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws CourseNotFoundException {
+		if (!courseJpaRepository.existsByCourseId(courseId)){
+			throw new CourseNotFoundException();
+		}
+		CourseComment courseComment = new CourseComment();
+		courseComment.setCommentMark(commentMark);
+		courseComment.setContent(comment);
+		courseComment.setLikes(0);
+		courseComment.setTime(new Timestamp(System.currentTimeMillis()));
+		courseComment.setCourse(courseJpaRepository.findCourseByCourseId(courseId));
+		courseComment.setStudent(studentJpaRepository.findStudentByUserId(studentId));
+		courseCommentJpaRepository.save(courseComment);
+		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		log.info(String.valueOf(courseCommentJpaRepository.getCommentMarkAvg(courseId)));
+		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(courseId));
+		courseJpaRepository.save(course);
+	}
+
 	@Override
 	public void collectPreference(int userId, int[] prefersId) {
 		//检查该学生是否已存入偏好
