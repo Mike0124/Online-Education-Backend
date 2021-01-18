@@ -11,5 +11,5 @@ import javax.persistence.Table;
 @Table(name = "relationship_stu_prefer")
 public class StudentPreference {
 	@EmbeddedId
-	private StudentPreferencePrimaryKey studentPreferencePrimaryKey;
+	private StudentPreferencePK studentPreferencePK;
 }

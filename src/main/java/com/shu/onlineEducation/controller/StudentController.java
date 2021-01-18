@@ -107,8 +107,14 @@ public class StudentController {
 	@ResponseBody
 	public Result collectPreference(@RequestParam("user_id") int userId, @RequestParam("prefers") int[] prefersId) {
 		studentService.collectPreference(userId, prefersId);
-		logger.info("收集到学生偏好：preferences=" + prefersId);
 		return Result.success();
+	}
+	
+	@PostMapping("/findAllPreferences")
+	@ApiOperation(value = "返回所有当前学生的偏好")
+	@ResponseBody
+	public Result findAllPreferences(@RequestParam("user_id") int userId) {
+		return Result.success(studentService.findAllPreferences(userId));
 	}
 	
 }

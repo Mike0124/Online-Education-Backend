@@ -1,23 +1,17 @@
 package com.shu.onlineEducation.service.impl;
 
 import com.shu.onlineEducation.dao.*;
-import com.shu.onlineEducation.entity.Course;
-import com.shu.onlineEducation.entity.CourseComment;
-import com.shu.onlineEducation.entity.EmbeddedId.StudentCourseEnroll;
-import com.shu.onlineEducation.entity.EmbeddedId.StudentCourseEnrollPrimaryKey;
+import com.shu.onlineEducation.entity.*;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
-import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePrimaryKey;
-import com.shu.onlineEducation.entity.Student;
-import com.shu.onlineEducation.moudle.request.CourseCommentRequest;
+import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePK;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import sun.rmi.runtime.Log;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -29,11 +23,13 @@ public class StudentServiceImpl implements StudentService {
 	@Autowired
 	private CourseJpaRepository courseJpaRepository;
 	@Autowired
-	private StudentCourseJpaRepository studentCourseJpaRepository;
-	@Autowired
 	private StudentPreferenceRepository studentPreferenceRepository;
 	@Autowired
 	private CourseCommentJpaRepository courseCommentJpaRepository;
+	@Autowired
+	private MajorJpaRepository majorJpaRepository;
+	@Autowired
+	private PreferJpaRepository preferJpaRepository;
 	
 	@Override
 	public List<Student> getAllStudents() {
@@ -65,36 +61,39 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
+	public Student loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException {
+		if (!studentJpaRepository.existsByPhoneId(phoneId)) {
+			throw new UserNotFoundException();
+		}
+		if (!password.equals(studentJpaRepository.findStudentByPhoneId(phoneId).getPassword())) {
+			throw new PassWordErrorException();
+		}
+		return studentJpaRepository.findStudentByPhoneId(phoneId);
+	}
+	
+	@Override
 	public void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade) throws UserNotFoundException {
 		Student stu = studentJpaRepository.findStudentByUserId(userId);
 		if (stu == null) {
 			throw new UserNotFoundException();
 		}
+		//TODO:合并各种Exception
+		Major major = majorJpaRepository.findMajorByMajorId(majorId);
+//		if (major == null){
+//			throw new MajorNotFoundException();
+//		}
 		stu.setNickName(nickname);
 		stu.setSex(sex);
 		stu.setSchool(school);
-		stu.setMajorId(majorId);
+		stu.setMajor(major);
 		stu.setGrade(grade);
 		studentJpaRepository.save(stu);
 	}
 	
-	@Override
-	public void enrollCourseById(int userId, int courseId) throws CourseHasEnrolledException {
-		StudentCourseEnrollPrimaryKey key = new StudentCourseEnrollPrimaryKey();
-		key.setStudentId(userId);
-		key.setCourseId(courseId);
-		StudentCourseEnroll studentCourseEnroll = new StudentCourseEnroll();
-		studentCourseEnroll.setStudentCourseEnrollPrimaryKey(key);
-		if (studentCourseJpaRepository.existsByStudentCourseEnrollPrimaryKey(key)) {
-			throw new CourseHasEnrolledException();
-		} else {
-			studentCourseJpaRepository.save(studentCourseEnroll);
-		}
-	}
-
+	
 	@Override
 	public void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws CourseNotFoundException {
-		if (!courseJpaRepository.existsByCourseId(courseId)){
+		if (!courseJpaRepository.existsByCourseId(courseId)) {
 			throw new CourseNotFoundException();
 		}
 		CourseComment courseComment = new CourseComment();
@@ -106,34 +105,30 @@ public class StudentServiceImpl implements StudentService {
 		courseComment.setStudent(studentJpaRepository.findStudentByUserId(studentId));
 		courseCommentJpaRepository.save(courseComment);
 		Course course = courseJpaRepository.findCourseByCourseId(courseId);
-		log.info(String.valueOf(courseCommentJpaRepository.getCommentMarkAvg(courseId)));
 		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(courseId));
 		courseJpaRepository.save(course);
 	}
-
+	
 	@Override
 	public void collectPreference(int userId, int[] prefersId) {
-		//检查该学生是否已存入偏好
-		if (studentPreferenceRepository.findAllByStudentId(userId).isEmpty()) {
-			for (int prefer : prefersId) {
-				StudentPreferencePrimaryKey key = new StudentPreferencePrimaryKey();
-				key.setStudentId(userId);
-				key.setPreferId(prefer);
-				StudentPreference studentPreference = new StudentPreference();
-				studentPreference.setStudentPreferencePrimaryKey(key);
-				studentPreferenceRepository.save(studentPreference);
-			}
+		for (int prefer : prefersId) {
+			StudentPreferencePK key = new StudentPreferencePK();
+			key.setStudent(studentJpaRepository.findStudentByUserId(userId));
+			key.setPrefer(preferJpaRepository.findPreferByPreferId(prefer));
+			StudentPreference studentPreference = new StudentPreference();
+			studentPreference.setStudentPreferencePK(key);
+			studentPreferenceRepository.save(studentPreference);
 		}
 	}
 	
 	@Override
-	public Student loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException {
-		if (!studentJpaRepository.existsByPhoneId(phoneId)) {
-			throw new UserNotFoundException();
+	public List<Prefer> findAllPreferences(int userId) {
+		List<Prefer> preferList = new ArrayList<>();
+		for (StudentPreference studentPreference:studentPreferenceRepository.findAllByStudentId(userId)) {
+			preferList.add(studentPreference.getStudentPreferencePK().getPrefer());
 		}
-		if (!password.equals(studentJpaRepository.findStudentByPhoneId(phoneId).getPassword())) {
-			throw new PassWordErrorException();
-		}
-		return studentJpaRepository.findStudentByPhoneId(phoneId);
+		return preferList;
 	}
+	
+	
 }

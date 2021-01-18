@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.service;
 
+import com.shu.onlineEducation.entity.Prefer;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 
@@ -13,18 +14,17 @@ public interface StudentService {
 	
 	void addUser(String phoneId, String password) throws UserHasExistedException;      //添加刚注册的学生
 	
+	Student loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException;
+	
 	void deleteStudentById(int userId) throws UserNotFoundException;        //删除学生
 	
 	void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade)
 			throws UserNotFoundException;       //完善学生信息
-	
-	//学生报名课程
-	void enrollCourseById(int userId, int courseId) throws CourseHasEnrolledException;
 
 	//学生评论课程
 	void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws CourseNotFoundException;
 	
 	void collectPreference(int userId, int[] prefersId);
-
-	Student loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException;
+	
+	List<Prefer> findAllPreferences(int userId);
 }
