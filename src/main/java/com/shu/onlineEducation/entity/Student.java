@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,8 +36,12 @@ public class Student {
     @Column
     private String school;
     
+    @Column(name = "major_id")
+    Integer majorId;
+    
     @ManyToOne
-    @JoinColumn(name = "major_id",referencedColumnName = "major_id")
+//    @JsonIgnore
+    @JoinColumn(name = "major_id",referencedColumnName = "major_id",insertable = false, updatable = false)
     Major major;
     
     @Column
@@ -48,8 +53,8 @@ public class Student {
     @Column(name = "is_vip")
     private boolean isVip;
     
-    @Column(name = "student_pic")
-    private byte[] studentPic;
+    @Column(name = "student_pic_url")
+    private String studentPicUrl;
 }
 
 

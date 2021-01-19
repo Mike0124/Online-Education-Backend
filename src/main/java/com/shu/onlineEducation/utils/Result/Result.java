@@ -13,8 +13,8 @@ public class Result implements Serializable {
     private Object data;
 
     public Result(ResultCode resultCode, Object data) {
-        this.code = resultCode.code();
-        this.message = resultCode.message();
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
         this.data = data;
     }
 
@@ -45,7 +45,7 @@ public class Result implements Serializable {
     }
 
     private void setResultCode(ResultCode resultCode) {
-        this.code = resultCode.code();
-        this.message = resultCode.message();
+        this.code = resultCode.getCode();
+        this.message = resultCode.getMessage();
     }
 }

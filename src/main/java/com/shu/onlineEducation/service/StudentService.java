@@ -26,5 +26,5 @@ public interface StudentService {
 	
 	void collectPreference(int userId, int[] prefersId);
 	
-	List<Prefer> findAllPreferences(int userId);
+	List<Integer> findAllPreferences(int userId);
 }

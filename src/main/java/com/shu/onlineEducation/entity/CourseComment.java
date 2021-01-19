@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -24,12 +25,15 @@ public class CourseComment {
     private Timestamp time;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "student_id", referencedColumnName = "user_id")
     private Student student;
     
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "course_id", referencedColumnName = "course_id")
     private Course course;
+    
     
     @Column(name = "comment_mark")
     private int commentMark;

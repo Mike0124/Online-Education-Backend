@@ -6,6 +6,7 @@ import com.shu.onlineEducation.service.TeacherService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +34,7 @@ public class TeacherServiceImpl implements TeacherService {
         teacher.setPhoneId(phoneId);
         teacher.setPassword(password);
         if (teacherJpaRepository.existsByPhoneId(phoneId)) {
-            throw new ExistedException(2001,"用户已存在");
+            throw new ExistedException(ResultCode.USER_HAS_EXISTED);
         }
         teacherJpaRepository.save(teacher);
     }
@@ -41,7 +42,7 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public void deleteTeacherById(int userId) throws NotFoundException {
         if (!teacherJpaRepository.existsByUserId(userId)) {
-            throw new NotFoundException(2002, "用户不存在");
+            throw new NotFoundException(ResultCode.USER_NOT_EXIST);
         }
         teacherJpaRepository.deleteTeacherByUserId(userId);
     }
@@ -50,7 +51,7 @@ public class TeacherServiceImpl implements TeacherService {
     public void completeTeacherInfo(int userId, String name, String sex, String school, String major) throws NotFoundException {
         Teacher tea = teacherJpaRepository.findTeacherByUserId(userId);
         if (tea == null){
-            throw new NotFoundException(2002, "用户不存在");
+            throw new NotFoundException(ResultCode.USER_NOT_EXIST);
         }
         tea.setName(name);
         tea.setSex(sex);
@@ -62,10 +63,10 @@ public class TeacherServiceImpl implements TeacherService {
     @Override
     public Teacher loginByPassword(String phoneId, String password) throws NotFoundException, ParamErrorException {
         if (!teacherJpaRepository.existsByPhoneId(phoneId)) {
-            throw new NotFoundException(2002, "用户不存在");
+            throw new NotFoundException(ResultCode.USER_NOT_EXIST);
         }
         if(!password.equals(teacherJpaRepository.findTeacherByPhoneId(phoneId).getPassword())) {
-            throw new ParamErrorException(2003, "密码错误");
+            throw new ParamErrorException(ResultCode.USER_LOGIN_ERROR);
         }
         return teacherJpaRepository.findTeacherByPhoneId(phoneId);
     }

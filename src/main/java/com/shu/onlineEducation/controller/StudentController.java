@@ -1,6 +1,6 @@
 package com.shu.onlineEducation.controller;
 
-import com.shu.onlineEducation.moudle.request.CourseCommentRequest;
+import com.shu.onlineEducation.model.request.CourseCommentRequest;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.Result.Result;

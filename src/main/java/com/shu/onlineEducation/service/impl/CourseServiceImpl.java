@@ -4,6 +4,7 @@ import com.shu.onlineEducation.dao.CourseJpaRepository;
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.service.CourseService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,7 @@ public class CourseServiceImpl implements CourseService {
 		if (courseJpaRepository.existsByPreferId(preferId)) {
 			return courseJpaRepository.findAllByPreferId(pageable, preferId);
 		} else {
-			throw new NotFoundException(3002,"此偏好课程不存在");
+			throw new NotFoundException(ResultCode.COURSE_PREFER_NOT_EXIST);
 		}
 	}
 	
@@ -35,7 +36,7 @@ public class CourseServiceImpl implements CourseService {
 		if (courseJpaRepository.existsByNeedVip(needVip)) {
 			return courseJpaRepository.findAllByNeedVip(needVip);
 		} else {
-			throw new NotFoundException(3003,"VIP课程不存在");
+			throw new NotFoundException(ResultCode.COURSE_VIP_NOT_EXIST);
 		}
 	}
 	
@@ -43,7 +44,7 @@ public class CourseServiceImpl implements CourseService {
 	public List<Course> getAllCoursesByNeedVipAndPreferId(boolean needVip, int preferId) throws
 			NotFoundException {
 		if (!courseJpaRepository.existsByNeedVip(needVip)) {
-			throw new NotFoundException(3003,"此偏好VIP课程不存在");
+			throw new NotFoundException(ResultCode.COURSE_VIP_NOT_EXIST);
 		}
 		return courseJpaRepository.findAllByNeedVipAndPreferId(needVip, preferId);
 	}

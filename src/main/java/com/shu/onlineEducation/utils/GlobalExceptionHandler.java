@@ -21,7 +21,7 @@ public class GlobalExceptionHandler {
     public Result existedException(ExistedException e){
         logger.error("发生业务异常！(已有该数据)原因是：【"+ e.getMessage() + "】");
         for (ResultCode code :ResultCode.values()){
-            if (code.code().equals(e.getErrorCode())){
+            if (code.getCode().equals(e.getErrorCode())){
                 return Result.failure(code);
             }
         }
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
     public Result notFoundException(NotFoundException e){
         logger.error("发生业务异常！(找不到数据)原因是：【"+ e.getMessage() + "】");
         for (ResultCode code :ResultCode.values()){
-            if (code.code().equals(e.getErrorCode())){
+            if (code.getCode().equals(e.getErrorCode())){
                 return Result.failure(code);
             }
         }
@@ -52,7 +52,7 @@ public class GlobalExceptionHandler {
     public Result paramErrorException(ParamErrorException e){
         logger.error("发生参数错误！原因是：【"+ e.getMessage() + "】");
         for (ResultCode code :ResultCode.values()){
-            if (code.code().equals(e.getErrorCode())){
+            if (code.getCode().equals(e.getErrorCode())){
                 return Result.failure(code);
             }
         }

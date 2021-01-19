@@ -8,13 +8,12 @@ import java.io.Serializable;
 @Embeddable
 @Data
 public class CourseChapterVideoPK implements Serializable {
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "course_id", referencedColumnName = "course_id"),
-			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id")
-	})
-	CourseChapter courseChapter;
+	@Column(name = "course_id")
+	Integer courseId;
+	
+	@Column(name = "chapter_id")
+	Integer chapterId;
 	
 	@Column(name = "video_id")
-	private Integer videoId;
+	Integer videoId;
 }

@@ -6,6 +6,7 @@ import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePK;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -47,7 +48,7 @@ public class StudentServiceImpl implements StudentService {
 		student.setPhoneId(phoneId);
 		student.setPassword(password);
 		if (studentJpaRepository.existsByPhoneId(phoneId)) {
-			throw new ExistedException(2001,"用户已存在");
+			throw new ExistedException(ResultCode.USER_HAS_EXISTED);
 		}
 		studentJpaRepository.save(student);
 	}
@@ -55,7 +56,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void deleteStudentById(int userId) throws NotFoundException {
 		if (!studentJpaRepository.existsByUserId(userId)) {
-			throw new NotFoundException(2002, "用户不存在");
+			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
 		}
 		studentJpaRepository.deleteStudentByUserId(userId);
 	}
@@ -63,10 +64,10 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public Student loginByPassword(String phoneId, String password) throws NotFoundException, ParamErrorException {
 		if (!studentJpaRepository.existsByPhoneId(phoneId)) {
-			throw new NotFoundException(2002,"用户不存在");
+			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
 		}
 		if (!password.equals(studentJpaRepository.findStudentByPhoneId(phoneId).getPassword())) {
-			throw new ParamErrorException(2003,"密码错误");
+			throw new ParamErrorException(ResultCode.USER_LOGIN_ERROR);
 		}
 		return studentJpaRepository.findStudentByPhoneId(phoneId);
 	}
@@ -75,17 +76,14 @@ public class StudentServiceImpl implements StudentService {
 	public void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade) throws NotFoundException {
 		Student stu = studentJpaRepository.findStudentByUserId(userId);
 		if (stu == null) {
-			throw new NotFoundException(2002, "用户不存在");
+			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
 		}
-		//TODO:合并各种Exception
 		Major major = majorJpaRepository.findMajorByMajorId(majorId);
-//		if (major == null){
-//			throw new MajorNotFoundException();
-//		}
 		stu.setNickName(nickname);
 		stu.setSex(sex);
 		stu.setSchool(school);
 		stu.setMajor(major);
+		stu.setMajorId(major.getMajorId());
 		stu.setGrade(grade);
 		studentJpaRepository.save(stu);
 	}
@@ -94,7 +92,7 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws NotFoundException {
 		if (!courseJpaRepository.existsByCourseId(courseId)) {
-			throw new NotFoundException(3001, "课程不存在");
+			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
 		CourseComment courseComment = new CourseComment();
 		courseComment.setCommentMark(commentMark);
@@ -111,10 +109,11 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Override
 	public void collectPreference(int userId, int[] prefersId) {
+		studentPreferenceRepository.deleteAll();
 		for (int prefer : prefersId) {
 			StudentPreferencePK key = new StudentPreferencePK();
-			key.setStudent(studentJpaRepository.findStudentByUserId(userId));
-			key.setPrefer(preferJpaRepository.findPreferByPreferId(prefer));
+			key.setStudentId(userId);
+			key.setPreferId(prefer);
 			StudentPreference studentPreference = new StudentPreference();
 			studentPreference.setStudentPreferencePK(key);
 			studentPreferenceRepository.save(studentPreference);
@@ -122,10 +121,10 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public List<Prefer> findAllPreferences(int userId) {
-		List<Prefer> preferList = new ArrayList<>();
+	public List<Integer> findAllPreferences(int userId) {
+		List<Integer> preferList = new ArrayList<>();
 		for (StudentPreference studentPreference:studentPreferenceRepository.findAllByStudentId(userId)) {
-			preferList.add(studentPreference.getStudentPreferencePK().getPrefer());
+			preferList.add(studentPreference.getStudentPreferencePK().getPreferId());
 		}
 		return preferList;
 	}

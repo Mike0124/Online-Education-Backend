@@ -1,10 +1,10 @@
 package com.shu.onlineEducation.entity.EmbeddedId;
 
+import com.shu.onlineEducation.entity.Prefer;
+import com.shu.onlineEducation.entity.Student;
 import lombok.Data;
 
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 @Data
 @Entity
@@ -12,4 +12,12 @@ import javax.persistence.Table;
 public class StudentPreference {
 	@EmbeddedId
 	private StudentPreferencePK studentPreferencePK;
+	
+	@ManyToOne
+	@JoinColumn(name = "student_id", referencedColumnName = "user_id", insertable = false, updatable = false)
+	private Student student;
+	
+	@ManyToOne
+	@JoinColumn(name = "prefer_id", referencedColumnName = "prefer_id", insertable = false, updatable = false)
+	private Prefer prefer;
 }

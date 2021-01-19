@@ -6,16 +6,16 @@ import javax.persistence.*;
 
 @Data
 @Entity
-@Table(name = "task_file")
-public class TaskFile {
+@Table(name = "homework_file")
+public class HomeworkFile {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "task_file_id")
-	Integer taskFileId;
+	@Column(name = "homework_file_id")
+	Integer homeworkFileId;
 	
 	@ManyToOne
-	@JoinColumn(name = "task_id",referencedColumnName = "task_id")
-	Task task;
+	@JoinColumn(name = "homework_id",referencedColumnName = "homework_id")
+	Homework homework;
 	
 	@Column(name = "file_url")
 	String fileUrl;

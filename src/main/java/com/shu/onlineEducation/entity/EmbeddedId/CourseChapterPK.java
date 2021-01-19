@@ -9,9 +9,8 @@ import java.io.Serializable;
 @Embeddable
 @Data
 public class CourseChapterPK implements Serializable {
-	@ManyToOne
-	@JoinColumn (name = "course_id",referencedColumnName = "course_id")
-	private Course course;
+	@Column(name = "course_id")
+	private Integer courseId;
 	
 	@Column(name = "chapter_id")
 	private Integer chapterId;

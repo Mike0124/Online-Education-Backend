@@ -1,19 +1,25 @@
 package com.shu.onlineEducation.utils.ExceptionUtil;
 
+import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-@AllArgsConstructor
 public class NotFoundException extends Exception {
-
-    protected Integer errorCode;
-
-    protected String errorMsg;
-
-    public NotFoundException(Integer errorCode, String errorMsg, Throwable cause) {
-        super(errorMsg, cause);
-        this.errorCode = errorCode;
-        this.errorMsg = errorMsg;
-    }
+	
+	protected Integer errorCode;
+	
+	protected String errorMsg;
+	
+	public NotFoundException(ResultCode resultCode) {
+		super(resultCode.getMessage());
+		this.errorCode = resultCode.getCode();
+		this.errorMsg = resultCode.getMessage();
+	}
+	
+	public NotFoundException(ResultCode resultCode, Throwable cause) {
+		super(resultCode.getMessage(), cause);
+		this.errorCode = resultCode.getCode();
+		this.errorMsg = resultCode.getMessage();
+	}
 }
