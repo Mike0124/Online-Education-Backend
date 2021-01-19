@@ -20,7 +20,7 @@ public class Major {
 	@Column(name = "major_content", nullable = false)
 	private String majorContent;
 	
-	@OneToMany(mappedBy = "major")
+	@OneToMany(mappedBy = "major", fetch = FetchType.EAGER)
 	@JsonIgnore
 	private Set<Prefer> prefers = new HashSet<>(0);
 }
