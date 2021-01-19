@@ -19,6 +19,8 @@ public interface CourseJpaRepository extends JpaRepository<Course, Integer>, Jpa
 	boolean existsByPreferId(int preferId);
 
 	boolean existsByNeedVip(boolean needVip);
+
+	boolean existsByNeedVipAndPreferId(boolean needVip, int preferId);
 	
 	Course findCourseByCourseId(int courseId);
 	

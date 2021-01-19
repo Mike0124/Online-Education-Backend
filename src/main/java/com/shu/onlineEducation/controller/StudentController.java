@@ -1,14 +1,13 @@
 package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.moudle.request.CourseCommentRequest;
-import com.shu.onlineEducation.service.CourseCommentService;
-import com.shu.onlineEducation.utils.ExceptionUtil.CourseNotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.service.StudentService;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.GlobalExceptionHandler;
 import io.swagger.annotations.*;
 import org.slf4j.Logger;
@@ -52,7 +51,7 @@ public class StudentController {
 //	})
 	@ApiOperation(value = "验证码验证成功后在学生表中添加一项")
 	@ResponseBody
-	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws UserHasExistedException {
+	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws ExistedException {
 		studentService.addUser(phoneId, password);
 		logger.info("添加用户成功");
 		return Result.success();
@@ -65,7 +64,8 @@ public class StudentController {
 //	})
 	@ApiOperation(value = "用户登录")
 	@ResponseBody
-	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
+	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password)
+			throws NotFoundException, ParamErrorException {
 		Student student = studentService.loginByPassword(phoneId,password);
 		logger.info("登录成功");
 		return Result.success(student);
@@ -75,7 +75,7 @@ public class StudentController {
 	@ApiImplicitParam(name = "user_id", value = "用户标识", required = true, paramType = "form", dataType = "String")
 	@ApiOperation(value = "删除学生")
 	@ResponseBody
-	public Result delete(@RequestParam("user_id") int userId) throws UserNotFoundException {
+	public Result delete(@RequestParam("user_id") int userId) throws NotFoundException {
 		studentService.deleteStudentById(userId);
 		logger.info("删除用户：id=" + userId);
 		return Result.success();
@@ -84,7 +84,7 @@ public class StudentController {
 	@PostMapping("/commentCourseByCourseId")
 	@ApiOperation(value = "根据课程Id对课程进行评价")
 	@ResponseBody
-	public Result comment(@RequestBody CourseCommentRequest courseCommentRequest) throws CourseNotFoundException{
+	public Result comment(@RequestBody CourseCommentRequest courseCommentRequest) throws NotFoundException {
 		studentService.commentCourseByCourseId(courseCommentRequest.getComment(), courseCommentRequest.getCommentMark(),
 				courseCommentRequest.getCourseId(), courseCommentRequest.getStudentId());
 		return Result.success();
@@ -96,7 +96,7 @@ public class StudentController {
 	public Result complete(@RequestParam("user_id") int userId, @RequestParam("nickname") String nickname,
 						   @RequestParam("sex") String sex, @RequestParam("school") String school,
 						   @RequestParam("major_id") int majorId, @RequestParam("grade") int grade)
-			throws UserNotFoundException {
+			throws NotFoundException {
 		studentService.completeStudent(userId, nickname, sex, school, majorId, grade);
 		logger.info("完善学生信息：id=" + userId);
 		return Result.success();

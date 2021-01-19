@@ -3,8 +3,7 @@ package com.shu.onlineEducation.controller;
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.CourseService;
-import com.shu.onlineEducation.utils.ExceptionUtil.CoursePreferNotFoundException;
-import com.shu.onlineEducation.utils.ExceptionUtil.CourseVipNotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;
@@ -35,7 +34,7 @@ public class CourseController {
 	@PostMapping("/getCourseByPreferId")
 	@ApiOperation(value = "获取此偏好的所有课程,1表示按时间最新排序，2表示按课程评分排序，3表示按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByPreferId(int page, int sort, int preferId) throws CoursePreferNotFoundException {
+	public Result getCourseByPreferId(int page, int sort, int preferId) throws NotFoundException {
 		Pageable pageable;
 		if (sort == 1) {
 			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
@@ -70,7 +69,7 @@ public class CourseController {
 	
 	@PostMapping("/getAllCourseNeedVip")
 	@ApiOperation(value = "获取所有付费课程")
-	public Result getAllCourseNeedVip() throws CourseVipNotFoundException {
+	public Result getAllCourseNeedVip() throws NotFoundException {
 		return Result.success(courseService.getAllCoursesByNeedVip(true));
 	}
 	

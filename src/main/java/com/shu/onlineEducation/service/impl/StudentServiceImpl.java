@@ -42,40 +42,40 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public void addUser(String phoneId, String password) throws UserHasExistedException {
+	public void addUser(String phoneId, String password) throws ExistedException {
 		Student student = new Student();
 		student.setPhoneId(phoneId);
 		student.setPassword(password);
 		if (studentJpaRepository.existsByPhoneId(phoneId)) {
-			throw new UserHasExistedException();
+			throw new ExistedException(2001,"用户已存在");
 		}
 		studentJpaRepository.save(student);
 	}
 	
 	@Override
-	public void deleteStudentById(int userId) throws UserNotFoundException {
+	public void deleteStudentById(int userId) throws NotFoundException {
 		if (!studentJpaRepository.existsByUserId(userId)) {
-			throw new UserNotFoundException();
+			throw new NotFoundException(2002, "用户不存在");
 		}
 		studentJpaRepository.deleteStudentByUserId(userId);
 	}
 	
 	@Override
-	public Student loginByPassword(String phoneId, String password) throws UserNotFoundException, PassWordErrorException {
+	public Student loginByPassword(String phoneId, String password) throws NotFoundException, ParamErrorException {
 		if (!studentJpaRepository.existsByPhoneId(phoneId)) {
-			throw new UserNotFoundException();
+			throw new NotFoundException(2002,"用户不存在");
 		}
 		if (!password.equals(studentJpaRepository.findStudentByPhoneId(phoneId).getPassword())) {
-			throw new PassWordErrorException();
+			throw new ParamErrorException(2003,"密码错误");
 		}
 		return studentJpaRepository.findStudentByPhoneId(phoneId);
 	}
 	
 	@Override
-	public void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade) throws UserNotFoundException {
+	public void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade) throws NotFoundException {
 		Student stu = studentJpaRepository.findStudentByUserId(userId);
 		if (stu == null) {
-			throw new UserNotFoundException();
+			throw new NotFoundException(2002, "用户不存在");
 		}
 		//TODO:合并各种Exception
 		Major major = majorJpaRepository.findMajorByMajorId(majorId);
@@ -92,9 +92,9 @@ public class StudentServiceImpl implements StudentService {
 	
 	
 	@Override
-	public void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws CourseNotFoundException {
+	public void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws NotFoundException {
 		if (!courseJpaRepository.existsByCourseId(courseId)) {
-			throw new CourseNotFoundException();
+			throw new NotFoundException(3001, "课程不存在");
 		}
 		CourseComment courseComment = new CourseComment();
 		courseComment.setCommentMark(commentMark);

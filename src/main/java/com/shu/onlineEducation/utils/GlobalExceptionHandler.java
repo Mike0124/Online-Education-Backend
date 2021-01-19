@@ -14,63 +14,48 @@ public class GlobalExceptionHandler {
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     /**
-     * 找不到用户
+     * 某数据已存在
      */
-    @ExceptionHandler(UserNotFoundException.class)
+    @ExceptionHandler(ExistedException.class)
     @ResponseBody
-    public Result userNotFoundException(UserNotFoundException e){
-        logger.error("用户没找到：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.USER_NOT_EXIST);
+    public Result existedException(ExistedException e){
+        logger.error("发生业务异常！(已有该数据)原因是：【"+ e.getMessage() + "】");
+        for (ResultCode code :ResultCode.values()){
+            if (code.code().equals(e.getErrorCode())){
+                return Result.failure(code);
+            }
+        }
+        return Result.failure(ResultCode.PARAM_IS_INVALID);
     }
 
     /**
-     * 用户已存在
+     * 找不到某对象
      */
-    @ExceptionHandler(UserHasExistedException.class)
+    @ExceptionHandler(NotFoundException.class)
     @ResponseBody
-    public Result userHasExistedException(UserHasExistedException e){
-        logger.error("用户已存在：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.USER_HAS_EXISTED);
-    }
-
-    /**
-     * 找不到课程
-     */
-    @ExceptionHandler(CourseNotFoundException.class)
-    @ResponseBody
-    public Result courseNotFoundException(CourseNotFoundException e){
-        logger.error("课程不存在：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.COURSE_NOT_EXIST);
-    }
-
-    /**
-     * 找不到该偏好课程
-     */
-    @ExceptionHandler(CoursePreferNotFoundException.class)
-    @ResponseBody
-    public Result coursePreferNotFoundException(CoursePreferNotFoundException e){
-        logger.error("该偏好课程不存在：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.COURSE_PREFER_NOT_EXIST);
-    }
-
-    /**
-     * 找不到VIP课程
-     */
-    @ExceptionHandler(CourseVipNotFoundException.class)
-    @ResponseBody
-    public Result courseVipNotFoundException(CoursePreferNotFoundException e){
-        logger.error("VIP课程不存在：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.COURSE_VIP_NOT_EXIST);
+    public Result notFoundException(NotFoundException e){
+        logger.error("发生业务异常！(找不到数据)原因是：【"+ e.getMessage() + "】");
+        for (ResultCode code :ResultCode.values()){
+            if (code.code().equals(e.getErrorCode())){
+                return Result.failure(code);
+            }
+        }
+        return Result.failure(ResultCode.PARAM_IS_INVALID);
     }
 
     
     /**
-     * 密码错误
+     * 参数错误
      */
-    @ExceptionHandler(PassWordErrorException.class)
+    @ExceptionHandler(ParamErrorException.class)
     @ResponseBody
-    public Result classHasEnrolledException(PassWordErrorException e){
-        logger.error("登录密码错误：【" + e.getMessage() + "】");
-        return Result.failure(ResultCode.USER_LOGIN_ERROR);
+    public Result paramErrorException(ParamErrorException e){
+        logger.error("发生参数错误！原因是：【"+ e.getMessage() + "】");
+        for (ResultCode code :ResultCode.values()){
+            if (code.code().equals(e.getErrorCode())){
+                return Result.failure(code);
+            }
+        }
+        return Result.failure(ResultCode.PARAM_IS_INVALID);
     }
 }

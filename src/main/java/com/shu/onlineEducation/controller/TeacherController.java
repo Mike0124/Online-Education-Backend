@@ -1,11 +1,12 @@
 package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.entity.Teacher;
+import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.service.TeacherService;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserHasExistedException;
-import com.shu.onlineEducation.utils.ExceptionUtil.UserNotFoundException;
+import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.GlobalExceptionHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
@@ -51,7 +52,7 @@ public class TeacherController {
 //    })
     @ApiOperation(value = "验证码验证成功后在教师表中添加一项")
     @ResponseBody
-    public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws UserHasExistedException {
+    public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws ExistedException {
         teacherService.addUser(phoneId,password);
         logger.info("添加用户成功");
         return Result.success();
@@ -64,7 +65,8 @@ public class TeacherController {
 //    })
     @ApiOperation(value = "用户登录")
     @ResponseBody
-    public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws Exception {
+    public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password)
+            throws NotFoundException, ParamErrorException {
         Teacher teacher = teacherService.loginByPassword(phoneId,password);
         logger.info("登录成功");
         return Result.success(teacher);
@@ -75,7 +77,7 @@ public class TeacherController {
     @ApiImplicitParam(name = "user_id", value = "用户标识", required = true, paramType = "form", dataType = "String")
     @ApiOperation(value = "删除教师")
     @ResponseBody
-    public Result delete(@RequestParam("user_id") int userId) throws UserNotFoundException {
+    public Result delete(@RequestParam("user_id") int userId) throws NotFoundException {
         teacherService.deleteTeacherById(userId);
         logger.info("删除用户：id="+ userId);
         return Result.success();
@@ -86,7 +88,7 @@ public class TeacherController {
     @ResponseBody
     public Result complete(@RequestParam("user_id") int userId,@RequestParam("nickname") String nickname,
                            @RequestParam("sex") String sex, @RequestParam("school") String school,
-                           @RequestParam("major") String major)throws UserNotFoundException{
+                           @RequestParam("major") String major)throws NotFoundException{
         teacherService.completeTeacherInfo(userId,nickname,sex,school,major);
         logger.info("完善教师信息：id=" + userId);
         return Result.success();
