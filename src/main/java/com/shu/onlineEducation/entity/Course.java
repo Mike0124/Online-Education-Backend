@@ -34,11 +34,6 @@ public class Course {
 	@Column(name = "prefer_id", nullable = false)
 	private Integer preferId;
 	
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumn(name = "prefer_id", referencedColumnName = "prefer_id", insertable = false, updatable = false)
-	private Prefer prefer;
-	
 	@Column(name = "need_vip")
 	private Boolean needVip;
 	
@@ -53,9 +48,18 @@ public class Course {
 	
 	@Column(name = "course_watches")
 	private Integer courseWatches;
+
+	@Column(name = "teacher_id")
+	private Integer teacherId;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "prefer_id", referencedColumnName = "prefer_id", insertable = false, updatable = false)
+	private Prefer prefer;
 	
 	@ManyToOne
-	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id")
+	@JsonIgnore
+	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	private Teacher teacher;
 	
 	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "course")

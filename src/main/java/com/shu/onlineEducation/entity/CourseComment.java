@@ -23,18 +23,23 @@ public class CourseComment {
     
     @Column
     private Timestamp time;
+
+    @Column(name = "comment_mark")
+    private Integer commentMark;
+
+    @Column(name = "student_id")
+    private Integer studentId;
+
+    @Column(name = "course_id")
+    private Integer courseId;
     
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "student_id", referencedColumnName = "user_id")
+    @JoinColumn(name = "student_id", referencedColumnName = "user_id", insertable = false, updatable = false)
     private Student student;
     
     @ManyToOne
     @JsonIgnore
-    @JoinColumn(name = "course_id", referencedColumnName = "course_id")
+    @JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false)
     private Course course;
-    
-    
-    @Column(name = "comment_mark")
-    private int commentMark;
 }

@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -13,10 +14,14 @@ public class HomeworkFile {
 	@Column(name = "homework_file_id")
 	Integer homeworkFileId;
 	
-	@ManyToOne
-	@JoinColumn(name = "homework_id",referencedColumnName = "homework_id")
-	Homework homework;
-	
 	@Column(name = "file_url")
 	String fileUrl;
+
+	@Column(name = "homework_id")
+	Integer homeworkId;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "homework_id",referencedColumnName = "homework_id", insertable = false, updatable = false)
+	Homework homework;
 }

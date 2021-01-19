@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,11 +13,15 @@ public class TaskFile {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "task_file_id")
 	Integer taskFileId;
-	
-	@ManyToOne
-	@JoinColumn(name = "task_id",referencedColumnName = "task_id")
-	Task task;
+
+	@Column(name = "task_id")
+	Integer taskId;
 	
 	@Column(name = "file_url")
 	String fileUrl;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "task_id",referencedColumnName = "task_id", updatable = false, insertable = false)
+	Task task;
 }

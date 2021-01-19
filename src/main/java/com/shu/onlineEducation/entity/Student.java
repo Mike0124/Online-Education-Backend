@@ -39,11 +39,6 @@ public class Student {
     @Column(name = "major_id")
     Integer majorId;
     
-    @ManyToOne
-//    @JsonIgnore
-    @JoinColumn(name = "major_id",referencedColumnName = "major_id",insertable = false, updatable = false)
-    Major major;
-    
     @Column
     private Integer grade;
     
@@ -55,6 +50,10 @@ public class Student {
     
     @Column(name = "student_pic_url")
     private String studentPicUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "major_id",referencedColumnName = "major_id",insertable = false, updatable = false)
+    Major major;
 }
 
 

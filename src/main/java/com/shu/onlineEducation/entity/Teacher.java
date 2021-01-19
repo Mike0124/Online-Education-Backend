@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,10 +35,6 @@ public class Teacher {
 	@Column
 	private String school;
 	
-	//	@ManyToOne
-//	@JoinColumn(name = "major_id", referencedColumnName = "major_id")
-//	Major major;
-	
 	@Column(name = "major_id")
 	private String majorId;
 	
@@ -51,6 +48,10 @@ public class Teacher {
 	private Integer teacherStatus;
 	
 	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
+	@JsonIgnore
 	private Set<Course> courseSet;
-	
+
+	@ManyToOne
+	@JoinColumn(name = "major_id", referencedColumnName = "major_id", updatable = false, insertable = false)
+	Major major;
 }

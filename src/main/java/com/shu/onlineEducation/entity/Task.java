@@ -16,13 +16,6 @@ public class Task {
 	@Column(name = "task_id")
 	Integer taskId;
 	
-	@ManyToOne
-	@JoinColumns({
-			@JoinColumn(name = "course_id", referencedColumnName = "course_id"),
-			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id")
-	})
-	CourseChapter courseChapter;
-	
 	@Column(name = "task_name")
 	String taskName;
 	
@@ -33,6 +26,19 @@ public class Task {
 	
 	@Column(name = "end_time")
 	Timestamp endTime;
+
+	@Column(name = "course_id")
+	Integer courseId;
+
+	@Column(name = "chapter_id")
+	Integer chapterId;
+
+	@ManyToOne
+	@JoinColumns({
+			@JoinColumn(name = "course_id", referencedColumnName = "course_id", updatable = false, insertable = false),
+			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id", updatable = false, insertable = false)
+	})
+	CourseChapter courseChapter;
 	
 	public String getStartTime() {
 		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(startTime);

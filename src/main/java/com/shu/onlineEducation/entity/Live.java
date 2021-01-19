@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,9 +36,13 @@ public class Live {
 	
 	@Column(name = "live_address")
 	String address;
+
+	@Column(name = "teacher_id")
+	Integer teacherId;
 	
 	@ManyToOne
-	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id")
+	@JsonIgnore
+	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	Teacher teacher;
 	
 	public String getStartTime() {

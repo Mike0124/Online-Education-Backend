@@ -194,7 +194,7 @@ create table teacher_comment
     content      varchar(100)  not null,
     time         date          not null,
     student_id   int           not null,
-    course_id    int           not null,
+    teacher_id    int           not null,
     comment_mark int           not null,
     constraint comment_ibfk_1
         foreign key (student_id) references students (user_id)

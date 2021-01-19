@@ -17,8 +17,11 @@ public class Prefer {
 	
 	@Column(name = "prefer_content", nullable = false)
 	private String preferContent;
-	
+
+	@Column(name = "major_id")
+	private Integer majorId;
+
 	@ManyToOne
-	@JoinColumn(name = "major_id",referencedColumnName = "major_id")
+	@JoinColumn(name = "major_id",referencedColumnName = "major_id", insertable = false, updatable = false)
 	private Major major;
 }
