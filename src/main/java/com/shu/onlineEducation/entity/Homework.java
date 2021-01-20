@@ -27,9 +27,11 @@ public class Homework {
 	
 	@Column(name = "chapter_id")
 	Integer chapterId;
-	
+
+	@Column
 	Integer likes;
-	
+
+	@Column
 	String content;
 	
 	@Column(name = "commit_time")

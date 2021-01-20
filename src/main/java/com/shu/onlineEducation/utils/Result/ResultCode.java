@@ -18,9 +18,11 @@ public enum ResultCode {
     COURSE_VIP_NOT_EXIST(3003,"VIP课程不存在"),
     COURSE_VIP_PREFER_NOT_EXIST(3004, "此偏好VIP课程不存在"),
 
-    COURSE_HAS_ENROLLED(3101,"该学生已报名该课程");
+    COURSE_HAS_ENROLLED(3101,"该学生已报名该课程"),
 
-    //
+    //      专业错误: 4001-4999
+    MAJOR_HAS_EXISTED(4001, "专业已存在"),
+    MAJOR_NOT_FOUND(4002,"专业不存在");
 
 
     private Integer code;
