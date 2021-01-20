@@ -109,7 +109,7 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Override
 	public void collectPreference(int userId, int[] prefersId) {
-		studentPreferenceRepository.deleteAll();
+		studentPreferenceRepository.deleteAllByStudentId(userId);
 		for (int prefer : prefersId) {
 			StudentPreferencePK key = new StudentPreferencePK();
 			key.setStudentId(userId);
@@ -128,6 +128,4 @@ public class StudentServiceImpl implements StudentService {
 		}
 		return preferList;
 	}
-	
-	
 }

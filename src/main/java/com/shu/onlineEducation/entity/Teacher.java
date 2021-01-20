@@ -47,9 +47,9 @@ public class Teacher {
 	@Column(name = "teacher_status")
 	private Integer teacherStatus;
 	
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
-	@JsonIgnore
-	private Set<Course> courseSet;
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "teacher")
+//	@JsonIgnore
+//	private Set<Course> courseSet;
 
 	@ManyToOne
 	@JoinColumn(name = "major_id", referencedColumnName = "major_id", updatable = false, insertable = false)

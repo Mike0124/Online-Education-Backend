@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.model.request;
+package com.shu.onlineEducation.model.request.course;
 
 import lombok.Getter;
 import lombok.Setter;

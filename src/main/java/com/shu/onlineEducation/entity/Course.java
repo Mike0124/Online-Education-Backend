@@ -1,14 +1,12 @@
 package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Set;
 
 @Data
 @Entity
@@ -22,19 +20,19 @@ public class Course {
 	@Column(nullable = false)
 	private String name;
 	
-	@Column(name = "course_num", nullable = false)
+	@Column(name = "course_num")
 	private Integer num;
 	
 	@Column(nullable = false)
 	private String intro;
 	
-	@Column(nullable = false)
+	@Column
 	private Timestamp uploadTime;
 	
-	@Column(name = "prefer_id", nullable = false)
+	@Column(name = "prefer_id")
 	private Integer preferId;
 	
-	@ManyToOne
+	@ManyToOne(fetch=FetchType.EAGER)
 	@JsonIgnore
 	@JoinColumn(name = "prefer_id", referencedColumnName = "prefer_id", insertable = false, updatable = false)
 	private Prefer prefer;
@@ -61,9 +59,6 @@ public class Course {
 	@JsonIgnore
 	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id",insertable = false,updatable = false)
 	private Teacher teacher;
-	
-	@OneToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY, mappedBy = "course")
-	private Set<CourseChapter> courseChapterSet;
 	
 	public String getUploadTime() {
 		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(uploadTime);

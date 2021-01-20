@@ -20,7 +20,7 @@ public class Major {
 	@Column(name = "major_content", nullable = false)
 	private String majorContent;
 	
-	@OneToMany(mappedBy = "major")
-	@JsonIgnore
-	private Set<Prefer> prefers = new HashSet<>(0);
+//	@OneToMany(mappedBy = "major")
+//	@JsonIgnore
+//	private Set<Prefer> prefers = new HashSet<>(0);
 }

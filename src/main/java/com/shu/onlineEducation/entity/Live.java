@@ -40,6 +40,9 @@ public class Live {
 	@Column(name = "teacher_id")
 	Integer teacherId;
 	
+	@Column(name = "live_pic_url")
+	String livePicUrl;
+	
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)

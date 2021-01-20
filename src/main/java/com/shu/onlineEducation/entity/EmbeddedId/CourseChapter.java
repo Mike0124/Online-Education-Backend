@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity.EmbeddedId;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shu.onlineEducation.entity.Course;
 import lombok.Data;
 
@@ -14,6 +15,7 @@ public class CourseChapter implements Serializable {
 	CourseChapterPK courseChapterPK;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false)
 	private Course course;
 	
