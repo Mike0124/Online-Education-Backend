@@ -1,8 +1,8 @@
 package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.entity.Course;
-import com.shu.onlineEducation.model.request.course.CourseChapterVideoRequest;
-import com.shu.onlineEducation.model.request.course.CourseRequest;
+import com.shu.onlineEducation.common.dto.course.CourseChapterDto;
+import com.shu.onlineEducation.common.dto.course.CourseDto;
 import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.CourseService;
 import com.shu.onlineEducation.utils.DateUtil;
@@ -101,17 +101,17 @@ public class CourseController {
 	@PostMapping("/addCourse")
 	@ApiOperation(value = "添加课程")
 	@ResponseBody
-	public Result addCourse(@RequestParam String createTime, @RequestBody CourseRequest courseRequest) throws NotFoundException {
-		courseService.addCourse(courseRequest.getTeacherId(), courseRequest.getPreferId(), courseRequest.getName(), courseRequest.getIntro()
-				, DateUtil.stringToTimestamp(createTime), courseRequest.getCoursePicUrl(), courseRequest.isNeedVip());
+	public Result addCourse(@RequestParam String createTime, @RequestBody CourseDto courseDto) throws NotFoundException {
+		courseService.addCourse(courseDto.getTeacherId(), courseDto.getPreferId(), courseDto.getName(), courseDto.getIntro()
+				, DateUtil.stringToTimestamp(createTime), courseDto.getCoursePicUrl(), courseDto.isNeedVip());
 		return Result.success();
 	}
 	
 	@PostMapping("/completeCourseInfo")
 	@ApiOperation(value = "更新课程信息")
 	@ResponseBody
-	public Result completeCourseInfo(@RequestParam Integer courseId, @RequestBody CourseRequest courseRequest) throws NotFoundException {
-		courseService.updateCourse(courseId, courseRequest.getPreferId(), courseRequest.getName(), courseRequest.getIntro(), courseRequest.getCoursePicUrl(), courseRequest.isNeedVip());
+	public Result completeCourseInfo(@RequestParam Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
+		courseService.updateCourse(courseId, courseDto.getPreferId(), courseDto.getName(), courseDto.getIntro(), courseDto.getCoursePicUrl(), courseDto.isNeedVip());
 		return Result.success();
 	}
 	
@@ -143,8 +143,8 @@ public class CourseController {
 	@PostMapping("/addCourseChapterViedo")
 	@ApiOperation(value = "添加/更新课程章节视频")
 	@ResponseBody
-	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterVideoRequest courseChapterVideoRequest) throws NotFoundException {
-		courseService.addCourseChapterVideo(courseId, chapterId, videoId, courseChapterVideoRequest.getVideoUrl(), courseChapterVideoRequest.getVideoName());
+	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterDto courseChapterDto) throws NotFoundException {
+		courseService.addCourseChapterVideo(courseId, chapterId, videoId, courseChapterDto.getVideoUrl(), courseChapterDto.getVideoName());
 		return Result.success();
 	}
 	

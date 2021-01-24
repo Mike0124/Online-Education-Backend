@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity.EmbeddedId;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -12,6 +13,7 @@ public class CourseChapterVideo {
 	private CourseChapterVideoPK courseChapterVideoPK;
 	
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumns({
 			@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false),
 			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id", insertable = false, updatable = false)

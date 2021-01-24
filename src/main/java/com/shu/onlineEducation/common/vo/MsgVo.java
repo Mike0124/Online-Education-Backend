@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.model.livechat;
+package com.shu.onlineEducation.common.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import javax.websocket.Session;
 */
 @Data
 @AllArgsConstructor
-public class StudentInfo {
+public class MsgVo {
 	private Integer userId;
 	private Session session;
 	private String nickName;

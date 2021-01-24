@@ -1,8 +1,9 @@
 package com.shu.onlineEducation.controller;
 
-import com.shu.onlineEducation.model.request.course.CourseCommentRequest;
+import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
+import com.shu.onlineEducation.utils.JwtUtils;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -15,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("/api/Student")
 @Api(tags = "1-学生模块")
@@ -23,6 +26,9 @@ public class StudentController {
 	
 	@Autowired
 	private StudentService studentService;
+	
+	@Autowired
+	JwtUtils jwtUtils;
 	
 	@GetMapping("/getStudent")
 	@ApiOperation(value = "获取所有用户详情")
@@ -64,10 +70,13 @@ public class StudentController {
 //	})
 	@ApiOperation(value = "用户登录")
 	@ResponseBody
-	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password)
+	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, HttpServletResponse response)
 			throws NotFoundException, ParamErrorException {
 		Student student = studentService.loginByPassword(phoneId,password);
 		logger.info("登录成功");
+		String jwt = jwtUtils.generateToken(student.getUserId());
+		response.setHeader("Authorization", jwt);
+		response.setHeader("Access-control-Expose-Headers", "Authorization");
 		return Result.success(student);
 	}
 	
@@ -84,9 +93,9 @@ public class StudentController {
 	@PostMapping("/commentCourseByCourseId")
 	@ApiOperation(value = "根据课程Id对课程进行评价")
 	@ResponseBody
-	public Result comment(@RequestBody CourseCommentRequest courseCommentRequest) throws NotFoundException {
-		studentService.commentCourseByCourseId(courseCommentRequest.getComment(), courseCommentRequest.getCommentMark(),
-				courseCommentRequest.getCourseId(), courseCommentRequest.getStudentId());
+	public Result comment(@RequestBody CourseCommentDto courseCommentDto) throws NotFoundException {
+		studentService.commentCourseByCourseId(courseCommentDto.getComment(), courseCommentDto.getCommentMark(),
+				courseCommentDto.getCourseId(), courseCommentDto.getStudentId());
 		return Result.success();
 	}
 	

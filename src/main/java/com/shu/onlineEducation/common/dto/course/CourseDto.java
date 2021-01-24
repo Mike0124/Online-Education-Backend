@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.model.request.course;
+package com.shu.onlineEducation.common.dto.course;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -7,7 +7,7 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CourseRequest {
+public class CourseDto {
 	Integer teacherId;
 	Integer preferId;
 	String name;

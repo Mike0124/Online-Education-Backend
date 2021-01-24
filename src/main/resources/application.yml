@@ -34,3 +34,9 @@ pagehelper:
 #################################
 backend:
   max_rows_in_one_page : 10
+
+online-education:
+  jwt:
+    secret: f4e2e52034348f86b67cde581c0f9eb5
+    expire: 604800
+    header: Authorization

@@ -1,9 +1,9 @@
-package com.shu.onlineEducation.model.request;
+package com.shu.onlineEducation.common.dto;
 
 import lombok.Data;
 
 @Data
-public class MajorRequest {
+public class MajorDto {
     Integer majorId;
     String majorContent;
 }

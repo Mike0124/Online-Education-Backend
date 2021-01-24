@@ -5,7 +5,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.io.output.MsgVO;
-import com.shu.onlineEducation.model.livechat.StudentInfo;
+import com.shu.onlineEducation.common.vo.MsgVo;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;
@@ -38,7 +38,7 @@ public class WebSocketSever {
 	/**
 	 * 直播号 -> 学生列表
 	 */
-	private static final ConcurrentHashMap<String, Map<Integer, StudentInfo>> STUDENT_MAP = new ConcurrentHashMap<>();
+	private static final ConcurrentHashMap<String, Map<Integer, MsgVo>> STUDENT_MAP = new ConcurrentHashMap<>();
 	/**
 	 * 直播号 -> 教师会话
 	 */
@@ -86,9 +86,9 @@ public class WebSocketSever {
 	public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId, @PathParam("nickName") String nickName) {
 		switch (type) {
 			case 0:
-				Map<Integer, StudentInfo> onlineUserMap = STUDENT_MAP.computeIfAbsent(sid, k -> new HashMap<>(30));
-				StudentInfo studentInfo = new StudentInfo(userId, session, nickName, false);
-				onlineUserMap.put(userId, studentInfo);
+				Map<Integer, MsgVo> onlineUserMap = STUDENT_MAP.computeIfAbsent(sid, k -> new HashMap<>(30));
+				MsgVo msgVo = new MsgVo(userId, session, nickName, false);
+				onlineUserMap.put(userId, msgVo);
 				log.info("Connection connected");
 				log.info("sid: {}, studentList size: {}", sid, onlineUserMap.size());
 				break;
@@ -111,7 +111,7 @@ public class WebSocketSever {
 	public void onClose(@PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId) {
 		switch (type) {
 			case 0:
-				Map<Integer, StudentInfo> onlineUserMap = STUDENT_MAP.get(sid);
+				Map<Integer, MsgVo> onlineUserMap = STUDENT_MAP.get(sid);
 				onlineUserMap.remove(userId);
 				log.info("Connection closed");
 				log.info("sid: {}, sessionList size: {}", sid, onlineUserMap.size());

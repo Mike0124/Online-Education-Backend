@@ -2,7 +2,7 @@ package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.dao.MajorJpaRepository;
 import com.shu.onlineEducation.entity.Major;
-import com.shu.onlineEducation.model.request.MajorRequest;
+import com.shu.onlineEducation.common.dto.MajorDto;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @Slf4j
 @RestController
 @RequestMapping("/api/Major")
-@Api(tags = "专业模块")
+@Api(tags = "8-专业模块")
 public class MajorController {
 
     @Autowired
@@ -56,12 +56,12 @@ public class MajorController {
     @PostMapping("/updateMajor")
     @ApiOperation("更新专业信息")
     @ResponseBody
-    public Result updateMajor(@RequestBody MajorRequest majorRequest) throws NotFoundException{
-        if (!majorJpaRepository.existsByMajorId(majorRequest.getMajorId())){
+    public Result updateMajor(@RequestBody MajorDto majorDto) throws NotFoundException{
+        if (!majorJpaRepository.existsByMajorId(majorDto.getMajorId())){
             throw new NotFoundException(ResultCode.MAJOR_NOT_FOUND);
         }
-        Major major = majorJpaRepository.findMajorByMajorId(majorRequest.getMajorId());
-        major.setMajorContent(majorRequest.getMajorContent());
+        Major major = majorJpaRepository.findMajorByMajorId(majorDto.getMajorId());
+        major.setMajorContent(majorDto.getMajorContent());
         majorJpaRepository.saveAndFlush(major);
         return Result.success();
     }
