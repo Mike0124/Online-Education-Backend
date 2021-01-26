@@ -3,7 +3,8 @@ package com.shu.onlineEducation.controller;
 import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
-import com.shu.onlineEducation.utils.JwtUtils;
+import com.shu.onlineEducation.utils.JwtUtil;
+import com.shu.onlineEducation.utils.RedisUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -11,6 +12,7 @@ import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.GlobalExceptionHandler;
 import io.swagger.annotations.*;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,17 +20,22 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/Student")
 @Api(tags = "1-学生模块")
 public class StudentController {
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
-	
 	@Autowired
 	private StudentService studentService;
 	
 	@Autowired
-	JwtUtils jwtUtils;
+	private SmsController smsController;
+	
+	@Autowired
+	JwtUtil jwtUtil;
+	
+	@Autowired
+	RedisUtil redisUtil;
 	
 	@GetMapping("/getStudent")
 	@ApiOperation(value = "获取所有用户详情")
@@ -43,7 +50,7 @@ public class StudentController {
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
 		if (!studentService.phoneValid(phoneId)) {
-			//TODO 向手机发送短信验证码
+			log.info(smsController.sendCode(phoneId));
 			return Result.success();
 		} else {
 			return Result.failure(ResultCode.USER_HAS_EXISTED);
@@ -57,12 +64,17 @@ public class StudentController {
 //	})
 	@ApiOperation(value = "验证码验证成功后在学生表中添加一项")
 	@ResponseBody
-	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password) throws ExistedException {
-		studentService.addUser(phoneId, password);
-		logger.info("添加用户成功");
-		return Result.success();
+	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, @RequestParam("code") String code) throws ExistedException {
+		if(code.equals(redisUtil.get(phoneId))){
+			studentService.addUser(phoneId, password);
+			log.info("添加用户成功");
+			return Result.success();
+		}else{
+			return Result.failure(ResultCode.PARAM_IS_INVALID);
+		}
+		
 	}
-
+	
 	@PostMapping("/loginByPassword")
 //	@ApiImplicitParams({
 //			@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form", dataType = "String"),
@@ -72,11 +84,11 @@ public class StudentController {
 	@ResponseBody
 	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, HttpServletResponse response)
 			throws NotFoundException, ParamErrorException {
-		Student student = studentService.loginByPassword(phoneId,password);
-		logger.info("登录成功");
-		String jwt = jwtUtils.generateToken(student.getUserId());
+		Student student = studentService.loginByPassword(phoneId, password);
+		String jwt = jwtUtil.generateToken(student.getUserId());
 		response.setHeader("Authorization", jwt);
 		response.setHeader("Access-control-Expose-Headers", "Authorization");
+		log.info("登录成功");
 		return Result.success(student);
 	}
 	
@@ -86,10 +98,10 @@ public class StudentController {
 	@ResponseBody
 	public Result delete(@RequestParam("user_id") int userId) throws NotFoundException {
 		studentService.deleteStudentById(userId);
-		logger.info("删除用户：id=" + userId);
+		log.info("删除用户：id=" + userId);
 		return Result.success();
 	}
-
+	
 	@PostMapping("/commentCourseByCourseId")
 	@ApiOperation(value = "根据课程Id对课程进行评价")
 	@ResponseBody
@@ -107,7 +119,7 @@ public class StudentController {
 						   @RequestParam("major_id") int majorId, @RequestParam("grade") int grade)
 			throws NotFoundException {
 		studentService.completeStudent(userId, nickname, sex, school, majorId, grade);
-		logger.info("完善学生信息：id=" + userId);
+		log.info("完善学生信息：id=" + userId);
 		return Result.success();
 	}
 	

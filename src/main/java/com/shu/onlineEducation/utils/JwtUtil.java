@@ -17,7 +17,7 @@ import java.util.Date;
 @Data
 @Component
 @ConfigurationProperties(prefix = "online-education.jwt")
-public class JwtUtils {
+public class JwtUtil {
 	
 	private String secret;
 	private long expire;
