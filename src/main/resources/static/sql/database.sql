@@ -2,17 +2,17 @@ create table course
 (
     course_id       int auto_increment
         primary key,
-    name            varchar(20)          not null,
-    course_num      int                  null,
-    intro           varchar(400)         null,
-    upload_time     datetime             not null,
-    teacher_id      int                  not null,
-    prefer_id       int                  not null,
-    course_pic      mediumblob           null,
-    course_status   int        default 0 not null,
-    need_vip        tinyint(1) default 0 not null,
-    course_avg_mark decimal(2, 1)        null,
-    course_watches  int                  null
+    name            varchar(20)                          not null,
+    course_num      int                                  null,
+    intro           varchar(400)                         null,
+    upload_time     datetime   default CURRENT_TIMESTAMP null,
+    teacher_id      int                                  not null,
+    prefer_id       int                                  not null,
+    course_pic      mediumblob                           null,
+    course_status   int        default 0                 not null,
+    need_vip        tinyint(1) default 0                 not null,
+    course_avg_mark decimal(2, 1)                        null,
+    course_watches  int                                  null
 );
 
 create index course_prefer_prefer_id_fk
@@ -46,12 +46,12 @@ create table course_comment
 (
     comment_id   int auto_increment
         primary key,
-    likes        int default 0 not null,
-    content      varchar(100)  not null,
-    time         datetime      not null,
-    student_id   int           not null,
-    course_id    int           not null,
-    comment_mark int           not null
+    likes        int      default 0                 not null,
+    content      varchar(100)                       null,
+    time         datetime default CURRENT_TIMESTAMP null,
+    student_id   int                                not null,
+    course_id    int                                not null,
+    comment_mark int      default 0                 null
 );
 
 create index cid
@@ -64,29 +64,26 @@ create table course_watch_record
 (
     id         int auto_increment
         primary key,
-    course_id  int      not null,
-    student_id int      not null,
-    watch_time datetime not null,
-    chapter_id int      null,
-    video_id   int      not null,
-    time       datetime not null
+    course_id  int                                not null,
+    student_id int                                not null,
+    watch_time datetime default CURRENT_TIMESTAMP null,
+    chapter_id int                                null,
+    video_id   int                                not null,
+    time       datetime                           not null
 );
 
 create table homework
 (
     homework_id int auto_increment
         primary key,
-    content     varchar(400)  not null,
-    likes       int default 0 not null,
-    commit_time datetime      not null,
-    student_id  int           not null,
-    task_id     int           not null,
-    course_id   int           null,
-    chapter_id  int           null
+    content     varchar(400)                       null,
+    likes       int      default 0                 null,
+    commit_time datetime default CURRENT_TIMESTAMP null,
+    student_id  int                                not null,
+    task_id     int                                not null,
+    mark        int      default 0                 null,
+    reply       varchar(100)                       null
 );
-
-create index homework_course_chapter_course_id_chapter_id_fk
-    on homework (course_id, chapter_id);
 
 create index homework_task_task_id_fk
     on homework (task_id);
