@@ -1,9 +1,7 @@
 package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
@@ -17,8 +15,7 @@ import java.text.SimpleDateFormat;
  */
 @Entity
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
+@Table(name = "live")
 public class Live {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,25 +28,33 @@ public class Live {
 	@Column(name = "live_intro")
 	String intro;
 	
-	@Column(name = "live_start_time")
-	Timestamp startTime;
+	@Column(name = "live_date")
+	Timestamp liveDate;
 	
-	@Column(name = "live_address")
-	String address;
+	@Column(name = "live_address_id")
+	Integer addressId;
 
 	@Column(name = "teacher_id")
 	Integer teacherId;
 	
 	@Column(name = "live_pic_url")
 	String livePicUrl;
+
+	@Column(name = "live_arrange")
+	Integer liveArrange;
 	
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	Teacher teacher;
+
+	@ManyToOne
+	@JsonIgnore
+	@JoinColumn(name = "live_address_id", referencedColumnName = "live_address_id", insertable = false, updatable = false)
+	LiveAddress liveAddress;
 	
 	public String getStartTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(startTime);
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(liveDate);
 	}
 	
 }
