@@ -17,13 +17,13 @@ public enum ResultCode {
     COURSE_PREFER_NOT_EXIST(3002,"此偏好课程不存在"),
     COURSE_VIP_NOT_EXIST(3003,"VIP课程不存在"),
     COURSE_VIP_PREFER_NOT_EXIST(3004, "此偏好VIP课程不存在"),
-
-    COURSE_HAS_ENROLLED(3101,"该学生已报名该课程"),
-
     //      专业错误: 4001-4999
     MAJOR_HAS_EXISTED(4001, "专业已存在"),
-    MAJOR_NOT_FOUND(4002,"专业不存在");
-
+    MAJOR_NOT_FOUND(4002,"专业不存在"),
+    //      作业错误: 5001-5999
+    TASK_HAS_CLOSED(5001,"任务已过期"),
+    TEACHER_HAS_CORRECTED(5002,"教师已批改");
+    
 
     private Integer code;
     private String message;

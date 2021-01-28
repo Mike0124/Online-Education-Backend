@@ -1,17 +1,19 @@
 package com.shu.onlineEducation.service.impl;
 
+import com.shu.onlineEducation.common.dto.StudentDto;
+import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.dao.*;
 import com.shu.onlineEducation.entity.*;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePK;
 import com.shu.onlineEducation.service.StudentService;
+import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,8 +31,11 @@ public class StudentServiceImpl implements StudentService {
 	private CourseCommentJpaRepository courseCommentJpaRepository;
 	@Autowired
 	private MajorJpaRepository majorJpaRepository;
-	@Autowired
-	private PreferJpaRepository preferJpaRepository;
+	
+	@Override
+	public Student getStudentById(Integer userId) {
+		return studentJpaRepository.findByUserId(userId);
+	}
 	
 	@Override
 	public List<Student> getAllStudents() {
@@ -54,7 +59,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public void deleteStudentById(int userId) throws NotFoundException {
+	public void deleteStudentById(Integer userId) throws NotFoundException {
 		if (!studentJpaRepository.existsByUserId(userId)) {
 			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
 		}
@@ -63,54 +68,59 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Override
 	public Student loginByPassword(String phoneId, String password) throws NotFoundException, ParamErrorException {
-		if (!studentJpaRepository.existsByPhoneId(phoneId)) {
+		Student student = studentJpaRepository.findByPhoneId(phoneId);
+		if (student == null) {
 			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
 		}
-		if (!password.equals(studentJpaRepository.findStudentByPhoneId(phoneId).getPassword())) {
+		if (!password.equals(student.getPassword())) {
 			throw new ParamErrorException(ResultCode.USER_LOGIN_ERROR);
 		}
-		return studentJpaRepository.findStudentByPhoneId(phoneId);
+		return studentJpaRepository.findByPhoneId(phoneId);
 	}
 	
 	@Override
-	public void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade) throws NotFoundException {
-		Student stu = studentJpaRepository.findStudentByUserId(userId);
+	public void completeStudent(Integer userId, StudentDto studentDto) throws NotFoundException {
+		Student stu = studentJpaRepository.findByUserId(userId);
+		Major major = majorJpaRepository.findMajorByMajorId(studentDto.getMajorId());
 		if (stu == null) {
 			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
 		}
-		Major major = majorJpaRepository.findMajorByMajorId(majorId);
-		stu.setNickName(nickname);
-		stu.setSex(sex);
-		stu.setSchool(school);
-		stu.setMajor(major);
+		if (major == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		stu.setNickName(studentDto.getNickname());
+		stu.setSex(studentDto.getSex());
+		stu.setSchool(studentDto.getSchool());
 		stu.setMajorId(major.getMajorId());
-		stu.setGrade(grade);
+		stu.setGrade(studentDto.getGrade());
+		stu.setStudentPicUrl(studentDto.getPicUrl());
 		studentJpaRepository.save(stu);
 	}
 	
 	
 	@Override
-	public void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws NotFoundException {
-		if (!courseJpaRepository.existsByCourseId(courseId)) {
-			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
+	public void commentCourseByCourseId(CourseCommentDto courseCommentDto) throws NotFoundException {
+		Course course = courseJpaRepository.findCourseByCourseId(courseCommentDto.getCourseId());
+		Student student = studentJpaRepository.findByUserId(courseCommentDto.getStudentId());
+		if (student == null || course == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
 		CourseComment courseComment = new CourseComment();
-		courseComment.setCommentMark(commentMark);
-		courseComment.setContent(comment);
+		courseComment.setCommentMark(courseCommentDto.getCommentMark());
+		courseComment.setContent(courseCommentDto.getComment());
 		courseComment.setLikes(0);
-		courseComment.setTime(new Timestamp(System.currentTimeMillis()));
-		courseComment.setCourse(courseJpaRepository.findCourseByCourseId(courseId));
-		courseComment.setStudent(studentJpaRepository.findStudentByUserId(studentId));
+		courseComment.setTime(DateUtil.getNowTimeStamp());
+		courseComment.setCourse(course);
+		courseComment.setStudent(student);
 		courseCommentJpaRepository.save(courseComment);
-		Course course = courseJpaRepository.findCourseByCourseId(courseId);
-		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(courseId));
+		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(course.getCourseId()));
 		courseJpaRepository.save(course);
 	}
 	
 	@Override
-	public void collectPreference(int userId, int[] prefersId) {
+	public void collectPreference(Integer userId, Integer[] prefersId) {
 		studentPreferenceRepository.deleteAllByStudentId(userId);
-		for (int prefer : prefersId) {
+		for (Integer prefer : prefersId) {
 			StudentPreferencePK key = new StudentPreferencePK();
 			key.setStudentId(userId);
 			key.setPreferId(prefer);
@@ -121,9 +131,9 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public List<Integer> findAllPreferences(int userId) {
+	public List<Integer> getAllPreferences(Integer userId) {
 		List<Integer> preferList = new ArrayList<>();
-		for (StudentPreference studentPreference:studentPreferenceRepository.findAllByStudentId(userId)) {
+		for (StudentPreference studentPreference : studentPreferenceRepository.findAllByStudentId(userId)) {
 			preferList.add(studentPreference.getStudentPreferencePK().getPreferId());
 		}
 		return preferList;

@@ -7,7 +7,8 @@ import lombok.ToString;
 @Getter
 @Setter
 @ToString
-public class CourseChapterDto {
+public class CourseChapterVideoDto {
+	Integer videoId;
 	String videoUrl;
 	String videoName;
 }

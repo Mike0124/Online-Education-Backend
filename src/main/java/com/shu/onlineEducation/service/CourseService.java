@@ -1,10 +1,13 @@
 package com.shu.onlineEducation.service;
 
+import com.shu.onlineEducation.common.dto.course.CourseDisplayDto;
+import com.shu.onlineEducation.common.dto.course.CourseDto;
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideo;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.sql.Timestamp;
 import java.util.List;
@@ -24,13 +27,13 @@ public interface CourseService {
 	
 	List<Course> getAllCoursesByTeacherId(Pageable pageable, int teacherId);//获取某老师的所有课程
 	
-	void addCourse(Integer teacherId, Integer preferId, String name, String intro, Timestamp uploadTime, String coursePicUrl, boolean needVip) throws NotFoundException;
+	void addCourse(CourseDto courseDto) throws NotFoundException;
 	
-	void updateCourse(Integer courseId, Integer preferId, String name, String intro, String coursePicUrl, boolean needVip) throws NotFoundException;
+	void updateCourse(Integer courseId, CourseDto courseDto) throws NotFoundException;
 	
 	/*课程章节*/
 	
-	List<CourseChapter> getAllCourseChapterByCourseId(Pageable pageable, int courseId) throws NotFoundException;
+	List<CourseChapter> getAllCourseChapterByCourseId(int courseId) throws NotFoundException;
 	
 	void addCourseChapter(Integer courseId, Integer chapterId, String intro) throws NotFoundException;
 	
@@ -43,4 +46,6 @@ public interface CourseService {
 	void deleteCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId);
 	
 	void addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, String videoUrl, String videoName) throws NotFoundException;
+	
+	CourseDisplayDto getCourseDisplay(Integer courseId) throws NotFoundException;
 }

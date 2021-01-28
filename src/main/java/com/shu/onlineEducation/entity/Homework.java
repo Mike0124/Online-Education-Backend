@@ -22,28 +22,20 @@ public class Homework {
 	@Column(name = "task_id")
 	Integer taskId;
 	
-	@Column(name = "course_id")
-	Integer courseId;
+	@Column
+	Integer mark;
 	
-	@Column(name = "chapter_id")
-	Integer chapterId;
-
+	@Column
+	String reply;
+	
 	@Column
 	Integer likes;
-
+	
 	@Column
 	String content;
 	
 	@Column(name = "commit_time")
-	Timestamp commitTime;
-	
-	@ManyToOne
-	@JsonIgnore
-	@JoinColumns({
-			@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false),
-			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id", insertable = false, updatable = false)
-	})
-	CourseChapter courseChapter;
+	String commitTime;
 	
 	@ManyToOne
 	@JsonIgnore

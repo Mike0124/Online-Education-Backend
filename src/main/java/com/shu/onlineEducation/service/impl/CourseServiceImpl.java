@@ -1,25 +1,26 @@
 package com.shu.onlineEducation.service.impl;
 
-import com.shu.onlineEducation.dao.CourseChapterJpaRepository;
-import com.shu.onlineEducation.dao.CourseChapterVideoJpaRepository;
-import com.shu.onlineEducation.dao.CourseJpaRepository;
-import com.shu.onlineEducation.dao.TeacherJpaRepository;
+import com.shu.onlineEducation.common.dto.course.CourseDisplayDto;
+import com.shu.onlineEducation.common.dto.course.CourseDto;
+import com.shu.onlineEducation.dao.*;
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterPK;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideo;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideoPK;
+import com.shu.onlineEducation.entity.Prefer;
+import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.service.CourseService;
+import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.*;
 
 @Slf4j
 @Service
@@ -37,6 +38,11 @@ public class CourseServiceImpl implements CourseService {
 	@Autowired
 	private CourseChapterVideoJpaRepository courseChapterVideoJpaRepository;
 	
+	@Autowired
+	private PreferJpaRepository preferJpaRepository;
+	
+	@Autowired
+	private TaskJpaRepository taskJpaRepository;
 	
 	@Override
 	public List<Course> getAllCourses() {
@@ -74,44 +80,45 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
-	public void addCourse(Integer teacherId, Integer preferId, String name, String intro, Timestamp uploadTime, String coursePicUrl, boolean needVip) throws NotFoundException {
+	public void addCourse(CourseDto courseDto) throws NotFoundException {
+		Teacher teacher = teacherJpaRepository.findTeacherByUserId(courseDto.getTeacherId());
+		Prefer prefer = preferJpaRepository.findPreferByPreferId(courseDto.getPreferId());
+		if (teacher == null || prefer == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
 		Course course = new Course();
-		course.setName(name);
-		try {
-			course.setTeacherId(teacherId);
-			course.setPreferId(preferId);
-		} catch (DataIntegrityViolationException e) {
-			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
-		}
-		course.setIntro(intro);
+		course.setName(courseDto.getName());
+		course.setTeacherId(teacher.getUserId());
+		course.setPreferId(prefer.getPreferId());
+		course.setIntro(courseDto.getIntro());
 		course.setStatus(0);
-		course.setNeedVip(needVip);
-		course.setUploadTime(uploadTime);
-		course.setCoursePic(coursePicUrl);
+		course.setNeedVip(courseDto.getNeedVip());
+		course.setUploadTime(DateUtil.getNowTimeStamp());
+		course.setCoursePic(courseDto.getCoursePicUrl());
 		courseJpaRepository.saveAndFlush(course);
 	}
 	
 	@Override
-	public void updateCourse(Integer courseId, Integer preferId, String name, String intro, String coursePicUrl, boolean needVip) throws NotFoundException {
-		Course course = courseJpaRepository.findCourseByCourseId(courseId);
-		course.setName(name);
-		try {
-			course.setPreferId(preferId);
-		} catch (DataIntegrityViolationException e) {
+	public void updateCourse(Integer courseId, CourseDto courseDto) throws NotFoundException {
+		Prefer prefer = preferJpaRepository.findPreferByPreferId(courseDto.getPreferId());
+		if (prefer == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
-		course.setIntro(intro);
-		course.setNeedVip(needVip);
-		course.setCoursePic(coursePicUrl);
+		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		course.setName(courseDto.getName());
+		course.setPreferId(prefer.getPreferId());
+		course.setIntro(courseDto.getIntro());
+		course.setNeedVip(courseDto.getNeedVip());
+		course.setCoursePic(courseDto.getCoursePicUrl());
 		courseJpaRepository.saveAndFlush(course);
 	}
 	
 	@Override
-	public List<CourseChapter> getAllCourseChapterByCourseId(Pageable pageable, int courseId) throws NotFoundException {
+	public List<CourseChapter> getAllCourseChapterByCourseId(int courseId) throws NotFoundException {
 		if (!courseJpaRepository.existsByCourseId(courseId)) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
-		return courseChapterJpaRepository.findAllByCourseId(pageable, courseId);
+		return courseChapterJpaRepository.findAllByCourseId(courseId);
 	}
 	
 	@Override
@@ -151,5 +158,21 @@ public class CourseServiceImpl implements CourseService {
 		} else {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
+	}
+	
+	@Override
+	public CourseDisplayDto getCourseDisplay(Integer courseId) throws NotFoundException {
+		if (!courseJpaRepository.existsByCourseId(courseId)) {
+			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
+		}
+		CourseDisplayDto courseDisplayDto = new CourseDisplayDto();
+		List<CourseChapter> courseChapterList = courseChapterJpaRepository.findAllByCourseId(courseId);
+		for (CourseChapter courseChapter : courseChapterList) {
+			Map<String, List> map = new LinkedHashMap<>();
+			map.put("VideoList", courseChapterVideoJpaRepository.findByCourseChapter(courseChapter));
+			map.put("TaskList", taskJpaRepository.findByCourseChapter(courseChapter));
+			courseDisplayDto.put(courseChapter, map);
+		}
+		return courseDisplayDto;
 	}
 }

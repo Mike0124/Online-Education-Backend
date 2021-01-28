@@ -1,11 +1,10 @@
 package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.entity.Course;
-import com.shu.onlineEducation.common.dto.course.CourseChapterDto;
+import com.shu.onlineEducation.common.dto.course.CourseChapterVideoDto;
 import com.shu.onlineEducation.common.dto.course.CourseDto;
 import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.CourseService;
-import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -38,7 +37,7 @@ public class CourseController {
 	@PostMapping("/getCourseByPreferId")
 	@ApiOperation(value = "获取此偏好的所有课程,1表示按时间最新排序，2表示按课程评分排序，3表示按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByPreferId(int page, int sort, int preferId) throws NotFoundException {
+	public Result getCourseByPreferId(Integer page, Integer sort, Integer preferId) throws NotFoundException {
 		Pageable pageable;
 		if (sort == 1) {
 			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
@@ -56,7 +55,7 @@ public class CourseController {
 	@PostMapping("/getCourseByNeedVipAndPreferId")
 	@ApiOperation(value = "获取此偏好的所有免费/付费课程,1表示按时间最新排序，2表示按课程评分排序，3表示按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByNeedVipAndPreferId(int page, int sort, int preferId, boolean needVip) throws NotFoundException {
+	public Result getCourseByNeedVipAndPreferId(Integer page, Integer sort, Integer preferId, Boolean needVip) throws NotFoundException {
 		Pageable pageable;
 		if (sort == 1) {
 			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
@@ -70,18 +69,12 @@ public class CourseController {
 		}
 		return Result.failure(ResultCode.PARAM_IS_INVALID);
 	}
-
-
-//	@PostMapping("/getAllCourseNeedVip")
-//	@ApiOperation(value = "获取所有付费课程")
-//	public Result getAllCourseNeedVip() throws NotFoundException {
-//		return Result.success(courseService.getAllCoursesByNeedVip(true));
-//	}
+	
 	
 	@PostMapping("/getCourseByTeacherId")
 	@ApiOperation(value = "获取老师所有课程信息")
 	@ResponseBody
-	public Result getCourseByTeacherId(int page, int sort, int teacherId) {
+	public Result getCourseByTeacherId(Integer page, Integer sort, Integer teacherId) {
 		Pageable pageable;
 		if (sort == 1) {
 			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
@@ -94,6 +87,12 @@ public class CourseController {
 			return Result.success(courseService.getAllCoursesByTeacherId(pageable, teacherId));
 		}
 		return Result.failure(ResultCode.PARAM_IS_INVALID);
+	}
+	@PostMapping("/getCourseDisplay")
+	@ApiOperation(value = "获取课程展示信息")
+	@ResponseBody
+	public Result getCourseDisplay(Integer courseId) throws NotFoundException {
+		return Result.success(courseService.getCourseDisplay(courseId));
 	}
 	
 	//-----管理员、教师------
@@ -101,9 +100,8 @@ public class CourseController {
 	@PostMapping("/addCourse")
 	@ApiOperation(value = "添加课程")
 	@ResponseBody
-	public Result addCourse(@RequestParam String createTime, @RequestBody CourseDto courseDto) throws NotFoundException {
-		courseService.addCourse(courseDto.getTeacherId(), courseDto.getPreferId(), courseDto.getName(), courseDto.getIntro()
-				, DateUtil.stringToTimestamp(createTime), courseDto.getCoursePicUrl(), courseDto.isNeedVip());
+	public Result addCourse(@RequestBody CourseDto courseDto) throws NotFoundException {
+		courseService.addCourse(courseDto);
 		return Result.success();
 	}
 	
@@ -111,7 +109,7 @@ public class CourseController {
 	@ApiOperation(value = "更新课程信息")
 	@ResponseBody
 	public Result completeCourseInfo(@RequestParam Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
-		courseService.updateCourse(courseId, courseDto.getPreferId(), courseDto.getName(), courseDto.getIntro(), courseDto.getCoursePicUrl(), courseDto.isNeedVip());
+		courseService.updateCourse(courseId,courseDto);
 		return Result.success();
 	}
 	
@@ -124,12 +122,11 @@ public class CourseController {
 		return Result.success();
 	}
 	
-	@GetMapping("/getCourseChapter/{courseId}/{page}")
+	@GetMapping("/getCourseChapter/{courseId}")
 	@ApiOperation(value = "获取该课程所有章节")
 	@ResponseBody
-	public Result getCourseChapterByCourseId(int page, Integer courseId) throws NotFoundException {
-		Pageable pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.ASC, "chapter_id"));
-		return Result.success(courseService.getAllCourseChapterByCourseId(pageable, courseId));
+	public Result getCourseChapterByCourseId(Integer courseId) throws NotFoundException {
+		return Result.success(courseService.getAllCourseChapterByCourseId(courseId));
 	}
 	
 	/*课程章节视频*/
@@ -143,8 +140,8 @@ public class CourseController {
 	@PostMapping("/addCourseChapterViedo")
 	@ApiOperation(value = "添加/更新课程章节视频")
 	@ResponseBody
-	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterDto courseChapterDto) throws NotFoundException {
-		courseService.addCourseChapterVideo(courseId, chapterId, videoId, courseChapterDto.getVideoUrl(), courseChapterDto.getVideoName());
+	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterVideoDto courseChapterVideoDto) throws NotFoundException {
+		courseService.addCourseChapterVideo(courseId, chapterId, videoId, courseChapterVideoDto.getVideoUrl(), courseChapterVideoDto.getVideoName());
 		return Result.success();
 	}
 	
@@ -160,7 +157,7 @@ public class CourseController {
 	@PostMapping("/updateCourseStatus")
 	@ApiOperation(value = "更新课程状态")
 	@ResponseBody
-	public Result updateCourseStatus(int courseId, int status) throws NotFoundException {
+	public Result updateCourseStatus(Integer courseId, Integer status) throws NotFoundException {
 		courseService.updateCourseStatusById(courseId, status);
 		return Result.success();
 	}
@@ -168,7 +165,7 @@ public class CourseController {
 	@PostMapping("/deleteCourseById")
 	@ApiOperation(value = "删除课程")
 	@ResponseBody
-	public Result deleteCourseById(int courseId){
+	public Result deleteCourseById(Integer courseId) {
 		courseService.deleteCourseById(courseId);
 		return Result.success();
 	}
@@ -176,7 +173,7 @@ public class CourseController {
 	@PostMapping("/deleteCourseChapter")
 	@ApiOperation(value = "删除课程章节")
 	@ResponseBody
-	public Result deleteCourseChapter(Integer courseId, Integer chapterId){
+	public Result deleteCourseChapter(Integer courseId, Integer chapterId) {
 		courseService.deleteCourseChapter(courseId, chapterId);
 		return Result.success();
 	}

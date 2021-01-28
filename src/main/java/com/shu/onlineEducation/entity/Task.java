@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import lombok.Data;
 
@@ -34,6 +35,7 @@ public class Task {
 	Integer chapterId;
 
 	@ManyToOne
+	@JsonIgnore
 	@JoinColumns({
 			@JoinColumn(name = "course_id", referencedColumnName = "course_id", updatable = false, insertable = false),
 			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id", updatable = false, insertable = false)

@@ -13,5 +13,5 @@ public class CourseDto {
 	String name;
 	String intro;
 	String coursePicUrl;
-	boolean needVip;
+	Boolean needVip;
 }

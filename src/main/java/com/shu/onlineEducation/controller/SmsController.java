@@ -35,16 +35,15 @@ public class SmsController {
 		code = UUID.randomUUID().toString().substring(0, 4);
 		
 		// 发送短信
-		Map<String, Object> codeMap = new HashMap<>();
+		Map<String, Object> codeMap = new HashMap<>(5);
 		codeMap.put("code", code);
-		Boolean success = smsService.sendMessage(phone, codeMap);
 		
-		if (success) {
-			// 如果发送成功，则将生成的4位随机验证码存入redis缓存,5分钟后过期
+		// 如果发送成功，则将生成的4位随机验证码存入redis缓存,5分钟后过期
+		if (smsService.sendMessage(phone, codeMap)) {
 			redisUtil.set(phone, code, 5 * 60);
-			return phone + " ： " + code + "发送成功！";
+			return phone + " : " + code + "发送成功！";
 		} else {
-			return phone + " ： " + code + "发送失败！";
+			return phone + " : " + code + "发送失败！";
 		}
 	}
 }

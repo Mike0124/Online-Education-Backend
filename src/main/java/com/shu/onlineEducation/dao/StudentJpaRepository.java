@@ -15,7 +15,7 @@ public interface StudentJpaRepository extends JpaRepository<Student, Integer>, J
     @Transactional
     void deleteStudentByUserId(int userId);
 
-    Student findStudentByUserId(int userId);
+    Student findByUserId(int userId);
 
-    Student findStudentByPhoneId(String phoneId);
+    Student findByPhoneId(String phoneId);
 }

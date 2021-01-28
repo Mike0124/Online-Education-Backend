@@ -4,8 +4,9 @@ import javax.websocket.Session;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.alibaba.fastjson.JSON;
-import com.shu.onlineEducation.io.output.MsgVO;
 import com.shu.onlineEducation.common.vo.MsgVo;
+import com.shu.onlineEducation.common.vo.StudentChatVo;
+import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;
@@ -38,7 +39,7 @@ public class WebSocketSever {
 	/**
 	 * 直播号 -> 学生列表
 	 */
-	private static final ConcurrentHashMap<String, Map<Integer, MsgVo>> STUDENT_MAP = new ConcurrentHashMap<>();
+	private static final ConcurrentHashMap<String, Map<Integer, StudentChatVo>> STUDENT_MAP = new ConcurrentHashMap<>();
 	/**
 	 * 直播号 -> 教师会话
 	 */
@@ -53,7 +54,7 @@ public class WebSocketSever {
 	@OnMessage
 	public void onMessage(@PathParam("sid") String sid, String message) {
 		// json字符串转对象
-		MsgVO msg = JSON.parseObject(message, MsgVO.class);
+		MsgVo msg = JSON.parseObject(message, MsgVo.class);
 		// json对象转字符串
 		String text = JSON.toJSONString(msg);
 		// 先一个群组内的成员发送消息
@@ -86,9 +87,9 @@ public class WebSocketSever {
 	public void onOpen(Session session, @PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId, @PathParam("nickName") String nickName) {
 		switch (type) {
 			case 0:
-				Map<Integer, MsgVo> onlineUserMap = STUDENT_MAP.computeIfAbsent(sid, k -> new HashMap<>(30));
-				MsgVo msgVo = new MsgVo(userId, session, nickName, false);
-				onlineUserMap.put(userId, msgVo);
+				Map<Integer, StudentChatVo> onlineUserMap = STUDENT_MAP.computeIfAbsent(sid, k -> new HashMap<>(30));
+				StudentChatVo studentChatVo = new StudentChatVo(userId, session, nickName,false);
+				onlineUserMap.put(userId, studentChatVo);
 				log.info("Connection connected");
 				log.info("sid: {}, studentList size: {}", sid, onlineUserMap.size());
 				break;
@@ -111,7 +112,7 @@ public class WebSocketSever {
 	public void onClose(@PathParam("sid") String sid, @PathParam("type") Integer type, @PathParam("userId") Integer userId) {
 		switch (type) {
 			case 0:
-				Map<Integer, MsgVo> onlineUserMap = STUDENT_MAP.get(sid);
+				Map<Integer, StudentChatVo> onlineUserMap = STUDENT_MAP.get(sid);
 				onlineUserMap.remove(userId);
 				log.info("Connection closed");
 				log.info("sid: {}, sessionList size: {}", sid, onlineUserMap.size());
@@ -149,9 +150,7 @@ public class WebSocketSever {
 		}
 		Map<String, Object> map = new HashMap<>(3);
 		Map<Integer, String> student = new HashMap<>(30);
-		STUDENT_MAP.get(sid).forEach((key, value) -> {
-			student.put(key,value.getNickName());
-		});
+		STUDENT_MAP.get(sid).forEach((key, value) -> student.put(key,value.getNickName()));
 		map.put("student", student);
 		map.put("count", STUDENT_MAP.get(sid).size());
 		return Result.success(map);

@@ -37,7 +37,7 @@ public class Student {
 	private String school;
 	
 	@Column(name = "major_id")
-	Integer majorId;
+	private Integer majorId;
 	
 	@Column
 	private Integer grade;

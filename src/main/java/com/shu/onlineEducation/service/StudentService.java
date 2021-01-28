@@ -1,12 +1,14 @@
 package com.shu.onlineEducation.service;
 
-import com.shu.onlineEducation.entity.Prefer;
+import com.shu.onlineEducation.common.dto.StudentDto;
+import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 
 import java.util.List;
 
 public interface StudentService {
+	Student getStudentById(Integer userId);
 	
 	List<Student> getAllStudents();         //获取所有学生信息
 	
@@ -16,15 +18,14 @@ public interface StudentService {
 	
 	Student loginByPassword(String phoneId, String password) throws ParamErrorException, NotFoundException;
 	
-	void deleteStudentById(int userId) throws NotFoundException;        //删除学生
+	void deleteStudentById(Integer userId) throws NotFoundException;        //删除学生
 	
-	void completeStudent(int userId, String nickname, String sex, String school, int majorId, int grade)
-			throws NotFoundException;       //完善学生信息
-
+	void completeStudent(Integer userId, StudentDto studentDto)throws NotFoundException;       //完善学生信息
+	
 	//学生评论课程
-	void commentCourseByCourseId(String comment, int commentMark, int courseId, int studentId) throws NotFoundException;
+	void commentCourseByCourseId(CourseCommentDto courseCommentDto) throws NotFoundException;
 	
-	void collectPreference(int userId, int[] prefersId);
+	void collectPreference(Integer userId, Integer[] prefersId);
 	
-	List<Integer> findAllPreferences(int userId);
+	List<Integer> getAllPreferences(Integer userId);
 }
