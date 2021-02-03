@@ -125,7 +125,7 @@ public class CourseController {
 	@GetMapping("/getCourseChapter/{courseId}")
 	@ApiOperation(value = "获取该课程所有章节")
 	@ResponseBody
-	public Result getCourseChapterByCourseId(Integer courseId) throws NotFoundException {
+	public Result getCourseChapterByCourseId(@PathVariable("courseId") Integer courseId) throws NotFoundException {
 		return Result.success(courseService.getAllCourseChapterByCourseId(courseId));
 	}
 	

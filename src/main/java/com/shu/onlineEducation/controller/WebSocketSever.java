@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.common.vo.MsgVo;
 import com.shu.onlineEducation.common.vo.StudentChatVo;
-import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;

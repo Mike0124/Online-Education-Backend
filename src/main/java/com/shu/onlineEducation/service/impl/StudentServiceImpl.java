@@ -14,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -131,11 +130,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public List<Integer> getAllPreferences(Integer userId) {
-		List<Integer> preferList = new ArrayList<>();
-		for (StudentPreference studentPreference : studentPreferenceRepository.findAllByStudentId(userId)) {
-			preferList.add(studentPreference.getStudentPreferencePK().getPreferId());
-		}
-		return preferList;
+	public List<StudentPreference> getAllPreferences(Integer userId) {
+		return studentPreferenceRepository.findAllByStudentId(userId);
 	}
 }

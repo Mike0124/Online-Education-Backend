@@ -2,6 +2,7 @@ package com.shu.onlineEducation.service;
 
 import com.shu.onlineEducation.common.dto.StudentDto;
 import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
+import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 
@@ -27,5 +28,5 @@ public interface StudentService {
 	
 	void collectPreference(Integer userId, Integer[] prefersId);
 	
-	List<Integer> getAllPreferences(Integer userId);
+	List<StudentPreference> getAllPreferences(Integer userId);
 }

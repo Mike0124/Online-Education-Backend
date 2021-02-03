@@ -14,6 +14,9 @@ import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -81,7 +84,7 @@ public class StudentController {
 	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, HttpServletResponse response)
 			throws NotFoundException, ParamErrorException {
 		Student student = studentService.loginByPassword(phoneId, password);
-		String jwt = jwtUtil.generateToken(student.getUserId());
+		String jwt = jwtUtil.generateToken(student.getPhoneId(), student.getPassword(), "student");
 		response.setHeader("Authorization", jwt);
 		response.setHeader("Access-control-Expose-Headers", "Authorization");
 		log.info("登录成功");
@@ -127,7 +130,9 @@ public class StudentController {
 	@PostMapping("/findAllPreferences")
 	@ApiOperation(value = "返回所有当前学生的偏好")
 	@ResponseBody
+	@PostAuthorize("hasAnyAuthority('ROLE_STUDENT')")
 	public Result findAllPreferences(@RequestParam("user_id") Integer userId) {
+		log.info("test:"+String.valueOf(SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
 		return Result.success(studentService.getAllPreferences(userId));
 	}
 	

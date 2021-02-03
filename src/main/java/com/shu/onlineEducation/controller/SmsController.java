@@ -2,9 +2,9 @@ package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.service.SmsService;
 import com.shu.onlineEducation.utils.RedisUtil;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 
 import java.util.HashMap;
 import java.util.Map;

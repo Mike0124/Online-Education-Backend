@@ -33,7 +33,6 @@ public class Course {
 	private Integer preferId;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
-	@JsonIgnore
 	@JoinColumn(name = "prefer_id", referencedColumnName = "prefer_id", insertable = false, updatable = false)
 	private Prefer prefer;
 	

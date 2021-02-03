@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.common.dto.course.CourseDisplayDto;
 import com.shu.onlineEducation.common.dto.course.CourseDto;
 import com.shu.onlineEducation.dao.*;
@@ -19,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.*;
 
 @Slf4j
@@ -171,7 +171,7 @@ public class CourseServiceImpl implements CourseService {
 			Map<String, List> map = new LinkedHashMap<>();
 			map.put("VideoList", courseChapterVideoJpaRepository.findByCourseChapter(courseChapter));
 			map.put("TaskList", taskJpaRepository.findByCourseChapter(courseChapter));
-			courseDisplayDto.put(courseChapter, map);
+			courseDisplayDto.put(JSON.toJSONString(courseChapter), map);
 		}
 		return courseDisplayDto;
 	}

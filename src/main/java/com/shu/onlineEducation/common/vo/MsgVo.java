@@ -24,6 +24,9 @@ public class MsgVo {
 	@ApiModelProperty(value = "nickName")
 	private String nickName;
 	
+	@ApiModelProperty(value = "isVip")
+	private boolean isVip;
+	
 	@ApiModelProperty(value = "msg")
 	private String msg;
 }
