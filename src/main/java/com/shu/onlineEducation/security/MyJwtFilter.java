@@ -32,7 +32,6 @@ public class MyJwtFilter implements Filter {
 		String authorizationToken = httpRequest.getHeader("Authorization");
 		//无认证token，不授予权限，放行
 		if (authorizationToken == null) {
-			((HttpServletResponse) response).setStatus(HttpStatus.OK.value());
 			chain.doFilter(request, response);
 			return;
 		}
