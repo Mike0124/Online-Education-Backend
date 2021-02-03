@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.security.service;
+package com.shu.onlineEducation.service;
 
 import com.shu.onlineEducation.security.SecurityUser;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;

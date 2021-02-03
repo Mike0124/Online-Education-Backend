@@ -26,19 +26,17 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/Student")
 @Api(tags = "1-学生模块")
 public class StudentController {
+	
 	@Autowired
 	private StudentService studentService;
-	
 	@Autowired
 	private SmsController smsController;
-	
 	@Autowired
 	private JwtUtil jwtUtil;
-	
 	@Autowired
 	private RedisUtil redisUtil;
 	
-	@PostMapping("/getStudentbyId")
+	@PostMapping("/getStudentById")
 	@ApiOperation(value = "获取当前学生信息")
 	@ResponseBody
 	public Result findById(@RequestParam("user_id") int userId) {
@@ -132,7 +130,7 @@ public class StudentController {
 	@ResponseBody
 	@PostAuthorize("hasAnyAuthority('ROLE_STUDENT')")
 	public Result findAllPreferences(@RequestParam("user_id") Integer userId) {
-		log.info("test:"+String.valueOf(SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
+		log.info("test:" + String.valueOf(SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
 		return Result.success(studentService.getAllPreferences(userId));
 	}
 	

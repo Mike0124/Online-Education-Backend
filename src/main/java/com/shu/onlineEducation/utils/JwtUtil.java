@@ -1,8 +1,7 @@
 package com.shu.onlineEducation.utils;
 
 import com.shu.onlineEducation.security.SecurityUser;
-import com.shu.onlineEducation.security.service.SecurityUserService;
-import com.shu.onlineEducation.service.StudentService;
+import com.shu.onlineEducation.service.SecurityUserService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import io.jsonwebtoken.Claims;
@@ -15,11 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.spec.SecretKeySpec;
-import javax.xml.bind.DatatypeConverter;
-import java.security.Key;
 import java.util.Date;
-import java.util.List;
 
 /**
  * jwt工具类

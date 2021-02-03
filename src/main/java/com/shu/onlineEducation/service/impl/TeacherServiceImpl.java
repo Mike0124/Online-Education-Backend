@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.service.impl;
 
+import com.shu.onlineEducation.common.dto.TeacherDto;
 import com.shu.onlineEducation.dao.TeacherJpaRepository;
 import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.service.TeacherService;
@@ -22,7 +23,12 @@ public class TeacherServiceImpl implements TeacherService {
     public boolean phoneValid(String phoneId) {
         return teacherJpaRepository.existsByPhoneId(phoneId);
     }
-
+    
+    @Override
+    public Teacher getTeacherById(Integer userId) {
+        return teacherJpaRepository.findTeacherByUserId(userId);
+    }
+    
     @Override
     public List<Teacher> getAllTeachers() {
         return teacherJpaRepository.findAll();
@@ -40,23 +46,20 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void deleteTeacherById(int userId) throws NotFoundException {
-        if (!teacherJpaRepository.existsByUserId(userId)) {
-            throw new NotFoundException(ResultCode.USER_NOT_EXIST);
-        }
+    public void deleteTeacherById(Integer userId) throws NotFoundException {
         teacherJpaRepository.deleteTeacherByUserId(userId);
     }
 
     @Override
-    public void completeTeacherInfo(int userId, String name, String sex, String school, String major) throws NotFoundException {
+    public void completeTeacherInfo(Integer userId, TeacherDto teacherDto) throws NotFoundException {
         Teacher tea = teacherJpaRepository.findTeacherByUserId(userId);
         if (tea == null){
             throw new NotFoundException(ResultCode.USER_NOT_EXIST);
         }
-        tea.setName(name);
-        tea.setSex(sex);
-        tea.setSchool(school);
-        tea.setMajorId(major);
+        tea.setName(teacherDto.getName());
+        tea.setSex(teacherDto.getSex());
+        tea.setSchool(teacherDto.getSchool());
+        tea.setMajorId(teacherDto.getMajorId());
         teacherJpaRepository.save(tea);
     }
     

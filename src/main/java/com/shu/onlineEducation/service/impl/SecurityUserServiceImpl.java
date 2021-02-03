@@ -1,8 +1,9 @@
-package com.shu.onlineEducation.security.service;
+package com.shu.onlineEducation.service.impl;
 
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.security.SecurityUser;
+import com.shu.onlineEducation.service.SecurityUserService;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.service.TeacherService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
@@ -34,7 +35,7 @@ public class SecurityUserServiceImpl implements SecurityUserService {
 				List<String> studentRoles = new ArrayList<>();
 				studentRoles.add("ROLE_STUDENT");
 				if (student.isVip()) {//若学生是vip则授予vip权限
-					studentRoles.add("ROLE_STUDENT_VIP");
+					studentRoles.add("STUDENT_VIP");
 				}
 				securityUser.setRoles(studentRoles);
 				break;
