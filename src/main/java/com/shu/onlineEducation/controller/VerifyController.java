@@ -9,6 +9,8 @@ import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
+import com.shu.onlineEducation.utils.idempotent.Idempotent;
+import com.shu.onlineEducation.utils.idempotent.IdempotentToken;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.swagger.annotations.Api;
@@ -17,12 +19,14 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 
 @Slf4j
 @RestController
 @RequestMapping("/api/Login")
-@Api(tags = "登录模块")
-public class LoginController {
+@Api(tags = "9-校验模块")
+public class VerifyController {
 	
 	@Autowired
 	JwtUtil jwtUtil;
@@ -56,5 +60,22 @@ public class LoginController {
 			default:
 				throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
+	}
+	
+	@Autowired
+	IdempotentToken idempotentToken;
+	
+	@PostMapping("/getIdempotentToken")
+	@ApiOperation(value = "获取幂等性token")
+	public Result getToken() {
+		return Result.success(idempotentToken.generateToken());
+	}
+	
+	@Idempotent
+	@PostMapping("/testToken")
+	@ApiOperation(value = "测试幂等性token")
+	public Result testToken(HttpServletRequest request) throws NotFoundException {
+		idempotentToken.verifyToken(request);
+		return Result.success();
 	}
 }

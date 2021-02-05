@@ -1,5 +1,7 @@
 package com.shu.onlineEducation.controller;
 
+import com.shu.onlineEducation.common.dto.LoginDto;
+import com.shu.onlineEducation.common.dto.RegisterDto;
 import com.shu.onlineEducation.common.dto.TeacherDto;
 import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
@@ -19,6 +21,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @RestController
@@ -66,9 +70,9 @@ public class TeacherController {
 	@PostMapping("/addTeacher")
 	@ApiOperation(value = "验证码验证成功后在教师表中添加一项")
 	@ResponseBody
-	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, @RequestParam("code") String code) throws ExistedException {
-		if (code.equals(redisUtils.get(phoneId))) {
-			teacherService.addUser(phoneId, password);
+	public Result add(@RequestBody RegisterDto registerDto) throws ExistedException {
+		if (registerDto.getCode().equals(redisUtils.get(registerDto.getPhone()))) {
+			teacherService.addUser(registerDto.getPhone(), registerDto.getPassword());
 			log.info("添加用户成功");
 			return Result.success();
 		} else {
@@ -79,10 +83,12 @@ public class TeacherController {
 	@PostMapping("/loginByPassword")
 	@ApiOperation(value = "用户登录")
 	@ResponseBody
-	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password)
-			throws NotFoundException, ParamErrorException {
-		Teacher teacher = teacherService.loginByPassword(phoneId, password);
-		logger.info("登录成功");
+	public Result loginByPassword(@RequestBody LoginDto loginDto, HttpServletResponse response) throws NotFoundException, ParamErrorException {
+		Teacher teacher = teacherService.loginByPassword(loginDto.getPhone(), loginDto.getPassword());
+		String jwt = jwtUtil.generateToken(teacher.getPhoneId(), teacher.getPassword(), "teacher");
+		response.setHeader("Authorization", jwt);
+		response.setHeader("Access-control-Expose-Headers", "Authorization");
+		log.info("登录成功");
 		return Result.success(teacher);
 	}
 	

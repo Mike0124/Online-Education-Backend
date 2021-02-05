@@ -1,5 +1,7 @@
 package com.shu.onlineEducation.controller;
 
+import com.shu.onlineEducation.common.dto.LoginDto;
+import com.shu.onlineEducation.common.dto.RegisterDto;
 import com.shu.onlineEducation.common.dto.StudentDto;
 import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
@@ -64,9 +66,9 @@ public class StudentController {
 	@PostMapping("/addStudent")
 	@ApiOperation(value = "验证成功后添加学生")
 	@ResponseBody
-	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, @RequestParam("code") String code) throws ExistedException {
-		if (code.equals(redisUtils.get(phoneId))) {
-			studentService.addUser(phoneId, password);
+	public Result add(@RequestBody RegisterDto registerDto) throws ExistedException {
+		if (registerDto.getCode().equals(redisUtils.get(registerDto.getPhone()))) {
+			studentService.addUser(registerDto.getPhone(), registerDto.getPassword());
 			log.info("添加用户成功");
 			return Result.success();
 		} else {
@@ -78,9 +80,8 @@ public class StudentController {
 	@PostMapping("/loginByPassword")
 	@ApiOperation(value = "登录")
 	@ResponseBody
-	public Result loginByPassword(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, HttpServletResponse response)
-			throws NotFoundException, ParamErrorException {
-		Student student = studentService.loginByPassword(phoneId, password);
+	public Result loginByPassword(@RequestBody LoginDto loginDto, HttpServletResponse response) throws NotFoundException, ParamErrorException {
+		Student student = studentService.loginByPassword(loginDto.getPhone(), loginDto.getPassword());
 		String jwt = jwtUtil.generateToken(student.getPhoneId(), student.getPassword(), "student");
 		response.setHeader("Authorization", jwt);
 		response.setHeader("Access-control-Expose-Headers", "Authorization");

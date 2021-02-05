@@ -3,7 +3,8 @@ package com.shu.onlineEducation.common.dto;
 import lombok.Data;
 
 @Data
-public class LoginDto {
+public class RegisterDto {
 	String phone;
 	String password;
+	String code;
 }
