@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.utils;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -15,8 +16,9 @@ import java.util.concurrent.TimeUnit;
  * @author pengjunlee
  * @create 2019-09-10 10:02
  */
+@Slf4j
 @Component
-public class RedisUtil {
+public class RedisUtils {
 	
 	@Resource
 	private RedisTemplate<String, Object> redisTemplate;
@@ -64,17 +66,15 @@ public class RedisUtil {
 	}
 	
 	/**
-	 * 删除键值
-	 *
-	 * @param key 可以传一个值 或多个
+	 * 删除key
+	 * @param key 键
 	 */
-	public void del(String... key) {
-		if (key != null && key.length > 0) {
-			if (key.length == 1) {
-				redisTemplate.delete(key[0]);
-			} else {
-				redisTemplate.delete((Collection<String>) CollectionUtils.arrayToList(key));
-			}
+	public Boolean del(String key) {
+		if (key != null && key.length() > 0) {
+			return redisTemplate.delete(key);
+		}else  {
+			log.error("del key:{}", key+" 不存在");
+			return false;
 		}
 	}
 	

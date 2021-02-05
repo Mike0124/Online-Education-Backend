@@ -5,7 +5,7 @@ import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
-import com.shu.onlineEducation.utils.RedisUtil;
+import com.shu.onlineEducation.utils.RedisUtils;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -15,7 +15,6 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +33,7 @@ public class StudentController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
-	private RedisUtil redisUtil;
+	private RedisUtils redisUtils;
 	
 	@PostMapping("/getStudentById")
 	@ApiOperation(value = "获取当前学生信息")
@@ -66,7 +65,7 @@ public class StudentController {
 	@ApiOperation(value = "验证成功后添加学生")
 	@ResponseBody
 	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, @RequestParam("code") String code) throws ExistedException {
-		if (code.equals(redisUtil.get(phoneId))) {
+		if (code.equals(redisUtils.get(phoneId))) {
 			studentService.addUser(phoneId, password);
 			log.info("添加用户成功");
 			return Result.success();

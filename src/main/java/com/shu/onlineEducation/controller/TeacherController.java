@@ -5,7 +5,7 @@ import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
-import com.shu.onlineEducation.utils.RedisUtil;
+import com.shu.onlineEducation.utils.RedisUtils;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.service.TeacherService;
@@ -34,7 +34,7 @@ public class TeacherController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
-	private RedisUtil redisUtil;
+	private RedisUtils redisUtils;
 	
 	@PostMapping("/getTeacherById")
 	@ApiOperation(value = "获取当前教师信息")
@@ -67,7 +67,7 @@ public class TeacherController {
 	@ApiOperation(value = "验证码验证成功后在教师表中添加一项")
 	@ResponseBody
 	public Result add(@RequestParam("phone_id") String phoneId, @RequestParam("password") String password, @RequestParam("code") String code) throws ExistedException {
-		if (code.equals(redisUtil.get(phoneId))) {
+		if (code.equals(redisUtils.get(phoneId))) {
 			teacherService.addUser(phoneId, password);
 			log.info("添加用户成功");
 			return Result.success();

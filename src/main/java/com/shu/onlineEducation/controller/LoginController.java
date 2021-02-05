@@ -17,8 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-
 
 @Slf4j
 @RestController
@@ -36,8 +34,7 @@ public class LoginController {
 	@PostMapping("/loginByJwt")
 	@ApiOperation(value = "通过JWT登录")
 	@ResponseBody
-	public Result loginByJwt(HttpServletRequest request) throws NotFoundException, ParamErrorException {
-		String jwt = request.getHeader("Authorization");
+	public Result loginByJwt(@RequestHeader("Authorization") String jwt) throws NotFoundException, ParamErrorException {
 		if (jwt == null) {
 			return Result.failure(ResultCode.PARAM_IS_INVALID);
 		}
