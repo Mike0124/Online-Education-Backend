@@ -4,10 +4,10 @@ import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.common.dto.course.CourseChapterVideoDto;
 import com.shu.onlineEducation.common.dto.course.CourseDto;
 import com.shu.onlineEducation.properties.AppProperties;
+import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.service.CourseService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
-import com.shu.onlineEducation.utils.Result.ResultCode;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +22,12 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
 	@Autowired
 	private CourseService courseService;
-	
 	@Autowired
-	AppProperties appProperties;
+	private CourseCommentService courseCommentService;
+	@Autowired
+	private AppProperties appProperties;
 	
-	//管理员、教师、学生
+	//管理员、教师、学生、游客
 	@GetMapping("/getClass")
 	@ApiOperation(value = "获取所有课程详情")
 	@ResponseBody
@@ -35,64 +36,87 @@ public class CourseController {
 	}
 	
 	@PostMapping("/getCourseByPreferId")
-	@ApiOperation(value = "获取此偏好的所有课程,1表示按时间最新排序，2表示按课程评分排序，3表示按课程观看数量排序")
+	@ApiOperation(value = "获取此偏好的所有课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByPreferId(Integer page, Integer sort, Integer preferId) throws NotFoundException {
+	public Result getCourseByPreferId(Integer page, @RequestParam(required = false) Integer sort, Integer preferId) throws NotFoundException {
 		Pageable pageable;
-		if (sort == 1) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
-			return Result.success(courseService.getAllCoursesByPreferId(pageable, preferId));
-		} else if (sort == 2) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
-			return Result.success(courseService.getAllCoursesByPreferId(pageable, preferId));
-		} else if (sort == 3) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
-			return Result.success(courseService.getAllCoursesByPreferId(pageable, preferId));
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
-		return Result.failure(ResultCode.PARAM_IS_INVALID);
+		return Result.success(courseService.getAllCoursesByPreferId(pageable, preferId));
 	}
 	
 	@PostMapping("/getCourseByNeedVipAndPreferId")
-	@ApiOperation(value = "获取此偏好的所有免费/付费课程,1表示按时间最新排序，2表示按课程评分排序，3表示按课程观看数量排序")
+	@ApiOperation(value = "获取此偏好的所有免费/付费课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByNeedVipAndPreferId(Integer page, Integer sort, Integer preferId, Boolean needVip) throws NotFoundException {
+	public Result getCourseByNeedVipAndPreferId(Integer page, @RequestParam(required = false) Integer sort, Integer preferId, Boolean needVip) throws NotFoundException {
 		Pageable pageable;
-		if (sort == 1) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
-			return Result.success(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId));
-		} else if (sort == 2) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
-			return Result.success(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId));
-		} else if (sort == 3) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
-			return Result.success(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId));
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
-		return Result.failure(ResultCode.PARAM_IS_INVALID);
+		return Result.success(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId));
 	}
 	
 	
 	@PostMapping("/getCourseByTeacherId")
-	@ApiOperation(value = "获取老师所有课程信息")
+	@ApiOperation(value = "获取老师所有课程信息	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByTeacherId(Integer page, Integer sort, Integer teacherId) {
+	public Result getCourseByTeacherId(Integer page, @RequestParam(required = false) Integer sort, Integer teacherId) {
 		Pageable pageable;
-		if (sort == 1) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
-			return Result.success(courseService.getAllCoursesByTeacherId(pageable, teacherId));
-		} else if (sort == 2) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
-			return Result.success(courseService.getAllCoursesByTeacherId(pageable, teacherId));
-		} else if (sort == 3) {
-			pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
-			return Result.success(courseService.getAllCoursesByTeacherId(pageable, teacherId));
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
-		return Result.failure(ResultCode.PARAM_IS_INVALID);
+		return Result.success(courseService.getAllCoursesByTeacherId(pageable, teacherId));
 	}
+	
 	@PostMapping("/getCourseDisplay")
 	@ApiOperation(value = "获取课程展示信息")
 	@ResponseBody
 	public Result getCourseDisplay(Integer courseId) throws NotFoundException {
 		return Result.success(courseService.getCourseDisplay(courseId));
+	}
+	
+	@PostMapping("/getCourseComments")
+	@ApiOperation(value = "获取课程评论	1.按时间最新排序，2.按评分排序，3.按点赞量排序")
+	@ResponseBody
+	public Result getCourseComments(Integer page, @RequestParam(required = false) Integer sort, Integer courseId) throws NotFoundException {
+		Pageable pageable;
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "time"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commentMark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "likes"));
+		}
+		return Result.success(courseCommentService.getCommentsByCourse(pageable, courseId));
 	}
 	
 	//-----管理员、教师------
@@ -109,7 +133,7 @@ public class CourseController {
 	@ApiOperation(value = "更新课程信息")
 	@ResponseBody
 	public Result completeCourseInfo(@RequestParam Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
-		courseService.updateCourse(courseId,courseDto);
+		courseService.updateCourse(courseId, courseDto);
 		return Result.success();
 	}
 	

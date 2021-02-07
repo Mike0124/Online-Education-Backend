@@ -6,6 +6,7 @@ import com.shu.onlineEducation.dao.*;
 import com.shu.onlineEducation.entity.*;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePK;
+import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
@@ -30,6 +31,8 @@ public class StudentServiceImpl implements StudentService {
 	private CourseCommentJpaRepository courseCommentJpaRepository;
 	@Autowired
 	private MajorJpaRepository majorJpaRepository;
+	@Autowired
+	private CourseCommentService courseCommentService;
 	
 	@Override
 	public Student getStudentById(Integer userId) {
@@ -109,11 +112,14 @@ public class StudentServiceImpl implements StudentService {
 		courseComment.setContent(courseCommentDto.getComment());
 		courseComment.setLikes(0);
 		courseComment.setTime(DateUtil.getNowTimeStamp());
-		courseComment.setCourse(course);
-		courseComment.setStudent(student);
+		courseComment.setCourseId(course.getCourseId());
+		courseComment.setStudentId(student.getUserId());
 		courseCommentJpaRepository.save(courseComment);
 		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(course.getCourseId()));
 		courseJpaRepository.save(course);
+		if (courseComment.getCommentId() % 20 == 0) {
+			courseCommentService.trainLatest(courseComment.getCommentId());
+		}
 	}
 	
 	@Override

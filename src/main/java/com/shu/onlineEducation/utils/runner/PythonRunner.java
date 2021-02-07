@@ -6,12 +6,13 @@ import lombok.extern.slf4j.Slf4j;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 
 @Slf4j
 @Data
 public class PythonRunner {
 	
-	static void run(String pyPaths, String[] parameters) {
+	public static void run(String pyPaths, String[] parameters) {
 		String[] runTimeArgs = new String[parameters.length + 2];
 		runTimeArgs[0] = "python";
 		runTimeArgs[1] = pyPaths;
@@ -24,7 +25,11 @@ public class PythonRunner {
 		}
 		BufferedReader in = null;
 		if (pr != null) {
-			in = new BufferedReader(new InputStreamReader(pr.getInputStream()));
+			try {
+				in = new BufferedReader(new InputStreamReader(pr.getInputStream(), "GBK"));
+			} catch (UnsupportedEncodingException e) {
+				e.printStackTrace();
+			}
 		}
 		String line;
 		try {

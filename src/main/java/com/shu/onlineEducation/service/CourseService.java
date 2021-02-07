@@ -7,9 +7,7 @@ import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideo;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import org.springframework.data.domain.Pageable;
-import org.springframework.web.bind.annotation.RequestBody;
 
-import java.sql.Timestamp;
 import java.util.List;
 
 public interface CourseService {
