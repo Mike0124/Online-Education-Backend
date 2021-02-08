@@ -61,10 +61,7 @@ public class StudentServiceImpl implements StudentService {
 	}
 	
 	@Override
-	public void deleteStudentById(Integer userId) throws NotFoundException {
-		if (!studentJpaRepository.existsByUserId(userId)) {
-			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
-		}
+	public void deleteStudentById(Integer userId) {
 		studentJpaRepository.deleteStudentByUserId(userId);
 	}
 	
@@ -77,7 +74,7 @@ public class StudentServiceImpl implements StudentService {
 		if (!password.equals(student.getPassword())) {
 			throw new ParamErrorException(ResultCode.USER_LOGIN_ERROR);
 		}
-		return studentJpaRepository.findByPhoneId(phoneId);
+		return student;
 	}
 	
 	@Override

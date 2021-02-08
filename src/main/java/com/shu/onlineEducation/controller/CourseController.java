@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -123,6 +124,7 @@ public class CourseController {
 	//课程
 	@PostMapping("/addCourse")
 	@ApiOperation(value = "添加课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result addCourse(@RequestBody CourseDto courseDto) throws NotFoundException {
 		courseService.addCourse(courseDto);
@@ -131,6 +133,7 @@ public class CourseController {
 	
 	@PostMapping("/completeCourseInfo")
 	@ApiOperation(value = "更新课程信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result completeCourseInfo(@RequestParam Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
 		courseService.updateCourse(courseId, courseDto);
@@ -140,6 +143,7 @@ public class CourseController {
 	/*课程章节*/
 	@PostMapping("/addCourseChapter")
 	@ApiOperation(value = "添加/修改课程章节")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result addCourseChapter(Integer courseId, Integer chapterId, String intro) throws NotFoundException {
 		courseService.addCourseChapter(courseId, chapterId, intro);
@@ -163,6 +167,7 @@ public class CourseController {
 	
 	@PostMapping("/addCourseChapterViedo")
 	@ApiOperation(value = "添加/更新课程章节视频")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterVideoDto courseChapterVideoDto) throws NotFoundException {
 		courseService.addCourseChapterVideo(courseId, chapterId, videoId, courseChapterVideoDto.getVideoUrl(), courseChapterVideoDto.getVideoName());
@@ -171,6 +176,7 @@ public class CourseController {
 	
 	@PostMapping("/deleteCourseChapterViedo")
 	@ApiOperation(value = "删除课程章节视频")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result deleteCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId) {
 		courseService.deleteCourseChapterVideo(courseId, chapterId, videoId);
@@ -180,6 +186,7 @@ public class CourseController {
 	//-----管理员------
 	@PostMapping("/updateCourseStatus")
 	@ApiOperation(value = "更新课程状态")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result updateCourseStatus(Integer courseId, Integer status) throws NotFoundException {
 		courseService.updateCourseStatusById(courseId, status);
@@ -188,6 +195,7 @@ public class CourseController {
 	
 	@PostMapping("/deleteCourseById")
 	@ApiOperation(value = "删除课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result deleteCourseById(Integer courseId) {
 		courseService.deleteCourseById(courseId);
@@ -196,6 +204,7 @@ public class CourseController {
 	
 	@PostMapping("/deleteCourseChapter")
 	@ApiOperation(value = "删除课程章节")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result deleteCourseChapter(Integer courseId, Integer chapterId) {
 		courseService.deleteCourseChapter(courseId, chapterId);

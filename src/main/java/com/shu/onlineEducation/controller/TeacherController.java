@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -42,6 +43,7 @@ public class TeacherController {
 	
 	@PostMapping("/getTeacherById")
 	@ApiOperation(value = "获取当前教师信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result findById(@RequestParam("user_id") int userId) {
 		return Result.success(teacherService.getTeacherById(userId));
@@ -49,6 +51,7 @@ public class TeacherController {
 	
 	@GetMapping("/getTeacher")
 	@ApiOperation(value = "获取所有用户详情")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result showInfo() {
 		return Result.success(teacherService.getAllTeachers());
@@ -96,6 +99,7 @@ public class TeacherController {
 	@PostMapping("/deleteTeacherById")
 	@ApiImplicitParam(name = "user_id", value = "用户标识", required = true, paramType = "form", dataType = "String")
 	@ApiOperation(value = "删除教师")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result delete(@RequestParam("user_id") int userId) throws NotFoundException {
 		teacherService.deleteTeacherById(userId);
@@ -105,6 +109,7 @@ public class TeacherController {
 	
 	@PostMapping("/completeTeacherById")
 	@ApiOperation(value = "完善教师信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody TeacherDto teacherDto) throws NotFoundException {
 		teacherService.completeTeacherInfo(userId, teacherDto);

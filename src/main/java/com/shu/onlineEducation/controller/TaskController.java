@@ -7,6 +7,7 @@ import com.shu.onlineEducation.utils.Result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -18,7 +19,7 @@ public class TaskController {
 	@Autowired
 	private TaskService taskService;
 	
-	//学生、教师、管理员
+	//学生、教师、管理员、游客
 	@PostMapping("getTaskByCourseChapter")
 	@ApiOperation(value = "根据课程章节获取任务")
 	@ResponseBody
@@ -36,6 +37,7 @@ public class TaskController {
 	//教师、管理员
 	@PostMapping("/addTaskByCourseChapter")
 	@ApiOperation(value = "根据课程章节添加任务")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result addTask(Integer courseId, Integer chapterId, @RequestBody TaskDto taskDto) throws NotFoundException, ParseException {
 		taskService.addTask(courseId, chapterId, taskDto);
@@ -44,6 +46,7 @@ public class TaskController {
 	
 	@PostMapping("/deleteTaskById")
 	@ApiOperation(value = "删除任务")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result deleteTaskById(Integer taskId) {
 		taskService.deleteTask(taskId);
@@ -52,6 +55,7 @@ public class TaskController {
 	
 	@PostMapping("/addTaskFileByTask")
 	@ApiOperation(value = "根据任务添加任务文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result addTaskFile(Integer taskId, String taskFileUrl) throws NotFoundException {
 		taskService.addTaskFile(taskId, taskFileUrl);
@@ -60,6 +64,7 @@ public class TaskController {
 	
 	@PostMapping("/deleteTaskFileById")
 	@ApiOperation(value = "删除任务文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result deleteTaskFileById(Integer taskFileId) {
 		taskService.deleteTaskFile(taskFileId);

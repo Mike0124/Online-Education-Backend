@@ -6,6 +6,7 @@ import com.shu.onlineEducation.utils.Result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -21,6 +22,7 @@ public class HomeworkController {
 	//学生、教师、管理员
 	@PostMapping("/getByTaskIdAndStudentId")
 	@ApiOperation(value = "根据任务和学生获取作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	//TODO 这是个空函数
 	public Result getByTaskIdAndStudentId(Integer taskId, Integer studentId) {
@@ -29,6 +31,7 @@ public class HomeworkController {
 	
 	@PostMapping("/addHomeWork")
 	@ApiOperation(value = "添加作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	//TODO 这是个空函数
 	public Result addHomeWork(HomeworkDto homeworkDto) {
@@ -38,6 +41,7 @@ public class HomeworkController {
 	
 	@PostMapping("/deleteHomeWork")
 	@ApiOperation(value = "删除作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	//TODO 这是个空函数
 	public Result deleteHomeWork(Integer homeworkId) {
@@ -48,6 +52,7 @@ public class HomeworkController {
 	//教师、管理员
 	@PostMapping("/getByTaskId")
 	@ApiOperation(value = "根据任务获取作业，按提交时间最新排序")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	//TODO 这是个空函数
 	public Result getByTaskId(Integer page, Integer taskId) {

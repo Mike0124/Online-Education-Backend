@@ -19,7 +19,7 @@ public interface StudentService {
 	
 	Student loginByPassword(String phoneId, String password) throws ParamErrorException, NotFoundException;
 	
-	void deleteStudentById(Integer userId) throws NotFoundException;        //删除学生
+	void deleteStudentById(Integer userId);       //删除学生
 	
 	void completeStudent(Integer userId, StudentDto studentDto)throws NotFoundException;       //完善学生信息
 	

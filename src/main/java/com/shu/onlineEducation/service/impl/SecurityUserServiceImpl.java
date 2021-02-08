@@ -1,8 +1,10 @@
 package com.shu.onlineEducation.service.impl;
 
+import com.shu.onlineEducation.entity.Admin;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.security.SecurityUser;
+import com.shu.onlineEducation.service.AdminService;
 import com.shu.onlineEducation.service.SecurityUserService;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.service.TeacherService;
@@ -26,6 +28,8 @@ public class SecurityUserServiceImpl implements SecurityUserService {
 	StudentService studentService;
 	@Autowired
 	TeacherService teacherService;
+	@Autowired
+	AdminService adminService;
 	
 	@Override
 	public void authenticateAndAuthorize(SecurityUser securityUser) throws NotFoundException, ParamErrorException {
@@ -44,6 +48,12 @@ public class SecurityUserServiceImpl implements SecurityUserService {
 				List<String> teacherRoles = new ArrayList<>();
 				teacherRoles.add("ROLE_STUDENT");
 				securityUser.setRoles(teacherRoles);
+				break;
+			case ("admin"):
+				Admin admin = adminService.loginByPassword(securityUser.getPhoneId(),securityUser.getPassword());
+				List<String> adminRoles = new ArrayList<>();
+				adminRoles.add("ROLE_ADMIN");
+				securityUser.setRoles(adminRoles);
 				break;
 			default:
 				throw new NotFoundException(ResultCode.USER_NOT_EXIST);

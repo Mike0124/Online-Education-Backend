@@ -17,6 +17,7 @@ import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +40,7 @@ public class StudentController {
 	
 	@PostMapping("/getStudentById")
 	@ApiOperation(value = "获取当前学生信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_ADMIN')")
 	@ResponseBody
 	public Result findById(@RequestParam("user_id") int userId) {
 		return Result.success(studentService.getStudentById(userId));
@@ -46,6 +48,7 @@ public class StudentController {
 	
 	@GetMapping("/getStudent")
 	@ApiOperation(value = "获取所有用户详情")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Iterable<Student> findAll() {
 		return studentService.getAllStudents();
@@ -92,6 +95,7 @@ public class StudentController {
 	@PostMapping("/deleteStudentById")
 	@ApiImplicitParam(name = "user_id", value = "用户标识", required = true, paramType = "form", dataType = "String")
 	@ApiOperation(value = "删除学生")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result delete(@RequestParam("user_id") Integer userId) throws NotFoundException {
 		studentService.deleteStudentById(userId);
@@ -101,6 +105,7 @@ public class StudentController {
 	
 	@PostMapping("/commentCourseByCourseId")
 	@ApiOperation(value = "评价课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result comment(@RequestBody CourseCommentDto courseCommentDto) throws NotFoundException {
 		studentService.commentCourseByCourseId(courseCommentDto);
@@ -109,6 +114,7 @@ public class StudentController {
 	
 	@PostMapping("/completeStudentById")
 	@ApiOperation(value = "完善学生信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody StudentDto studentDto)
 			throws NotFoundException {
@@ -119,6 +125,7 @@ public class StudentController {
 	
 	@PostMapping("/collectPreferences")
 	@ApiOperation(value = "收集学生偏好")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result collectPreference(@RequestParam("user_id") Integer userId, @RequestParam("prefers") Integer[] prefersId) {
 		studentService.collectPreference(userId, prefersId);
@@ -127,6 +134,7 @@ public class StudentController {
 	
 	@PostMapping("/findAllPreferences")
 	@ApiOperation(value = "返回所有当前学生的偏好")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	@PostAuthorize("hasAnyAuthority('ROLE_STUDENT')")
 	public Result findAllPreferences(@RequestParam("user_id") Integer userId) {
