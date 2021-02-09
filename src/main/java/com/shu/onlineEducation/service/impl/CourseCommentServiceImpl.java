@@ -10,11 +10,14 @@ import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.utils.runner.PythonRunner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
@@ -42,11 +45,23 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	}
 	
 	@Override
-	public List<CourseComment> getCommentsByCourse(Pageable pageable, Integer courseId) throws NotFoundException {
+	public Page<CourseComment> getCommentsByCourse(Pageable pageable, Integer courseId) throws NotFoundException {
 		Course course = courseJpaRepository.findCourseByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
 		return courseCommentJpaRepository.findByCourse(pageable, course);
+	}
+	
+	@Override
+	public Map<String, Object> analysisByCourse(Integer courseId) throws NotFoundException {
+		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		if (course == null) {
+			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
+		}
+		List<CourseComment> commentList = courseCommentJpaRepository.findByCourse(course);
+		Map<String, Object> map = new HashMap<>();
+		
+		return map;
 	}
 }

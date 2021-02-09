@@ -55,6 +55,6 @@ public class PythonRunner {
 	}
 	
 	public static void main(String[] args) {
-		PythonRunner.run("src/main/resources/static/python/py2.py",new String[]{String.valueOf(1), String.valueOf(2)});
+		PythonRunner.run("src/main/resources/static/python/emotion_analysis.py",new String[]{String.valueOf(1), String.valueOf(2)});
 	}
 }

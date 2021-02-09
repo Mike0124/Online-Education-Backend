@@ -17,6 +17,7 @@ import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -50,12 +51,12 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
-	public List<Course> getAllCoursesByPreferId(Pageable pageable, int preferId) {
+	public Page<Course> getAllCoursesByPreferId(Pageable pageable, int preferId) {
 		return courseJpaRepository.findAllByPreferIdAndStatus(pageable, preferId, 1);
 	}
 	
 	@Override
-	public List<Course> getAllCoursesByNeedVipAndPreferId(Pageable pageable, boolean needVip, int preferId) {
+	public Page<Course> getAllCoursesByNeedVipAndPreferId(Pageable pageable, boolean needVip, int preferId) {
 		return courseJpaRepository.findAllByNeedVipAndPreferIdAndStatus(pageable, needVip, preferId, 1);
 	}
 	
@@ -75,7 +76,7 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
-	public List<Course> getAllCoursesByTeacherId(Pageable pageable, int teacherId) {
+	public Page<Course> getAllCoursesByTeacherId(Pageable pageable, int teacherId) {
 		return courseJpaRepository.findAllByTeacherIdAndStatus(pageable, teacherId, 1);
 	}
 	

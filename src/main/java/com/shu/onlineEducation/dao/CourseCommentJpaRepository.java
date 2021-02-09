@@ -2,6 +2,7 @@ package com.shu.onlineEducation.dao;
 
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.entity.CourseComment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -19,7 +20,7 @@ public interface CourseCommentJpaRepository extends JpaRepository<CourseComment,
 	@Query(value = "select * from course_comment where comment_id between (:start) and (:end)", nativeQuery = true)
 	List<CourseComment> findByBetween(@Param("start") Integer start, @Param("end") Integer end);
 	
-	List<CourseComment> findByCourse(Pageable pageable, Course course);
+	Page<CourseComment> findByCourse(Pageable pageable, Course course);
 	
 	List<CourseComment> findByCourse(Course course);
 }

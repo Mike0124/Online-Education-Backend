@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.dao;
 
 import com.shu.onlineEducation.entity.Course;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -16,11 +17,11 @@ public interface CourseJpaRepository extends JpaRepository<Course, Integer>, Jpa
 	
 	Course findCourseByCourseId(int courseId);
 	
-	List<Course> findAllByPreferIdAndStatus(Pageable pageable, int preferId, int status);
+	Page<Course> findAllByPreferIdAndStatus(Pageable pageable, int preferId, int status);
 	
-	List<Course> findAllByNeedVipAndPreferIdAndStatus(Pageable pageable, boolean needVip, int preferId, int status);
+	Page<Course> findAllByNeedVipAndPreferIdAndStatus(Pageable pageable, boolean needVip, int preferId, int status);
 	
-	List<Course> findAllByTeacherIdAndStatus(Pageable pageable, int teacherId, int status);
+	Page<Course> findAllByTeacherIdAndStatus(Pageable pageable, int teacherId, int status);
 	
 	@Transactional
 	void deleteByCourseId(int courseId);

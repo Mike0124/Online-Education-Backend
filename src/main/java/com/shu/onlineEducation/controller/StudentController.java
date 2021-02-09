@@ -7,7 +7,7 @@ import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
-import com.shu.onlineEducation.utils.RedisUtils;
+import com.shu.onlineEducation.utils.RedisUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -36,7 +36,7 @@ public class StudentController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
-	private RedisUtils redisUtils;
+	private RedisUtil redisUtil;
 	
 	@PostMapping("/getStudentById")
 	@ApiOperation(value = "获取当前学生信息")
@@ -70,7 +70,7 @@ public class StudentController {
 	@ApiOperation(value = "验证成功后添加学生")
 	@ResponseBody
 	public Result add(@RequestBody RegisterDto registerDto) throws ExistedException {
-		if (registerDto.getCode().equals(redisUtils.get(registerDto.getPhone()))) {
+		if (registerDto.getCode().equals(redisUtil.get(registerDto.getPhone()))) {
 			studentService.addUser(registerDto.getPhone(), registerDto.getPassword());
 			log.info("添加用户成功");
 			return Result.success();

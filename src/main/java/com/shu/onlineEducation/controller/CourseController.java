@@ -7,6 +7,7 @@ import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.service.CourseService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import com.shu.onlineEducation.utils.MapUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -52,7 +53,7 @@ public class CourseController {
 			default:
 				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
-		return Result.success(courseService.getAllCoursesByPreferId(pageable, preferId));
+		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByPreferId(pageable, preferId)));
 	}
 	
 	@PostMapping("/getCourseByNeedVipAndPreferId")
@@ -71,7 +72,7 @@ public class CourseController {
 			default:
 				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
-		return Result.success(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId));
+		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId)));
 	}
 	
 	
@@ -91,7 +92,7 @@ public class CourseController {
 			default:
 				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
-		return Result.success(courseService.getAllCoursesByTeacherId(pageable, teacherId));
+		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByTeacherId(pageable, teacherId)));
 	}
 	
 	@PostMapping("/getCourseDisplay")
@@ -117,7 +118,7 @@ public class CourseController {
 			default:
 				pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "likes"));
 		}
-		return Result.success(courseCommentService.getCommentsByCourse(pageable, courseId));
+		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourse(pageable, courseId)));
 	}
 	
 	//-----管理员、教师------
