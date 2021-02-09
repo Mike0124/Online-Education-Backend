@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.dao.CourseCommentJpaRepository;
 import com.shu.onlineEducation.dao.CourseJpaRepository;
 import com.shu.onlineEducation.entity.Course;
@@ -27,6 +28,8 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	private CourseCommentJpaRepository courseCommentJpaRepository;
 	@Autowired
 	private CourseJpaRepository courseJpaRepository;
+	@Autowired
+	private PythonRunner pythonRunner;
 	
 	@Override
 	public BigDecimal getCommentMarkAvg(int courseId) {
@@ -41,7 +44,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		for (CourseComment courseComment : courseComments) {
 			sb.append(courseComment.getContent().replace("\t", " ".replace("\n", ""))).append("\t").append(courseComment.getCommentMark()).append("\n");
 		}
-		PythonRunner.run("D:\\Projects\\Github\\Online-Education-Backend\\src\\main\\resources\\static\\python\\train.py", new String[]{sb.toString()});
+		pythonRunner.train(sb.toString());
 	}
 	
 	@Override
@@ -54,14 +57,17 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	}
 	
 	@Override
-	public Map<String, Object> analysisByCourse(Integer courseId) throws NotFoundException {
+	public JSON analysisByCourse(Integer courseId) throws NotFoundException {
 		Course course = courseJpaRepository.findCourseByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
 		List<CourseComment> commentList = courseCommentJpaRepository.findByCourse(course);
-		Map<String, Object> map = new HashMap<>();
-		
-		return map;
+		StringBuilder sb = new StringBuilder();
+		for (CourseComment courseComment : commentList) {
+			sb.append(courseComment.getContent().replace("\t", " ".replace("\n", ""))).append("\t").append(courseComment.getCommentMark()).append("\n");
+		}
+		String result = PythonRunner.run("D:\\Projects\\Github\\Online-Education-Backend\\src\\main\\resources\\static\\python\\emotion_analysis.py", new String[]{sb.toString()});
+		return JSON.parseObject(result);
 	}
 }

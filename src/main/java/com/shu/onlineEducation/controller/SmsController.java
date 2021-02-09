@@ -3,6 +3,7 @@ package com.shu.onlineEducation.controller;
 import com.shu.onlineEducation.service.SmsService;
 import com.shu.onlineEducation.utils.RedisUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 
@@ -23,6 +24,7 @@ public class SmsController {
 	 * 发送短信
 	 * @param phone
 	 */
+	@Async
 	public String sendCode(String phone) {
 		
 		// 根据手机号从redis中拿验证码

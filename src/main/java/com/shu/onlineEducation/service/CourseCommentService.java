@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.shu.onlineEducation.entity.CourseComment;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import org.springframework.data.domain.Page;
@@ -17,5 +18,5 @@ public interface CourseCommentService {
 	
 	Page<CourseComment> getCommentsByCourse(Pageable pageable, Integer courseId) throws NotFoundException;
 	
-	Map<String,Object> analysisByCourse(Integer courseId)throws NotFoundException;
+	JSON analysisByCourse(Integer courseId)throws NotFoundException;
 }

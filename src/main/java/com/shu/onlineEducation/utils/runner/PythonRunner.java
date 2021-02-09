@@ -1,7 +1,8 @@
 package com.shu.onlineEducation.utils.runner;
 
-import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,10 +10,10 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 
 @Slf4j
-@Data
+@Component
 public class PythonRunner {
 	
-	public static void run(String pyPaths, String[] parameters) {
+	public static String run(String pyPaths, String[] parameters) {
 		String[] runTimeArgs = new String[parameters.length + 2];
 		runTimeArgs[0] = "python";
 		runTimeArgs[1] = pyPaths;
@@ -32,16 +33,16 @@ public class PythonRunner {
 			}
 		}
 		String line;
+		StringBuffer sb = new StringBuffer();
 		try {
 			if (in != null) {
 				while ((line = in.readLine()) != null) {
-					log.info(line);
+					sb.append(line).append("\n");
 				}
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 		try {
 			if (in != null) {
 				in.close();
@@ -52,9 +53,14 @@ public class PythonRunner {
 		} catch (IOException | InterruptedException e) {
 			e.printStackTrace();
 		}
+		return sb.toString();
+	}
+	
+	@Async
+	public void train(String param) {
+		PythonRunner.run("D:\\Projects\\Github\\Online-Education-Backend\\src\\main\\resources\\static\\python\\train.py", new String[]{param});
 	}
 	
 	public static void main(String[] args) {
-		PythonRunner.run("src/main/resources/static/python/emotion_analysis.py",new String[]{String.valueOf(1), String.valueOf(2)});
 	}
 }

@@ -4,6 +4,7 @@ import com.shu.onlineEducation.common.dto.LoginDto;
 import com.shu.onlineEducation.common.dto.RegisterDto;
 import com.shu.onlineEducation.common.dto.TeacherDto;
 import com.shu.onlineEducation.entity.Teacher;
+import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
@@ -36,6 +37,8 @@ public class TeacherController {
 	private TeacherService teacherService;
 	@Autowired
 	private SmsController smsController;
+	@Autowired
+	private CourseCommentService courseCommentService;
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
@@ -117,4 +120,11 @@ public class TeacherController {
 		return Result.success();
 	}
 	
+	@PostMapping("/analysisCommentByCourse")
+	@ApiOperation(value = "获取课程评论分析")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result analysisCommentByCourse(@RequestParam("course_id") Integer courseId) throws NotFoundException {
+		return Result.success(courseCommentService.analysisByCourse(courseId));
+	}
 }
