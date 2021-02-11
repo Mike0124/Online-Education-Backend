@@ -2,6 +2,8 @@ package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -10,6 +12,7 @@ import java.text.SimpleDateFormat;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "course")
 public class Course {
 	@Id
@@ -26,13 +29,14 @@ public class Course {
 	@Column(nullable = false)
 	private String intro;
 	
+	@CreatedDate
 	@Column
 	private Timestamp uploadTime;
 	
 	@Column(name = "prefer_id")
 	private Integer preferId;
 	
-	@ManyToOne(fetch=FetchType.EAGER)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "prefer_id", referencedColumnName = "prefer_id", insertable = false, updatable = false)
 	private Prefer prefer;
 	
@@ -50,13 +54,13 @@ public class Course {
 	
 	@Column(name = "course_watches")
 	private Integer courseWatches;
-
+	
 	@Column(name = "teacher_id")
 	private Integer teacherId;
-
+	
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id",insertable = false,updatable = false)
+	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	private Teacher teacher;
 	
 	public String getUploadTime() {

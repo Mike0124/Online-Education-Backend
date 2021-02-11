@@ -8,7 +8,6 @@ import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePK;
 import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.service.StudentService;
-import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
@@ -104,16 +103,23 @@ public class StudentServiceImpl implements StudentService {
 		if (student == null || course == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
-		CourseComment courseComment = new CourseComment();
+		//每个学生只能评论一个课程一次
+		CourseComment comment = courseCommentJpaRepository.findByCourseAndStudent(course, student);
+		CourseComment courseComment;
+		if (comment == null) {
+			courseComment = new CourseComment();
+			courseComment.setCourseId(course.getCourseId());
+			courseComment.setStudentId(student.getUserId());
+		} else {
+			courseComment = comment;
+		}
 		courseComment.setCommentMark(courseCommentDto.getCommentMark());
 		courseComment.setContent(courseCommentDto.getComment());
 		courseComment.setLikes(0);
-		courseComment.setTime(DateUtil.getNowTimeStamp());
-		courseComment.setCourseId(course.getCourseId());
-		courseComment.setStudentId(student.getUserId());
 		courseCommentJpaRepository.save(courseComment);
 		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(course.getCourseId()));
 		courseJpaRepository.save(course);
+		//每20条评论训练一次情感分析模型
 		if (courseComment.getCommentId() % 20 == 0) {
 			courseCommentService.trainLatest(courseComment.getCommentId());
 		}

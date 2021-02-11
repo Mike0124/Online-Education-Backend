@@ -8,20 +8,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 public class LiveServiceImpl implements LiveService {
-    @Autowired
-    LiveJpaRepository liveJpaRepository;
-
-    @Transactional
-    @Override
-    public void addLive(LiveDto liveDto) {
-        Live live = new Live();
-        live.setAddressId(liveDto.getAddressId());
-        live.setIntro(liveDto.getLiveIntro());
-        live.setLiveArrange(liveDto.getLiveArrange());
-        live.setLiveDate(liveDto.getLiveDate());
-        live.setLivePicUrl(liveDto.getLivePicUrl());
-        live.setLiveName(liveDto.getLiveName());
-        live.setTeacherId(liveDto.getTeacherId());
-        liveJpaRepository.saveAndFlush(live);
-    }
+	@Autowired
+	LiveJpaRepository liveJpaRepository;
+	
+	@Transactional
+	@Override
+	public void addLive(LiveDto liveDto) {
+		Live live = new Live();
+		live.setAddressId(liveDto.getAddressId());
+		live.setIntro(liveDto.getLiveIntro());
+		live.setLiveArrange(liveDto.getLiveArrange());
+		live.setLiveDate(liveDto.getLiveDate());
+		live.setLivePicUrl(liveDto.getLivePicUrl());
+		live.setLiveName(liveDto.getLiveName());
+		live.setTeacherId(liveDto.getTeacherId());
+		liveJpaRepository.saveAndFlush(live);
+	}
 }

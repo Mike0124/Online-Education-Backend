@@ -17,7 +17,7 @@ public interface TeacherService {
 
     void addUser(String phoneId, String password) throws ExistedException;      //添加刚注册的教师
 
-    void deleteTeacherById(Integer userId) throws NotFoundException;        //删除教师
+    void deleteTeacherById(Integer userId);        //删除教师
 
     void completeTeacherInfo(Integer userId, TeacherDto teacherDto)
             throws NotFoundException;//完善教师信息

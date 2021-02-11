@@ -46,7 +46,7 @@ public class TeacherServiceImpl implements TeacherService {
     }
 
     @Override
-    public void deleteTeacherById(Integer userId) throws NotFoundException {
+    public void deleteTeacherById(Integer userId){
         teacherJpaRepository.deleteTeacherByUserId(userId);
     }
 

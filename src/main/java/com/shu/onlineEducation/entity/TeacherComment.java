@@ -2,12 +2,15 @@ package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "teacher_comment")
 public class TeacherComment {
 	@Id
@@ -20,6 +23,7 @@ public class TeacherComment {
 	@Column
 	private String content;
 	
+	@CreatedDate
 	@Column
 	private Timestamp time;
 

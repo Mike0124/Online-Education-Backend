@@ -94,7 +94,6 @@ public class CourseServiceImpl implements CourseService {
 		course.setIntro(courseDto.getIntro());
 		course.setStatus(0);
 		course.setNeedVip(courseDto.getNeedVip());
-		course.setUploadTime(DateUtil.getNowTimeStamp());
 		course.setCoursePic(courseDto.getCoursePicUrl());
 		courseJpaRepository.saveAndFlush(course);
 	}

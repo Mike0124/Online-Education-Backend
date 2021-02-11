@@ -3,18 +3,24 @@ package com.shu.onlineEducation.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideo;
 import lombok.Data;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
 
 @Data
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 @Table(name = "course_watch_record")
 public class CourseWatchRecord {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	
+	@CreatedDate
+	@LastModifiedDate
 	@Column(name = "watch_time")
 	Timestamp watchTime;
 

@@ -13,12 +13,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @Service
@@ -36,6 +35,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		return courseCommentJpaRepository.getCommentMarkAvg(courseId);
 	}
 	
+	@Async
 	@Override
 	public void trainLatest(Integer end) {
 		Integer start = Math.max(end - 20, 0);

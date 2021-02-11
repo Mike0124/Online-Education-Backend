@@ -2,6 +2,7 @@ package com.shu.onlineEducation.dao;
 
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.entity.CourseComment;
+import com.shu.onlineEducation.entity.Student;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -23,4 +24,6 @@ public interface CourseCommentJpaRepository extends JpaRepository<CourseComment,
 	Page<CourseComment> findByCourse(Pageable pageable, Course course);
 	
 	List<CourseComment> findByCourse(Course course);
+	
+	CourseComment findByCourseAndStudent(Course course, Student student);
 }

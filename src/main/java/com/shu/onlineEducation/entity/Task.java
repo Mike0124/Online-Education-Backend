@@ -3,6 +3,7 @@ package com.shu.onlineEducation.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import lombok.Data;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
