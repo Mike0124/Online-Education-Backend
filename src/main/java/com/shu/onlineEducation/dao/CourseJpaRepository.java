@@ -13,7 +13,7 @@ public interface CourseJpaRepository extends JpaRepository<Course, Integer>, Jpa
 	
 	boolean existsByCourseId(int courseId);
 	
-	Course findCourseByCourseId(int courseId);
+	Course findByCourseId(int courseId);
 	
 	Page<Course> findAllByPreferIdAndStatus(Pageable pageable, int preferId, int status);
 	

@@ -1,3 +1,13 @@
+create table admin
+(
+    user_id  int auto_increment
+        primary key,
+    phone_id varchar(30) not null,
+    password varchar(30) not null,
+    constraint admin_phone_id_uindex
+        unique (phone_id)
+);
+
 create table course
 (
     course_id       int auto_increment
@@ -8,7 +18,7 @@ create table course
     upload_time     datetime   default CURRENT_TIMESTAMP null,
     teacher_id      int                                  not null,
     prefer_id       int                                  not null,
-    course_pic      mediumblob                           null,
+    course_pic      varchar(150)                         null,
     course_status   int        default 0                 not null,
     need_vip        tinyint(1) default 0                 not null,
     course_avg_mark decimal(2, 1)                        null,
@@ -31,11 +41,11 @@ create table course_chapter
 
 create table course_chapter_video
 (
-    course_id  int         not null,
-    chapter_id int         not null,
-    video_url  varchar(40) null,
-    video_id   int         not null,
-    video_name varchar(20) null,
+    course_id  int          not null,
+    chapter_id int          not null,
+    video_url  varchar(200) null,
+    video_id   int          not null,
+    video_name varchar(20)  null,
     primary key (chapter_id, course_id, video_id)
 );
 
@@ -69,7 +79,8 @@ create table course_watch_record
     watch_time datetime default CURRENT_TIMESTAMP null,
     chapter_id int                                null,
     video_id   int                                not null,
-    time       datetime                           not null
+    deleted    int      default 0                 null,
+    pic_url    varchar(150)                       null
 );
 
 create table homework
@@ -95,8 +106,8 @@ create table homework_file
 (
     homework_file_id int auto_increment
         primary key,
-    homework_id      int         not null,
-    file_url         varchar(50) null
+    homework_id      int          not null,
+    file_url         varchar(150) null
 );
 
 create index homework_file_homework_homework_id_fk
@@ -156,7 +167,7 @@ create table students
     school          varchar(20)          null,
     grade           int                  null,
     password        varchar(20)          not null,
-    student_pic_url varchar(50)          null,
+    student_pic_url varchar(150)         null,
     is_vip          tinyint(1) default 0 not null,
     major_id        int                  null
 );
@@ -183,8 +194,8 @@ create table task_file
 (
     task_file_id int auto_increment
         primary key,
-    file_url     varchar(50) null,
-    task_id      int         not null
+    file_url     varchar(150) null,
+    task_id      int          not null
 );
 
 create index task_file_task_task_id_fk
@@ -216,7 +227,7 @@ create table teachers
     sex             varchar(4)           null,
     school          varchar(20)          null,
     major_id        int                  null,
-    teacher_pic_url varchar(50)          null,
+    teacher_pic_url varchar(150)         null,
     teacher_status  tinyint(1) default 0 null
 );
 

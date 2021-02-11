@@ -17,8 +17,11 @@ public interface CourseChapterVideoJpaRepository extends JpaRepository<CourseCha
 	@Query(value = "select * from course_chapter_video where course_id = ?1 and chapter_id = ?2", nativeQuery = true)
 	List<CourseChapterVideo> findByCourseChapter(Integer courseId, Integer chapterId);
 	
+	@Query(value = "select *  from course_chapter_video where course_id = ?1 and chapter_id = ?2 and video_id =?3", nativeQuery = true)
+	CourseChapterVideo findByCourseIdAndChapterIdAndVideoId(int courseId, int chapterId, int videoId);
+	
 	@Transactional
 	@Modifying
 	@Query(value = "delete from course_chapter_video where course_id = ?1 and chapter_id = ?2 and video_id =?3", nativeQuery = true)
-	void deleteByCourseIdAndChapterIdandAndVideoId(int courseId, int chapterId, int videoId);
+	void deleteByCourseIdAndChapterIdAndVideoId(int courseId, int chapterId, int videoId);
 }

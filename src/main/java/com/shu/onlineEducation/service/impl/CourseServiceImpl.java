@@ -12,7 +12,6 @@ import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideoPK;
 import com.shu.onlineEducation.entity.Prefer;
 import com.shu.onlineEducation.entity.Teacher;
 import com.shu.onlineEducation.service.CourseService;
-import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
@@ -62,7 +61,7 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Override
 	public synchronized void updateCourseStatusById(int courseId, int status) throws NotFoundException {
-		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		Course course = courseJpaRepository.findByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
@@ -104,7 +103,7 @@ public class CourseServiceImpl implements CourseService {
 		if (prefer == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
-		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		Course course = courseJpaRepository.findByCourseId(courseId);
 		course.setName(courseDto.getName());
 		course.setPreferId(prefer.getPreferId());
 		course.setIntro(courseDto.getIntro());
@@ -144,7 +143,7 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Override
 	public void deleteCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId) {
-		courseChapterVideoJpaRepository.deleteByCourseIdAndChapterIdandAndVideoId(courseId, chapterId, videoId);
+		courseChapterVideoJpaRepository.deleteByCourseIdAndChapterIdAndVideoId(courseId, chapterId, videoId);
 	}
 	
 	@Override

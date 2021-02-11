@@ -4,9 +4,12 @@ import com.shu.onlineEducation.common.dto.LoginDto;
 import com.shu.onlineEducation.common.dto.RegisterDto;
 import com.shu.onlineEducation.common.dto.StudentDto;
 import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
+import com.shu.onlineEducation.common.dto.course.WatchRecordDto;
+import com.shu.onlineEducation.service.WatchRecordService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
+import com.shu.onlineEducation.utils.MapUtil;
 import com.shu.onlineEducation.utils.RedisUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.entity.Student;
@@ -16,7 +19,9 @@ import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PostAuthorize;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
@@ -33,6 +38,8 @@ public class StudentController {
 	private StudentService studentService;
 	@Autowired
 	private SmsController smsController;
+	@Autowired
+	private WatchRecordService watchRecordService;
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
@@ -136,10 +143,35 @@ public class StudentController {
 	@ApiOperation(value = "返回所有当前学生的偏好")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	@PostAuthorize("hasAnyAuthority('ROLE_STUDENT')")
 	public Result findAllPreferences(@RequestParam("user_id") Integer userId) {
-		log.info("test:" + String.valueOf(SecurityContextHolder.getContext().getAuthentication().getAuthorities()));
+		log.info("test:" + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 		return Result.success(studentService.getAllPreferences(userId));
 	}
 	
+	@PostMapping("/findAllWatchRecords")
+	@ApiOperation(value = "返回所有当前学生的观看记录")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result findAllWatchRecords(Integer page, @RequestParam("user_id") Integer userId) throws NotFoundException {
+		Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "watchTime"));
+		return Result.success(MapUtil.pageResponse(watchRecordService.getAllByStudent(pageable, userId)));
+	}
+	
+	@PostMapping("/addWatchRecords")
+	@ApiOperation(value = "添加、修改观看记录")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result addWatchRecords(@RequestBody WatchRecordDto watchRecordDto) throws NotFoundException {
+		watchRecordService.addWatchRecords(watchRecordDto);
+		return Result.success();
+	}
+	
+	@PostMapping("/deleteWatchRecords")
+	@ApiOperation(value = "删除观看记录")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result deleteWatchRecords(Integer watchRecordId){
+		watchRecordService.deleteWatchRecord(watchRecordId);
+		return Result.success();
+	}
 }

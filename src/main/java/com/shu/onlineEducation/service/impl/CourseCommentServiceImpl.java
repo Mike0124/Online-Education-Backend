@@ -49,7 +49,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	
 	@Override
 	public Page<CourseComment> getCommentsByCourse(Pageable pageable, Integer courseId) throws NotFoundException {
-		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		Course course = courseJpaRepository.findByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
@@ -58,7 +58,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	
 	@Override
 	public JSON analysisByCourse(Integer courseId) throws NotFoundException {
-		Course course = courseJpaRepository.findCourseByCourseId(courseId);
+		Course course = courseJpaRepository.findByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
