@@ -6,7 +6,7 @@ import java.util.Map;
 
 public class MapUtil {
 	public static Map<String, Object> pageResponse(Page page){
-		Map<String, Object> map = new HashMap<>(2);
+		Map<String, Object> map = new HashMap<>(5);
 		map.put("total_page",page.getTotalPages());
 		map.put("list",page.getContent());
 		map.put("total_element",page.getTotalElements());

@@ -30,6 +30,9 @@ public interface CourseService {
 	
 	void updateCourse(Integer courseId, CourseDto courseDto) throws NotFoundException;
 	
+	List<Course> getRelatedCourses(Integer courseId) throws NotFoundException;
+	
+	Page<Course> getCoursesWithRegex(Pageable pageable, String query);
 	/*课程章节*/
 	
 	List<CourseChapter> getAllCourseChapterByCourseId(int courseId) throws NotFoundException;

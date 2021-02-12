@@ -13,7 +13,6 @@ create table course
     course_id       int auto_increment
         primary key,
     name            varchar(20)                          not null,
-    course_num      int                                  null,
     intro           varchar(400)                         null,
     upload_time     datetime   default CURRENT_TIMESTAMP null,
     teacher_id      int                                  not null,
@@ -22,7 +21,7 @@ create table course
     course_status   int        default 0                 not null,
     need_vip        tinyint(1) default 0                 not null,
     course_avg_mark decimal(2, 1)                        null,
-    course_watches  int                                  null
+    course_watches  int        default 0                 null
 );
 
 create index course_prefer_prefer_id_fk

@@ -1,6 +1,8 @@
 package com.shu.onlineEducation.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.shu.onlineEducation.common.dto.course.CourseDisplayDto;
 import com.shu.onlineEducation.common.dto.course.CourseDto;
 import com.shu.onlineEducation.dao.*;
@@ -91,6 +93,7 @@ public class CourseServiceImpl implements CourseService {
 		course.setTeacherId(teacher.getUserId());
 		course.setPreferId(prefer.getPreferId());
 		course.setIntro(courseDto.getIntro());
+		course.setCourseWatches(0);
 		course.setStatus(0);
 		course.setNeedVip(courseDto.getNeedVip());
 		course.setCoursePic(courseDto.getCoursePicUrl());
@@ -110,6 +113,41 @@ public class CourseServiceImpl implements CourseService {
 		course.setNeedVip(courseDto.getNeedVip());
 		course.setCoursePic(courseDto.getCoursePicUrl());
 		courseJpaRepository.saveAndFlush(course);
+	}
+	
+	@Override
+	public List<Course> getRelatedCourses(Integer courseId) throws NotFoundException {
+		Course course = courseJpaRepository.findByCourseId(courseId);
+		if (course == null) {
+			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
+		}
+		return courseJpaRepository.findRelatedCourses(course.getCourseId(), course.getPreferId());
+	}
+	
+	@Override
+	public Page<Course> getCoursesWithRegex(Pageable pageable, String query) {
+		// 使用HanLP分词
+		List<Term> termList = StandardTokenizer.segment(query);
+		// 拼接正则字符串
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < termList.size(); i++) {
+			String word = termList.get(i).word;
+			if (i != termList.size() - 1) {
+				sb.append(word).append("|");
+			} else {
+				sb.append(word);
+			}
+		}
+		String regex = sb.toString();
+		sb.insert(0, ".*(");
+		sb.append(").*");
+		Page<Course> courses = courseJpaRepository.findWithRegex(pageable, regex);
+		List<Course> list = courses.getContent();
+		list.forEach(course -> {
+			String newName = course.getName().replaceAll(regex, " $0 ");
+			course.setName(newName);
+		});
+		return courses;
 	}
 	
 	@Override

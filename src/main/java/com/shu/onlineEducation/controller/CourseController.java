@@ -125,6 +125,22 @@ public class CourseController {
 		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourse(pageable, courseId)));
 	}
 	
+	@PostMapping("/getRelatedCourses")
+	@ApiOperation(value = "获取相关课程")
+	@ResponseBody
+	public Result getRelatedCourses(Integer courseId) throws NotFoundException {
+		return Result.success(courseService.getRelatedCourses(courseId));
+	}
+	
+	@PostMapping("/getCoursesWithRegex")
+	@ApiOperation(value = "正则搜素课程")
+	@ResponseBody
+	public Result getCoursesWithRegex(@RequestParam(required = false, defaultValue = "1") Integer page, String query) {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "course_watches"));
+		return Result.success(MapUtil.pageResponse(courseService.getCoursesWithRegex(pageable, query)));
+	}
+	
 	//-----管理员、教师------
 	//课程
 	@PostMapping("/addCourse")
@@ -140,7 +156,7 @@ public class CourseController {
 	@ApiOperation(value = "更新课程信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result completeCourseInfo(@RequestParam Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
+	public Result completeCourseInfo(Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
 		courseService.updateCourse(courseId, courseDto);
 		return Result.success();
 	}

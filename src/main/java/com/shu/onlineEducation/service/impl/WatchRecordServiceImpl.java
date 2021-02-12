@@ -50,11 +50,16 @@ public class WatchRecordServiceImpl implements WatchRecordService {
 		//判断是否存在该课程的观看记录
 		WatchRecord watchRecord = watchRecordJpaRepository.findByStudentAndCourse(watchRecordDto.getStudentId(), watchRecordDto.getCourseId());
 		if (watchRecord == null) {
+			//从已删除的课程中判断学生是否看过课程,没看过则课程观看数量+1
+			if (watchRecordJpaRepository.findDeletedByStudentAndCourse(watchRecordDto.getStudentId(), watchRecordDto.getCourseId()) == null) {
+				course.setCourseWatches(course.getCourseWatches() + 1);
+				courseJpaRepository.saveAndFlush(course);
+			}
 			watchRecord = new WatchRecord();
 			watchRecord.setStudentId(watchRecordDto.getStudentId());
-			watchRecord.setPicUrl(course.getCoursePic());
 		}
 		watchRecord.setDeleted(0);
+		watchRecord.setPicUrl(course.getCoursePic());
 		watchRecord.setCourseChapterVideo(video);
 		watchRecordJpaRepository.save(watchRecord);
 	}

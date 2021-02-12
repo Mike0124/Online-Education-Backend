@@ -23,9 +23,6 @@ public class Course {
 	@Column(nullable = false)
 	private String name;
 	
-	@Column(name = "course_num")
-	private Integer num;
-	
 	@Column(nullable = false)
 	private String intro;
 	

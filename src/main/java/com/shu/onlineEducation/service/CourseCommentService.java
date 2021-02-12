@@ -8,8 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
 
 public interface CourseCommentService {
 	BigDecimal getCommentMarkAvg(int courseId);
@@ -18,7 +16,7 @@ public interface CourseCommentService {
 	
 	Page<CourseComment> getCommentsByCourse(Pageable pageable, Integer courseId) throws NotFoundException;
 	
-	Page<CourseComment> getCommentsByCourseWithRegex(Pageable pageable, Integer courseId, String queryString)throws NotFoundException;
+	Page<CourseComment> getCommentsByCourseWithRegex(Pageable pageable, Integer courseId, String queryString) throws NotFoundException;
 	
-	JSON analysisByCourse(Integer courseId)throws NotFoundException;
+	JSON analysisByCourse(Integer courseId) throws NotFoundException;
 }

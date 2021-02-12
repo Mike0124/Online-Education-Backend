@@ -59,9 +59,12 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	}
 	
 	@Override
-	public Page<CourseComment> getCommentsByCourseWithRegex(Pageable pageable, Integer courseId, String queryString) throws NotFoundException {
+	public Page<CourseComment> getCommentsByCourseWithRegex(Pageable pageable, Integer courseId, String query) throws NotFoundException {
+		if (courseJpaRepository.findByCourseId(courseId) == null) {
+			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
+		}
 		// 使用HanLP分词
-		List<Term> termList = StandardTokenizer.segment(queryString);
+		List<Term> termList = StandardTokenizer.segment(query);
 		// 拼接正则字符串
 		StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < termList.size(); i++) {
@@ -79,11 +82,9 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		Page<CourseComment> courseComments = courseCommentJpaRepository.findByCourseWithRegex(pageable, sb.toString(), courseId);
 		List<CourseComment> list = courseComments.getContent();
 		list.forEach(courseComment -> {
-			String content = courseComment.getContent();
-			String newContent = content.replaceAll(regex, " $0 ");
+			String newContent = courseComment.getContent().replaceAll(regex, " $0 ");
 			courseComment.setContent(newContent);
 		});
-		
 		return courseComments;
 	}
 	
