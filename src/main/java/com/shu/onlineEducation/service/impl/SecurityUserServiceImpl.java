@@ -46,7 +46,7 @@ public class SecurityUserServiceImpl implements SecurityUserService {
 			case ("teacher"):
 				Teacher teacher = teacherService.loginByPassword(securityUser.getPhoneId(), securityUser.getPassword());
 				List<String> teacherRoles = new ArrayList<>();
-				teacherRoles.add("ROLE_STUDENT");
+				teacherRoles.add("ROLE_TEACHER");
 				securityUser.setRoles(teacherRoles);
 				break;
 			case ("admin"):

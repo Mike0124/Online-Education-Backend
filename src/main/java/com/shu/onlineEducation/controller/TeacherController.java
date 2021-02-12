@@ -133,7 +133,7 @@ public class TeacherController {
 	}
 	
 	@PostMapping("/getCommentByCourseWithRegex")
-	@ApiOperation(value = "正则搜素课程评论")
+	@ApiOperation(value = "正则搜索课程评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result getCommentByCourseWithRegex(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam("course_id") Integer courseId, String query) throws NotFoundException {

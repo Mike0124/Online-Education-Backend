@@ -45,7 +45,7 @@ public class MyJwtFilter extends OncePerRequestFilter{
 			SecurityContextHolder.getContext().setAuthentication(myAuthenticationToken);
 		} catch (ExpiredJwtException ex) {//JWT过期
 			log.error("Exception caught when decode toke." + ex.getLocalizedMessage());
-			((HttpServletResponse) httpServletRequest).setStatus(HttpStatus.UNAUTHORIZED.value());
+			((HttpServletResponse) httpServletResponse).setStatus(HttpStatus.UNAUTHORIZED.value());
 			return;
 		} catch (DisabledException de) {//账户不可用
 			log.error("Exception caught when validate account." + de.getLocalizedMessage());
