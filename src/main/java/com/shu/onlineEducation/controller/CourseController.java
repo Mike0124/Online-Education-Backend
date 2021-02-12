@@ -41,17 +41,18 @@ public class CourseController {
 	@ApiOperation(value = "获取此偏好的所有课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
 	public Result getCourseByPreferId(Integer page, @RequestParam(required = false) Integer sort, Integer preferId) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
 			case (1):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
 				break;
 			case (2):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
 				break;
 			case (3):
 			default:
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
 		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByPreferId(pageable, preferId)));
 	}
@@ -60,17 +61,18 @@ public class CourseController {
 	@ApiOperation(value = "获取此偏好的所有免费/付费课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
 	public Result getCourseByNeedVipAndPreferId(Integer page, @RequestParam(required = false) Integer sort, Integer preferId, Boolean needVip) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
 			case (1):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
 				break;
 			case (2):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
 				break;
 			case (3):
 			default:
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
 		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByNeedVipAndPreferId(pageable, needVip, preferId)));
 	}
@@ -80,17 +82,18 @@ public class CourseController {
 	@ApiOperation(value = "获取老师所有课程信息	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
 	public Result getCourseByTeacherId(Integer page, @RequestParam(required = false) Integer sort, Integer teacherId) {
+		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
 			case (1):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
 				break;
 			case (2):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
 				break;
 			case (3):
 			default:
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
 		}
 		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByTeacherId(pageable, teacherId)));
 	}
@@ -106,17 +109,18 @@ public class CourseController {
 	@ApiOperation(value = "获取课程评论	1.按时间最新排序，2.按评分排序，3.按点赞量排序")
 	@ResponseBody
 	public Result getCourseComments(Integer page, @RequestParam(required = false) Integer sort, Integer courseId) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
 			case (1):
-				pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "time"));
+				pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
 				break;
 			case (2):
-				pageable = PageRequest.of(page - 1, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commentMark"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commentMark"));
 				break;
 			case (3):
 			default:
-				pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "likes"));
+				pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
 		}
 		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourse(pageable, courseId)));
 	}

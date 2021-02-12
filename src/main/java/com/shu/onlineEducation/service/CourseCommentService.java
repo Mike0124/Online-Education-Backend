@@ -18,5 +18,7 @@ public interface CourseCommentService {
 	
 	Page<CourseComment> getCommentsByCourse(Pageable pageable, Integer courseId) throws NotFoundException;
 	
+	Page<CourseComment> getCommentsByCourseWithRegex(Pageable pageable, Integer courseId, String queryString)throws NotFoundException;
+	
 	JSON analysisByCourse(Integer courseId)throws NotFoundException;
 }

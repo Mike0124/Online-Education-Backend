@@ -1,6 +1,8 @@
 package com.shu.onlineEducation.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hankcs.hanlp.seg.common.Term;
+import com.hankcs.hanlp.tokenizer.StandardTokenizer;
 import com.shu.onlineEducation.dao.CourseCommentJpaRepository;
 import com.shu.onlineEducation.dao.CourseJpaRepository;
 import com.shu.onlineEducation.entity.Course;
@@ -54,6 +56,35 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
 		}
 		return courseCommentJpaRepository.findByCourse(pageable, course);
+	}
+	
+	@Override
+	public Page<CourseComment> getCommentsByCourseWithRegex(Pageable pageable, Integer courseId, String queryString) throws NotFoundException {
+		// 使用HanLP分词
+		List<Term> termList = StandardTokenizer.segment(queryString);
+		// 拼接正则字符串
+		StringBuffer sb = new StringBuffer();
+		for (int i = 0; i < termList.size(); i++) {
+			String word = termList.get(i).word;
+			if (i != termList.size() - 1) {
+				sb.append(word).append("|");
+			} else {
+				sb.append(word);
+			}
+		}
+		String regex = sb.toString();
+		sb.insert(0, ".*(");
+		sb.append(").*");
+		
+		Page<CourseComment> courseComments = courseCommentJpaRepository.findByCourseWithRegex(pageable, sb.toString(), courseId);
+		List<CourseComment> list = courseComments.getContent();
+		list.forEach(courseComment -> {
+			String content = courseComment.getContent();
+			String newContent = content.replaceAll(regex, " $0 ");
+			courseComment.setContent(newContent);
+		});
+		
+		return courseComments;
 	}
 	
 	@Override

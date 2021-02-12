@@ -8,6 +8,7 @@ import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.JwtUtil;
+import com.shu.onlineEducation.utils.MapUtil;
 import com.shu.onlineEducation.utils.RedisUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -21,6 +22,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -126,5 +130,15 @@ public class TeacherController {
 	@ResponseBody
 	public Result analysisCommentByCourse(@RequestParam("course_id") Integer courseId) throws NotFoundException {
 		return Result.success(courseCommentService.analysisByCourse(courseId));
+	}
+	
+	@PostMapping("/getCommentByCourseWithRegex")
+	@ApiOperation(value = "正则搜素课程评论")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getCommentByCourseWithRegex(Integer page, @RequestParam("course_id") Integer courseId, String query) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
+		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourseWithRegex(pageable, courseId, query)));
 	}
 }

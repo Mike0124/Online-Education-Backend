@@ -9,6 +9,7 @@ public class MapUtil {
 		Map<String, Object> map = new HashMap<>(2);
 		map.put("total_page",page.getTotalPages());
 		map.put("list",page.getContent());
+		map.put("total_element",page.getTotalElements());
 		return map;
 	}
 }

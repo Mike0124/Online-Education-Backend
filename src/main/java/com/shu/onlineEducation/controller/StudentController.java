@@ -153,7 +153,8 @@ public class StudentController {
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result findAllWatchRecords(Integer page, @RequestParam("user_id") Integer userId) throws NotFoundException {
-		Pageable pageable = PageRequest.of(page - 1, 10, Sort.by(Sort.Direction.DESC, "watchTime"));
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "watchTime"));
 		return Result.success(MapUtil.pageResponse(watchRecordService.getAllByStudent(pageable, userId)));
 	}
 	
