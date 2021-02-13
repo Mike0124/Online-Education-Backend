@@ -1,6 +1,6 @@
 package com.shu.onlineEducation.service.impl;
 
-import com.shu.onlineEducation.common.dto.TaskDto;
+import com.shu.onlineEducation.common.dto.course.TaskDto;
 import com.shu.onlineEducation.dao.CourseChapterJpaRepository;
 import com.shu.onlineEducation.dao.TaskFileJpaRepository;
 import com.shu.onlineEducation.dao.TaskJpaRepository;
@@ -60,7 +60,7 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Override
 	public void addTaskFile(Integer taskId, String taskFileUrl) throws NotFoundException {
-		Task task = taskJpaRepository.findTaskById(taskId);
+		Task task = taskJpaRepository.findByTaskId(taskId);
 		if (task == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
@@ -77,7 +77,7 @@ public class TaskServiceImpl implements TaskService {
 	
 	@Override
 	public List<TaskFile> getTaskFileByTask(Integer taskId) throws NotFoundException {
-		Task task = taskJpaRepository.findTaskById(taskId);
+		Task task = taskJpaRepository.findByTaskId(taskId);
 		if (task == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}

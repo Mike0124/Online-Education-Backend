@@ -113,14 +113,14 @@ public class CourseController {
 		Pageable pageable;
 		switch (sort) {
 			case (1):
-				pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "time"));
 				break;
 			case (2):
 				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commentMark"));
 				break;
 			case (3):
 			default:
-				pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "likes"));
 		}
 		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourse(pageable, courseId)));
 	}

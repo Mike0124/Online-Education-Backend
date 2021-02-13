@@ -14,13 +14,10 @@ import com.shu.onlineEducation.utils.Result.Result;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import com.shu.onlineEducation.service.TeacherService;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
-import com.shu.onlineEducation.utils.GlobalExceptionHandler;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -35,7 +32,6 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/api/Teacher")
 @Api(tags = "2-教师模块")
 public class TeacherController {
-	private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 	
 	@Autowired
 	private TeacherService teacherService;
@@ -83,7 +79,6 @@ public class TeacherController {
 	public Result add(@RequestBody RegisterDto registerDto) throws ExistedException {
 		if (registerDto.getCode().equals(redisUtil.get(registerDto.getPhone()))) {
 			teacherService.addUser(registerDto.getPhone(), registerDto.getPassword());
-			log.info("添加用户成功");
 			return Result.success();
 		} else {
 			return Result.failure(ResultCode.PARAM_IS_INVALID);
@@ -108,9 +103,8 @@ public class TeacherController {
 	@ApiOperation(value = "删除教师")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result delete(@RequestParam("user_id") int userId) throws NotFoundException {
+	public Result delete(@RequestParam("user_id") int userId) {
 		teacherService.deleteTeacherById(userId);
-		logger.info("删除用户：id=" + userId);
 		return Result.success();
 	}
 	
@@ -120,7 +114,6 @@ public class TeacherController {
 	@ResponseBody
 	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody TeacherDto teacherDto) throws NotFoundException {
 		teacherService.completeTeacherInfo(userId, teacherDto);
-		logger.info("完善教师信息：id=" + userId);
 		return Result.success();
 	}
 	

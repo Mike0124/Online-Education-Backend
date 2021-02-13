@@ -1,11 +1,11 @@
 package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
 import lombok.Data;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Data
 @Entity
@@ -35,7 +35,10 @@ public class Homework {
 	String content;
 	
 	@Column(name = "commit_time")
-	String commitTime;
+	Timestamp commitTime;
+	
+	@Column
+	Integer status;
 	
 	@ManyToOne
 	@JsonIgnore
@@ -46,4 +49,8 @@ public class Homework {
 	@JsonIgnore
 	@JoinColumn(name = "task_id", referencedColumnName = "task_id", insertable = false, updatable = false)
 	private Task task;
+	
+	public String getCommitTime() {
+		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(commitTime);
+	}
 }

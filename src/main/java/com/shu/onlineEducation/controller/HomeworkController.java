@@ -1,16 +1,20 @@
 package com.shu.onlineEducation.controller;
 
+import com.shu.onlineEducation.common.dto.homework.CorrectDto;
 import com.shu.onlineEducation.common.dto.homework.HomeworkDto;
+import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.HomeworkService;
+import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import com.shu.onlineEducation.utils.MapUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/Homework")
@@ -18,45 +22,87 @@ import org.springframework.web.bind.annotation.RestController;
 public class HomeworkController {
 	@Autowired
 	private HomeworkService homeworkService;
+	@Autowired
+	private AppProperties appProperties;
 	
-	//学生、教师、管理员
-	@PostMapping("/getByTaskIdAndStudentId")
+	@PostMapping("/getByTaskAndStudent")
 	@ApiOperation(value = "根据任务和学生获取作业")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	//TODO 这是个空函数
-	public Result getByTaskIdAndStudentId(Integer taskId, Integer studentId) {
-		return Result.success(homeworkService.getByTaskIdAndStudentId(taskId, studentId));
+	public Result getByTaskIdAndStudentId(Integer taskId, Integer studentId) throws NotFoundException {
+		return Result.success(homeworkService.getByTaskAndStudent(taskId, studentId));
 	}
 	
-	@PostMapping("/addHomeWork")
-	@ApiOperation(value = "添加作业")
-	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
+	@PostMapping("/getFilesByHomework")
+	@ApiOperation(value = "根据作业获取作业文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	//TODO 这是个空函数
-	public Result addHomeWork(HomeworkDto homeworkDto) {
-		homeworkService.addHomeWork(homeworkDto);
+	public Result getFilesByHomework(Integer homeworkId) throws NotFoundException {
+		return Result.success(homeworkService.getFilesByHomework(homeworkId));
+	}
+	
+	@PostMapping("/studentHomework")
+	@ApiOperation(value = "学生添加/修改作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result studentHomework(@RequestBody HomeworkDto homeworkDto) throws NotFoundException {
+		homeworkService.studentHomework(homeworkDto);
+		return Result.success();
+	}
+	
+	@PostMapping("/teacherHomework")
+	@ApiOperation(value = "老师批改/驳回作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result teacherHomework(@RequestBody CorrectDto correctDto) throws NotFoundException {
+		homeworkService.teacherHomework(correctDto);
 		return Result.success();
 	}
 	
 	@PostMapping("/deleteHomeWork")
 	@ApiOperation(value = "删除作业")
-	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	//TODO 这是个空函数
-	public Result deleteHomeWork(Integer homeworkId) {
-		homeworkService.deleteHomeWork(homeworkId);
+	public Result deleteHomework(Integer homeworkId) {
+		homeworkService.deleteHomework(homeworkId);
 		return Result.success();
 	}
 	
-	//教师、管理员
-	@PostMapping("/getByTaskId")
-	@ApiOperation(value = "根据任务获取作业，按提交时间最新排序")
+	@PostMapping("/addHomeworkFile")
+	@ApiOperation(value = "添加作业文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result addHomeworkFile(Integer homeworkId, String homeworkFileUrl) throws NotFoundException {
+		homeworkService.addHomeworkFile(homeworkId, homeworkFileUrl);
+		return Result.success();
+	}
+	
+	@PostMapping("/deleteHomeworkFile")
+	@ApiOperation(value = "删除作业文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result deleteHomeworkFile(Integer homeworkFileId) {
+		homeworkService.deleteHomeworkFile(homeworkFileId);
+		return Result.success();
+	}
+	
+	@PostMapping("/getByTask")
+	@ApiOperation(value = "根据任务获取作业，提交时间最新")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	//TODO 这是个空函数
-	public Result getByTaskId(Integer page, Integer taskId) {
-		return Result.success();
+	public Result getByTaskId(Integer page, Integer taskId) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commitTime"));
+		return Result.success(MapUtil.pageResponse(homeworkService.getByTask(pageable, taskId)));
 	}
 	
+	@PostMapping("/getByTaskAndStatus")
+	@ApiOperation(value = "根据任务和任务状态获取作业，提交时间最新 未上传：0 已驳回：1 已上传：2 已批改：3")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getByTaskAndStatus(Integer page, Integer taskId, Integer status) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commitTime"));
+		return Result.success(MapUtil.pageResponse(homeworkService.getByTaskAndStatus(pageable, taskId, status)));
+	}
 }
