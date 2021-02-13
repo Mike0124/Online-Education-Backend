@@ -1,8 +1,10 @@
 package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.dao.MajorJpaRepository;
+import com.shu.onlineEducation.dao.PreferJpaRepository;
 import com.shu.onlineEducation.entity.Major;
 import com.shu.onlineEducation.common.dto.MajorDto;
+import com.shu.onlineEducation.entity.Prefer;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
@@ -22,9 +24,11 @@ public class MajorController {
 	
 	@Autowired
 	MajorJpaRepository majorJpaRepository;
+	@Autowired
+	PreferJpaRepository preferJpaRepository;
 	
 	@GetMapping("/findAllMajor")
-	@ApiOperation("查询所有的专业")
+	@ApiOperation("获取所有的专业")
 	@ResponseBody
 	public Result findAllMajor() {
 		return Result.success(majorJpaRepository.findAll());
@@ -68,5 +72,64 @@ public class MajorController {
 		major.setMajorContent(majorDto.getMajorContent());
 		majorJpaRepository.saveAndFlush(major);
 		return Result.success();
+	}
+	
+	@PostMapping("/addPrefer")
+	@ApiOperation("添加子专业")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ResponseBody
+	public Result addPrefer(@RequestParam("major_id") Integer majorId, @RequestParam("prefer_content") String preferContent) throws ExistedException, NotFoundException {
+		Prefer prefer = preferJpaRepository.findByPreferContent(preferContent);
+		if (prefer != null) {
+			throw new ExistedException(ResultCode.PARAM_IS_INVALID);
+		}
+		Major major = majorJpaRepository.findMajorByMajorId(majorId);
+		if (major == null) {
+			throw new NotFoundException(ResultCode.MAJOR_NOT_FOUND);
+		}
+		prefer = new Prefer();
+		prefer.setMajorId(major.getMajorId());
+		prefer.setPreferContent(preferContent);
+		preferJpaRepository.saveAndFlush(prefer);
+		return Result.success();
+	}
+	
+	@PostMapping("/deletePrefer")
+	@ApiOperation("删除子专业")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ResponseBody
+	public Result deletePrefer(@RequestParam("prefer_id") int preferId) {
+		preferJpaRepository.deleteById(preferId);
+		return Result.success();
+	}
+	
+	@PostMapping("/updatePrefer")
+	@ApiOperation("更新子专业信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ResponseBody
+	public Result updatePrefer(@RequestParam("prefer_id") int preferId, @RequestParam("major_id") Integer majorId, @RequestParam("prefer_content") String preferContent) throws NotFoundException, ExistedException {
+		Prefer prefer = preferJpaRepository.findByPreferId(preferId);
+		Major major = majorJpaRepository.findMajorByMajorId(majorId);
+		if (prefer == null || major == null) {
+			throw new NotFoundException(ResultCode.MAJOR_NOT_FOUND);
+		}
+		if (preferJpaRepository.findByPreferContent(preferContent) != null) {
+			throw new ExistedException(ResultCode.PARAM_IS_INVALID);
+		}
+		prefer.setMajorId(major.getMajorId());
+		prefer.setPreferContent(preferContent);
+		preferJpaRepository.saveAndFlush(prefer);
+		return Result.success();
+	}
+	
+	@PostMapping("/getPreferByMajor")
+	@ApiOperation("获取所有专业的子专业")
+	@ResponseBody
+	public Result getPreferByMajor(@RequestParam("major_id") Integer majorId) throws NotFoundException {
+		Major major = majorJpaRepository.findMajorByMajorId(majorId);
+		if (major == null) {
+			throw new NotFoundException(ResultCode.MAJOR_NOT_FOUND);
+		}
+		return Result.success(preferJpaRepository.findByMajor(major));
 	}
 }

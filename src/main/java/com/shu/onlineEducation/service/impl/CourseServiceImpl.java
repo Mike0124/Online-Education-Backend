@@ -84,7 +84,7 @@ public class CourseServiceImpl implements CourseService {
 	@Override
 	public void addCourse(CourseDto courseDto) throws NotFoundException {
 		Teacher teacher = teacherJpaRepository.findTeacherByUserId(courseDto.getTeacherId());
-		Prefer prefer = preferJpaRepository.findPreferByPreferId(courseDto.getPreferId());
+		Prefer prefer = preferJpaRepository.findByPreferId(courseDto.getPreferId());
 		if (teacher == null || prefer == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
@@ -102,7 +102,7 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Override
 	public void updateCourse(Integer courseId, CourseDto courseDto) throws NotFoundException {
-		Prefer prefer = preferJpaRepository.findPreferByPreferId(courseDto.getPreferId());
+		Prefer prefer = preferJpaRepository.findByPreferId(courseDto.getPreferId());
 		if (prefer == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
