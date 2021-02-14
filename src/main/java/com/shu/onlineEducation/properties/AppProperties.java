@@ -9,4 +9,5 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties("backend")
 public class AppProperties {
     Integer max_rows_in_one_page;
+    Integer max_live_in_one_arrange;
 }

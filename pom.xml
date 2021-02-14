@@ -143,6 +143,12 @@
             <artifactId>hanlp</artifactId>
             <version>portable-1.7.4</version>
         </dependency>
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.4</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <build>

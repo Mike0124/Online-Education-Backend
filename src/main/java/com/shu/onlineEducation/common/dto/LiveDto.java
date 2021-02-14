@@ -4,7 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 
-import java.sql.Timestamp;
+import java.sql.Date;
 
 @Getter
 @Setter
@@ -12,7 +12,7 @@ import java.sql.Timestamp;
 public class LiveDto {
     String liveName;
     String liveIntro;
-    Timestamp liveDate;
+    Date liveDate;
     Integer addressId;
     Integer teacherId;
     String livePicUrl;

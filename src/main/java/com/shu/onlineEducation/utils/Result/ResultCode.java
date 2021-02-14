@@ -17,12 +17,17 @@ public enum ResultCode {
     COURSE_PREFER_NOT_EXIST(3002,"此偏好课程不存在"),
     COURSE_VIP_NOT_EXIST(3003,"VIP课程不存在"),
     COURSE_VIP_PREFER_NOT_EXIST(3004, "此偏好VIP课程不存在"),
+    COURSE_LIVE_EXISTED(3005,"此时间段已被预约满"),
+    COURSE_LIVE_NOT_FOUND(3006,"此直播不存在"),
     //      专业错误: 4001-4999
     MAJOR_HAS_EXISTED(4001, "专业已存在"),
     MAJOR_NOT_FOUND(4002,"专业不存在"),
     //      作业错误: 5001-5999
     TASK_HAS_CLOSED(5001,"任务已过期"),
-    TEACHER_HAS_CORRECTED(5002,"教师已批改");
+    TEACHER_HAS_CORRECTED(5002,"教师已批改"),
+    //      直播地址错误: 6001-6999
+    LIVE_ADDRESS_HAS_EXISTED(6001,"直播地址已存在"),
+    LIVE_ADDRESS_NOT_FOUND(6002,"直播地址不存在");
     
 
     private Integer code;

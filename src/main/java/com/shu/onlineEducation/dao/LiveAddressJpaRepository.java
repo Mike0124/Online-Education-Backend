@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface LiveAddressJpaRepository extends JpaRepository<LiveAddress, Integer> {
-
+    Boolean existsByLiveAddress(String liveAddress);
 }
