@@ -86,13 +86,14 @@ create table homework
 (
     homework_id int auto_increment
         primary key,
-    content     varchar(400)                       null,
+    content     text                               null,
     likes       int      default 0                 null,
     commit_time datetime default CURRENT_TIMESTAMP null,
     student_id  int                                not null,
     task_id     int                                not null,
     mark        int      default 0                 null,
-    reply       varchar(100)                       null
+    reply       varchar(200)                       null,
+    status      int      default 0                 null
 );
 
 create index homework_task_task_id_fk

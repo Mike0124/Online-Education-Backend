@@ -2,6 +2,7 @@ package com.shu.onlineEducation.service;
 
 import com.shu.onlineEducation.common.dto.StudentDto;
 import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
+import com.shu.onlineEducation.entity.CourseComment;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
@@ -21,10 +22,12 @@ public interface StudentService {
 	
 	void deleteStudentById(Integer userId);       //删除学生
 	
-	void completeStudent(Integer userId, StudentDto studentDto)throws NotFoundException;       //完善学生信息
+	void completeStudent(Integer userId, StudentDto studentDto) throws NotFoundException;       //完善学生信息
 	
 	//学生评论课程
 	void commentCourseByCourseId(CourseCommentDto courseCommentDto) throws NotFoundException;
+	
+	CourseComment getCourseCommentByStudentAndCourse(Integer userId, Integer courseId) throws NotFoundException;
 	
 	void collectPreference(Integer userId, Integer[] prefersId);
 	

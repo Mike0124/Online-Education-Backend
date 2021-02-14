@@ -1,6 +1,6 @@
 package com.shu.onlineEducation.service;
 
-import com.shu.onlineEducation.common.dto.TaskDto;
+import com.shu.onlineEducation.common.dto.course.TaskDto;
 import com.shu.onlineEducation.entity.Task;
 import com.shu.onlineEducation.entity.TaskFile;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;

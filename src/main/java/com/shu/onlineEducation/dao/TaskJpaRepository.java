@@ -14,8 +14,7 @@ import java.util.List;
 public interface TaskJpaRepository extends JpaRepository<Task, Integer> {
 	List<Task> findByCourseChapter(CourseChapter courseChapter);
 	
-	@Query(value = "select * from task where task_id = :taskId", nativeQuery = true)
-	Task findTaskById(Integer taskId);
+	Task findByTaskId(Integer taskId);
 	
 	@Query(value = "select * from task where course_id = :courseId and chapter_id = :chapterId", nativeQuery = true)
 	List<Task> findByCourseChapter(Integer courseId, Integer chapterId);

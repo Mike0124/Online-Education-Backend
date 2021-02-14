@@ -1,12 +1,32 @@
 package com.shu.onlineEducation.service;
 
+import com.shu.onlineEducation.common.dto.homework.CorrectDto;
 import com.shu.onlineEducation.common.dto.homework.HomeworkDto;
+import com.shu.onlineEducation.entity.Homework;
+import com.shu.onlineEducation.entity.HomeworkFile;
+import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 public interface HomeworkService {
-	Object getByTaskIdAndStudentId(Integer taskId, Integer studentId);
+	Homework getByTaskAndStudent(Integer taskId, Integer studentId) throws NotFoundException;
 	
-	void addHomeWork(HomeworkDto homeworkDto);
+	Page<Homework> getByTask(Pageable pageable, Integer taskId) throws NotFoundException;
 	
-	void deleteHomeWork(Integer homeworkId);
+	Page<Homework> getByTaskAndStatus(Pageable pageable, Integer taskId, Integer status) throws NotFoundException;
+	
+	List<HomeworkFile> getFilesByHomework(Integer homeworkId) throws NotFoundException;
+	
+	void studentHomework(HomeworkDto homeworkDto) throws NotFoundException;
+	
+	void teacherHomework(CorrectDto correctDto) throws NotFoundException;
+	
+	void deleteHomework(Integer homeworkId);
+	
+	void addHomeworkFile(Integer homeworkId, String homeworkFileUrl) throws NotFoundException;
+	
+	void deleteHomeworkFile(Integer homeworkId);
 }
 

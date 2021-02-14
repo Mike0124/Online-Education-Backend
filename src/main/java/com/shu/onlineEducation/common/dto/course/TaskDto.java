@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.common.dto;
+package com.shu.onlineEducation.common.dto.course;
 
 import lombok.Data;
 

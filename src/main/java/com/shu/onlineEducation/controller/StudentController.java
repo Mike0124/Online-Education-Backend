@@ -119,6 +119,14 @@ public class StudentController {
 		return Result.success();
 	}
 	
+	@PostMapping("/getCourseCommentByStudentAndCourse")
+	@ApiOperation(value = "获取当前学生对该课程的评价")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getCourseCommentByStudentAndCourse(@RequestParam("user_id") Integer userId, @RequestParam("course_id") Integer courseId) throws NotFoundException {
+		return Result.success(studentService.getCourseCommentByStudentAndCourse(userId, courseId));
+	}
+	
 	@PostMapping("/completeStudentById")
 	@ApiOperation(value = "完善学生信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
@@ -171,7 +179,7 @@ public class StudentController {
 	@ApiOperation(value = "删除观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteWatchRecords(Integer watchRecordId){
+	public Result deleteWatchRecords(Integer watchRecordId) {
 		watchRecordService.deleteWatchRecord(watchRecordId);
 		return Result.success();
 	}

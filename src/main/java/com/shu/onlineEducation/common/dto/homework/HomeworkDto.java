@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class HomeworkDto {
 	String content;
-	Integer like;
 	Integer studentId;
 	Integer taskId;
+	Integer status;
 }

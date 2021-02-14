@@ -104,7 +104,7 @@ public class StudentServiceImpl implements StudentService {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
 		//每个学生只能评论一个课程一次
-		CourseComment courseComment= courseCommentJpaRepository.findByCourseAndStudent(course, student);
+		CourseComment courseComment = courseCommentJpaRepository.findByCourseAndStudent(course, student);
 		if (courseComment == null) {
 			courseComment = new CourseComment();
 			courseComment.setCourseId(course.getCourseId());
@@ -120,6 +120,16 @@ public class StudentServiceImpl implements StudentService {
 		if (courseComment.getCommentId() % 20 == 0) {
 			courseCommentService.trainLatest(courseComment.getCommentId());
 		}
+	}
+	
+	@Override
+	public CourseComment getCourseCommentByStudentAndCourse(Integer userId, Integer courseId) throws NotFoundException {
+		Course course = courseJpaRepository.findByCourseId(courseId);
+		Student student = studentJpaRepository.findByUserId(userId);
+		if (student == null || course == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		return courseCommentJpaRepository.findByCourseAndStudent(course, student);
 	}
 	
 	@Override
