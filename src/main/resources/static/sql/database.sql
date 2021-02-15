@@ -119,14 +119,22 @@ create table live
         primary key,
     live_name       varchar(20)  not null,
     live_intro      varchar(100) not null,
-    live_start_time datetime     not null,
-    live_address    varchar(100) not null,
+    live_date       date         not null,
+    live_address_id int          not null,
     teacher_id      int          not null,
-    live_pic_url    varchar(50)  null
+    live_pic_url    varchar(100) null,
+    live_arrange    int          not null
 );
 
-create index live_teachers_user_id_fk
+create index live_teacher_id_index
     on live (teacher_id);
+
+create table live_address
+(
+    live_address_id int auto_increment
+        primary key,
+    live_address    varchar(100) not null
+);
 
 create table major
 (
@@ -155,6 +163,18 @@ create table relationship_stu_prefer
 
 create index pre_id
     on relationship_stu_prefer (prefer_id);
+
+create table stu_like_comment
+(
+    id         int auto_increment
+        primary key,
+    student_id int                                null,
+    comment_id int                                null,
+    time       datetime default CURRENT_TIMESTAMP null
+);
+
+create index stu_like_comment_student_id_index
+    on stu_like_comment (student_id);
 
 create table students
 (

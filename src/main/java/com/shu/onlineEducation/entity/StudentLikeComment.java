@@ -12,31 +12,23 @@ import java.text.SimpleDateFormat;
 @Data
 @Entity
 @EntityListeners(AuditingEntityListener.class)
-@Table(name = "course_comment")
-public class CourseComment {
+@Table(name = "stu_like_comment")
+public class StudentLikeComment {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "comment_id")
-	private Integer commentId;
-	
-	@Column
-	private Integer likes;
-	
-	@Column
-	private String content;
-	
-	@CreatedDate
-	@Column
-	private Timestamp time;
-	
-	@Column(name = "comment_mark")
-	private Integer commentMark;
+	@Column(name = "id")
+	private Integer id;
 	
 	@Column(name = "student_id")
 	private Integer studentId;
 	
-	@Column(name = "course_id")
-	private Integer courseId;
+	
+	@Column(name = "comment_id")
+	private Integer commentId;
+	
+	@CreatedDate
+	@Column(name = "time")
+	private Timestamp time;
 	
 	@ManyToOne
 	@JsonIgnore
@@ -45,8 +37,8 @@ public class CourseComment {
 	
 	@ManyToOne
 	@JsonIgnore
-	@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false)
-	private Course course;
+	@JoinColumn(name = "comment_id", referencedColumnName = "comment_id", insertable = false, updatable = false)
+	private CourseComment courseComment;
 	
 	public String getTime() {
 		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(time);

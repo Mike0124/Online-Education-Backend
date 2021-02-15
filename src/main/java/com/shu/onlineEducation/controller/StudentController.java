@@ -5,6 +5,7 @@ import com.shu.onlineEducation.common.dto.RegisterDto;
 import com.shu.onlineEducation.common.dto.StudentDto;
 import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.common.dto.course.WatchRecordDto;
+import com.shu.onlineEducation.service.LikeService;
 import com.shu.onlineEducation.service.WatchRecordService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
@@ -27,6 +28,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
 
 @Slf4j
 @RestController
@@ -40,6 +42,8 @@ public class StudentController {
 	private SmsController smsController;
 	@Autowired
 	private WatchRecordService watchRecordService;
+	@Autowired
+	private LikeService likeService;
 	@Autowired
 	private JwtUtil jwtUtil;
 	@Autowired
@@ -148,7 +152,7 @@ public class StudentController {
 	}
 	
 	@PostMapping("/findAllPreferences")
-	@ApiOperation(value = "返回所有当前学生的偏好")
+	@ApiOperation(value = "获取所有当前学生的偏好")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result findAllPreferences(@RequestParam("user_id") Integer userId) {
@@ -157,7 +161,7 @@ public class StudentController {
 	}
 	
 	@PostMapping("/findAllWatchRecords")
-	@ApiOperation(value = "返回所有当前学生的观看记录")
+	@ApiOperation(value = "获取当前学生的观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result findAllWatchRecords(Integer page, @RequestParam("user_id") Integer userId) throws NotFoundException {
@@ -182,5 +186,41 @@ public class StudentController {
 	public Result deleteWatchRecords(Integer watchRecordId) {
 		watchRecordService.deleteWatchRecord(watchRecordId);
 		return Result.success();
+	}
+	
+	@PostMapping("/getLikeCommentByStudent")
+	@ApiOperation(value = "获取当前学生的点赞评论")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getLikeCommentByStudent(Integer page, @RequestParam("user_id") Integer userId) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
+		return Result.success(MapUtil.pageResponse(likeService.getByStudent(pageable, userId)));
+	}
+	
+	@PostMapping("/likeComment")
+	@ApiOperation(value = "点赞评论")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result likeComment(@RequestParam("user_id") Integer userId, Integer commentId) throws NotFoundException {
+		likeService.addByStudentAndCourseComment(userId, commentId);
+		return Result.success();
+	}
+	
+	@PostMapping("/dislikeComment")
+	@ApiOperation(value = "取消点赞评论")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result dislikeComment(@RequestParam("user_id") Integer userId, Integer commentId) throws NotFoundException {
+		likeService.deleteByStudentAndCourseComment(userId, commentId);
+		return Result.success();
+	}
+	
+	@PostMapping("/getStudentIsLikedComments")
+	@ApiOperation(value = "获取当前学生是否点赞了这些评论")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getStudentIsLikedComments(@RequestParam("user_id") Integer userId, Integer[] commentIds) throws NotFoundException {
+		return Result.success(likeService.getByStudentAndComments(userId, Arrays.asList(commentIds)));
 	}
 }
