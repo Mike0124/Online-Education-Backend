@@ -18,5 +18,5 @@ public interface LiveJpaRepository extends JpaRepository<Live, Integer> {
 
     List<Live> findAllByLiveDate(Date liveDate);
 
-    List<Live> findAllByTeacher(Integer teacherId);
+    List<Live> findAllByTeacherId(Integer teacherId);
 }

@@ -82,7 +82,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		Page<CourseComment> courseComments = courseCommentJpaRepository.findByCourseWithRegex(pageable, sb.toString(), courseId);
 		List<CourseComment> list = courseComments.getContent();
 		list.forEach(courseComment -> {
-			String newContent = courseComment.getContent().replaceAll(regex, " $0 ");
+			String newContent = courseComment.getContent().replaceAll(regex, "<font color='#409eff'>$0</font>");
 			courseComment.setContent(newContent);
 		});
 		return courseComments;

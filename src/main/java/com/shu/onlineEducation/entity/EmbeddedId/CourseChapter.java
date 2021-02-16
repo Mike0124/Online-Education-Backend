@@ -17,7 +17,7 @@ public class CourseChapter implements Serializable {
 	@ManyToOne
 	@JsonIgnore
 	@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false)
-	private Course course;
+	transient private Course course;
 	
 	@Column(name = "chapter_intro")
 	String chapterIntro;

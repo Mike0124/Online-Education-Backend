@@ -85,7 +85,7 @@ public class LiveServiceImpl implements LiveService {
 
     @Override
     public List<Live> findAllLiveByTeacherId(Integer teacherId) {
-        return liveJpaRepository.findAllByTeacher(teacherId);
+        return liveJpaRepository.findAllByTeacherId(teacherId);
     }
 
     @Override

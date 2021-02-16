@@ -56,7 +56,7 @@ public class Course {
 	private Integer teacherId;
 	
 	@ManyToOne
-	@JsonIgnore
+//	@JsonIgnore
 	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	private Teacher teacher;
 	

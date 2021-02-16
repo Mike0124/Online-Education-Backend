@@ -16,6 +16,8 @@ public interface CourseService {
 	
 	List<Course> getAllCourses();        //获取所有课程信息
 	
+	Page<Course> getAllCoursesByMajorId(Pageable pageable, int majorId) throws NotFoundException;     //获取专业的所有课程
+	
 	Page<Course> getAllCoursesByPreferId(Pageable pageable, int preferId) throws NotFoundException;     //获取某子专业的所有课程
 	
 	Page<Course> getAllCoursesByNeedVipAndPreferId(Pageable pageable, boolean needVip, int preferId) throws NotFoundException;

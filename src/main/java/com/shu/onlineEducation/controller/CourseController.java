@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.controller;
 
+import com.shu.onlineEducation.dao.CourseJpaRepository;
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.common.dto.course.CourseChapterVideoDto;
 import com.shu.onlineEducation.common.dto.course.CourseDto;
@@ -27,6 +28,8 @@ public class CourseController {
 	@Autowired
 	private CourseCommentService courseCommentService;
 	@Autowired
+	private CourseJpaRepository courseJpaRepository;
+	@Autowired
 	private AppProperties appProperties;
 	
 	//管理员、教师、学生、游客
@@ -37,10 +40,37 @@ public class CourseController {
 		return courseService.getAllCourses();
 	}
 	
+	@PostMapping("/getCourseById")
+	@ApiOperation(value = "获取课程信息")
+	@ResponseBody
+	public Result getCourseById(Integer courseId) {
+		return Result.success(courseJpaRepository.findByCourseId(courseId));
+	}
+	
+	@PostMapping("/getCourseByMajorId")
+	@ApiOperation(value = "获取此专业的所有课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
+	@ResponseBody
+	public Result getCourseByMajorId(Integer page, @RequestParam(required = false, defaultValue = "3") Integer sort, Integer majorId) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable;
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "upload_time"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "course_avg_mark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "course_watches"));
+		}
+		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByMajorId(pageable, majorId)));
+	}
+	
 	@PostMapping("/getCourseByPreferId")
 	@ApiOperation(value = "获取此偏好的所有课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByPreferId(Integer page, @RequestParam(required = false) Integer sort, Integer preferId) throws NotFoundException {
+	public Result getCourseByPreferId(Integer page, @RequestParam(required = false, defaultValue = "3") Integer sort, Integer preferId) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
@@ -60,7 +90,7 @@ public class CourseController {
 	@PostMapping("/getCourseByNeedVipAndPreferId")
 	@ApiOperation(value = "获取此偏好的所有免费/付费课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByNeedVipAndPreferId(Integer page, @RequestParam(required = false) Integer sort, Integer preferId, Boolean needVip) throws NotFoundException {
+	public Result getCourseByNeedVipAndPreferId(Integer page, @RequestParam(required = false, defaultValue = "3") Integer sort, Integer preferId, Boolean needVip) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
@@ -81,7 +111,7 @@ public class CourseController {
 	@PostMapping("/getCourseByTeacherId")
 	@ApiOperation(value = "获取老师所有课程信息	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
-	public Result getCourseByTeacherId(Integer page, @RequestParam(required = false) Integer sort, Integer teacherId) {
+	public Result getCourseByTeacherId(Integer page, @RequestParam(required = false, defaultValue = "3") Integer sort, Integer teacherId) {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
@@ -106,19 +136,22 @@ public class CourseController {
 	}
 	
 	@PostMapping("/getCourseComments")
-	@ApiOperation(value = "获取课程评论	1.按时间最新排序，2.按评分排序，3.按点赞量排序")
+	@ApiOperation(value = "获取课程评论	1.按时间最新排序，2.按点赞量排序，3.好评优先 4.差评优先")
 	@ResponseBody
-	public Result getCourseComments(Integer page, @RequestParam(required = false, defaultValue = "1") Integer sort, Integer courseId) throws NotFoundException {
+	public Result getCourseComments(Integer page, @RequestParam(required = false, defaultValue = "2") Integer sort, Integer courseId) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
 			case (1):
 				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "time"));
 				break;
-			case (2):
+			case (3):
 				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commentMark"));
 				break;
-			case (3):
+			case (4):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.ASC, "commentMark"));
+				break;
+			case (2):
 			default:
 				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "likes"));
 		}

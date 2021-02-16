@@ -52,6 +52,11 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
+	public Page<Course> getAllCoursesByMajorId(Pageable pageable, int majorId) throws NotFoundException {
+		return courseJpaRepository.findByMajor(pageable, majorId);
+	}
+	
+	@Override
 	public Page<Course> getAllCoursesByPreferId(Pageable pageable, int preferId) {
 		return courseJpaRepository.findAllByPreferIdAndStatus(pageable, preferId, 1);
 	}
@@ -144,7 +149,7 @@ public class CourseServiceImpl implements CourseService {
 		Page<Course> courses = courseJpaRepository.findWithRegex(pageable, regex);
 		List<Course> list = courses.getContent();
 		list.forEach(course -> {
-			String newName = course.getName().replaceAll(regex, " $0 ");
+			String newName = course.getName().replaceAll(regex, "<font color='#409eff'>$0</font>");
 			course.setName(newName);
 		});
 		return courses;
