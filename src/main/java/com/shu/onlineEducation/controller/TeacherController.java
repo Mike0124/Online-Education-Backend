@@ -66,7 +66,7 @@ public class TeacherController {
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
 		if (!teacherService.phoneValid(phoneId)) {
-			log.info(smsController.sendCode(phoneId));
+			smsController.sendCode(phoneId);
 			return Result.success();
 		} else {
 			return Result.failure(ResultCode.USER_HAS_EXISTED);

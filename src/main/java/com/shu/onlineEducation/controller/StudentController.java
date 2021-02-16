@@ -70,7 +70,7 @@ public class StudentController {
 	@ResponseBody
 	public Result checkPhoneId(@RequestParam("phone_id") String phoneId) {
 		if (!studentService.phoneValid(phoneId)) {
-			log.info(smsController.sendCode(phoneId));
+			smsController.sendCode(phoneId);
 			return Result.success();
 		} else {
 			return Result.failure(ResultCode.USER_HAS_EXISTED);
@@ -170,6 +170,14 @@ public class StudentController {
 		return Result.success(MapUtil.pageResponse(watchRecordService.getAllByStudent(pageable, userId)));
 	}
 	
+	@PostMapping("/getWatchRecordByStudentAndCourse")
+	@ApiOperation(value = "获取当前学生该课程的观看记录")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getWatchRecordByStudentAndCourse(@RequestParam("user_id") Integer userId, Integer courseId) throws NotFoundException {
+		return Result.success(watchRecordService.getByStudentAndCourse(userId, courseId));
+	}
+	
 	@PostMapping("/addWatchRecords")
 	@ApiOperation(value = "添加、修改观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
@@ -220,7 +228,7 @@ public class StudentController {
 	@ApiOperation(value = "获取当前学生是否点赞了这些评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getStudentIsLikedComments(@RequestParam("user_id") Integer userId, Integer[] commentIds) throws NotFoundException {
+	public Result getStudentIsLikedComments(@RequestParam("user_id") Integer userId, @RequestBody Integer[] commentIds) throws NotFoundException {
 		return Result.success(likeService.getByStudentAndComments(userId, Arrays.asList(commentIds)));
 	}
 }

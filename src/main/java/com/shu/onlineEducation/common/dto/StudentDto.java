@@ -8,6 +8,6 @@ public class StudentDto {
 	String sex;
 	String school;
 	Integer majorId;
-	Integer grade;
+	String grade;
 	String picUrl;
 }

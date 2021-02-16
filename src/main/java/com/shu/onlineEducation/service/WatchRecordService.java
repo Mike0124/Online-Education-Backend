@@ -12,4 +12,6 @@ public interface WatchRecordService {
 	void addWatchRecords(WatchRecordDto watchRecordDto) throws NotFoundException;
 	
 	void deleteWatchRecord(Integer watchRecordId);
+	
+	WatchRecord getByStudentAndCourse(Integer userId, Integer courseId) throws NotFoundException;
 }

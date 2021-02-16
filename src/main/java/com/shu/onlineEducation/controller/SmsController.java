@@ -2,6 +2,7 @@ package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.service.SmsService;
 import com.shu.onlineEducation.utils.RedisUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Controller;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+@Slf4j
 @Controller
 public class SmsController {
 	
@@ -25,12 +27,12 @@ public class SmsController {
 	 * @param phone
 	 */
 	@Async
-	public String sendCode(String phone) {
+	public void sendCode(String phone) {
 		
 		// 根据手机号从redis中拿验证码
 		String code = (String) redisUtil.get(phone);
 		if (!StringUtils.isEmpty(code)) {
-			return phone + " : " + code + "已经存在，还没有过期！";
+			log.info(phone + " : " + code + "已经存在，还没有过期！");
 		}
 		
 		// 如果redis中无手机号对应验证码，则生成4位随机验证码
@@ -43,9 +45,9 @@ public class SmsController {
 		// 如果发送成功，则将生成的4位随机验证码存入redis缓存,5分钟后过期
 		if (smsService.sendMessage(phone, codeMap)) {
 			redisUtil.set(phone, code, 5 * 60);
-			return phone + " : " + code + "发送成功！";
+			log.info(phone + " : " + code + "发送成功！");
 		} else {
-			return phone + " : " + code + "发送失败！";
+			log.info(phone + " : " + code + "发送失败！");
 		}
 	}
 }

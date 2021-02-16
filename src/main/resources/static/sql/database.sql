@@ -71,15 +71,16 @@ create index student_id
 
 create table course_watch_record
 (
-    id         int auto_increment
+    id          int auto_increment
         primary key,
-    course_id  int                                not null,
-    student_id int                                not null,
-    watch_time datetime default CURRENT_TIMESTAMP null,
-    chapter_id int                                null,
-    video_id   int                                not null,
-    deleted    int      default 0                 null,
-    pic_url    varchar(150)                       null
+    course_id   int                                not null,
+    student_id  int                                not null,
+    watch_time  datetime default CURRENT_TIMESTAMP null,
+    chapter_id  int                                null,
+    video_id    int                                not null,
+    deleted     int      default 0                 null,
+    pic_url     varchar(150)                       null,
+    course_name varchar(50)                        null
 );
 
 create table homework
@@ -185,7 +186,7 @@ create table students
     phone_id        varchar(12)          not null,
     sex             varchar(4)           null,
     school          varchar(20)          null,
-    grade           int                  null,
+    grade           varchar(20)          null,
     password        varchar(20)          not null,
     student_pic_url varchar(150)         null,
     is_vip          tinyint(1) default 0 not null,

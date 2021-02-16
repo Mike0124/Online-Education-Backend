@@ -40,7 +40,7 @@ public class Student {
 	private Integer majorId;
 	
 	@Column
-	private Integer grade;
+	private String grade;
 	
 	@Column
 	private String password;

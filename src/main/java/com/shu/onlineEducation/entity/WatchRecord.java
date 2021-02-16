@@ -35,6 +35,9 @@ public class WatchRecord {
 	@Column(name = "pic_url")
 	String picUrl;
 	
+	@Column(name = "course_name")
+	String courseName;
+	
 	@Column
 	@JsonIgnore
 	Integer deleted;

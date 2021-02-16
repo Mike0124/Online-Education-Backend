@@ -59,6 +59,7 @@ public class WatchRecordServiceImpl implements WatchRecordService {
 			watchRecord.setStudentId(watchRecordDto.getStudentId());
 		}
 		watchRecord.setDeleted(0);
+		watchRecord.setCourseName(course.getName());
 		watchRecord.setPicUrl(course.getCoursePic());
 		watchRecord.setCourseChapterVideo(video);
 		watchRecordJpaRepository.save(watchRecord);
@@ -69,4 +70,13 @@ public class WatchRecordServiceImpl implements WatchRecordService {
 		watchRecordJpaRepository.deleteById(watchRecordId);
 	}
 	
+	@Override
+	public WatchRecord getByStudentAndCourse(Integer userId, Integer courseId) throws NotFoundException {
+		Student student = studentJpaRepository.findByUserId(userId);
+		Course course = courseJpaRepository.findByCourseId(courseId);
+		if (student == null || course == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		return watchRecordJpaRepository.findByStudentAndCourse(userId, courseId);
+	}
 }

@@ -108,7 +108,7 @@ public class CourseController {
 	@PostMapping("/getCourseComments")
 	@ApiOperation(value = "获取课程评论	1.按时间最新排序，2.按评分排序，3.按点赞量排序")
 	@ResponseBody
-	public Result getCourseComments(Integer page, @RequestParam(required = false, defaultValue = "0") Integer sort, Integer courseId) throws NotFoundException {
+	public Result getCourseComments(Integer page, @RequestParam(required = false, defaultValue = "1") Integer sort, Integer courseId) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable;
 		switch (sort) {
