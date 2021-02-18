@@ -54,7 +54,7 @@ public class TeacherController {
 	
 	@GetMapping("/getTeacher")
 	@ApiOperation(value = "获取所有用户详情")
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+//	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result showInfo() {
 		return Result.success(teacherService.getAllTeachers());

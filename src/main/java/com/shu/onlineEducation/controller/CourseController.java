@@ -67,6 +67,26 @@ public class CourseController {
 		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByMajorId(pageable, majorId)));
 	}
 	
+	@PostMapping("/getCourseByMajorIdAndNeedVip")
+	@ApiOperation(value = "获取此专业的所有免费/付费课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
+	@ResponseBody
+	public Result getCourseByMajorIdAndNeedVip(Integer page, @RequestParam(required = false, defaultValue = "3") Integer sort, Integer majorId, Boolean needVip) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable;
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "upload_time"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "course_avg_mark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "course_watches"));
+		}
+		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByMajorIdAndNeedVip(pageable, majorId, needVip)));
+	}
+	
 	@PostMapping("/getCourseByPreferId")
 	@ApiOperation(value = "获取此偏好的所有课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody

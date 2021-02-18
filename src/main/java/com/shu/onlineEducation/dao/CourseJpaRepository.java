@@ -19,13 +19,16 @@ public interface CourseJpaRepository extends JpaRepository<Course, Integer>, Jpa
 	
 	Course findByCourseId(int courseId);
 	
-	@Query(value = "select * from course where prefer_id = :preferId and course_id != :courseId order by course_watches desc limit 5", nativeQuery = true)
+	@Query(value = "select * from course where prefer_id = :preferId and course_id != :courseId and course_status = 1 order by course_watches desc limit 5", nativeQuery = true)
 	List<Course> findRelatedCourses(@Param(value = "courseId") Integer courseId, @Param(value = "preferId") Integer preferId);
 	
-	@Query(value = "select course_id, name,intro, upload_time, teacher_id, course.prefer_id , course_pic, need_vip, course_status, course_watches, course_avg_mark from course, prefer p where p.major_id = :majorId", nativeQuery = true)
+	@Query(value = "select distinct course_id, name,intro, upload_time, teacher_id, course.prefer_id , course_pic, need_vip, course_status, course_watches, course_avg_mark from course ,prefer where major_id = :majorId and course_status = 1", nativeQuery = true)
 	Page<Course> findByMajor(Pageable pageable, @Param("majorId") Integer majorId);
 	
-	@Query(value = "select * from course where name regexp :regex", nativeQuery = true)
+	@Query(value = "select distinct course_id, name,intro, upload_time, teacher_id, course.prefer_id , course_pic, need_vip, course_status, course_watches, course_avg_mark from course ,prefer where major_id = :majorId and need_vip = :needVip and course_status = 1", nativeQuery = true)
+	Page<Course> findByMajorAndNeedVip(Pageable pageable, @Param("majorId") Integer majorId, @Param("needVip") boolean needVip);
+	
+	@Query(value = "select * from course where name regexp :regex and course_status = 1", nativeQuery = true)
 	Page<Course> findWithRegex(Pageable pageable, @Param("regex") String regex);
 	
 	Page<Course> findAllByPreferIdAndStatus(Pageable pageable, int preferId, int status);

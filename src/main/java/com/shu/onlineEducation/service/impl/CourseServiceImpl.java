@@ -57,6 +57,11 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
+	public Page<Course> getAllCoursesByMajorIdAndNeedVip(Pageable pageable, int majorId, boolean needVip) throws NotFoundException {
+		return courseJpaRepository.findByMajorAndNeedVip(pageable, majorId, needVip);
+	}
+	
+	@Override
 	public Page<Course> getAllCoursesByPreferId(Pageable pageable, int preferId) {
 		return courseJpaRepository.findAllByPreferIdAndStatus(pageable, preferId, 1);
 	}
