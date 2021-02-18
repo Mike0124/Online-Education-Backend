@@ -61,6 +61,7 @@ public class TeacherServiceImpl implements TeacherService {
         tea.setSchool(teacherDto.getSchool());
         tea.setMajorId(teacherDto.getMajorId());
         tea.setTeacherPicUrl(teacherDto.getPicUrl());
+        tea.setIntro(teacherDto.getIntro());
         teacherJpaRepository.save(tea);
     }
     

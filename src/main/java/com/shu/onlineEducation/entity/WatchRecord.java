@@ -32,12 +32,6 @@ public class WatchRecord {
 	@Column(name = "student_id")
 	Integer studentId;
 	
-	@Column(name = "pic_url")
-	String picUrl;
-	
-	@Column(name = "course_name")
-	String courseName;
-	
 	@Column
 	@JsonIgnore
 	Integer deleted;
@@ -46,6 +40,10 @@ public class WatchRecord {
 	@JsonIgnore
 	@JoinColumn(name = "student_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	private Student student;
+	
+	@ManyToOne
+	@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false)
+	private Course course;
 	
 	@ManyToOne
 	@JoinColumns({

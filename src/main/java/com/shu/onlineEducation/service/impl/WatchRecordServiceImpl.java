@@ -51,7 +51,7 @@ public class WatchRecordServiceImpl implements WatchRecordService {
 		WatchRecord watchRecord = watchRecordJpaRepository.findByStudentAndCourse(watchRecordDto.getStudentId(), watchRecordDto.getCourseId());
 		if (watchRecord == null) {
 			//从已删除的课程中判断学生是否看过课程,没看过则课程观看数量+1
-			if (watchRecordJpaRepository.findDeletedByStudentAndCourse(watchRecordDto.getStudentId(), watchRecordDto.getCourseId()) == null) {
+			if (watchRecordJpaRepository.findDeletedByStudentAndCourse(watchRecordDto.getStudentId(), watchRecordDto.getCourseId()).size() == 0) {
 				course.setCourseWatches(course.getCourseWatches() + 1);
 				courseJpaRepository.saveAndFlush(course);
 			}
@@ -59,8 +59,6 @@ public class WatchRecordServiceImpl implements WatchRecordService {
 			watchRecord.setStudentId(watchRecordDto.getStudentId());
 		}
 		watchRecord.setDeleted(0);
-		watchRecord.setCourseName(course.getName());
-		watchRecord.setPicUrl(course.getCoursePic());
 		watchRecord.setCourseChapterVideo(video);
 		watchRecordJpaRepository.save(watchRecord);
 	}

@@ -20,13 +20,11 @@ public class Teacher {
 	@Column(name = "user_id")
 	private Integer userId;
 	
-	@Column(name = "wechat_id")
-	private String wechatId;
-	
 	@Column
 	private String name;
 	
 	@Column(name = "phone_id", nullable = false)
+	@JsonIgnore
 	private String phoneId;
 	
 	@Column
@@ -39,6 +37,10 @@ public class Teacher {
 	private Integer majorId;
 	
 	@Column
+	private String intro;
+	
+	@Column
+	@JsonIgnore
 	private String password;
 	
 	@Column(name = "teacher_pic_url")

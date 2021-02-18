@@ -7,6 +7,7 @@ public class TeacherDto {
 	String name;
 	String sex;
 	String school;
+	String intro;
 	Integer majorId;
 	String picUrl;
 }

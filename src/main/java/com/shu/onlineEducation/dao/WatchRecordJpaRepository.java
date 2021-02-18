@@ -8,11 +8,13 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 public interface WatchRecordJpaRepository extends JpaRepository<WatchRecord, Integer> {
 	Page<WatchRecord> findAllByStudent(Pageable pageable, Student student);
 	
 	@Query(value = "select * from course_watch_record where student_id = :studentId and course_id = :courseId and deleted is null", nativeQuery = true)
-	WatchRecord findDeletedByStudentAndCourse(@Param("studentId") Integer studentId, @Param("courseId") Integer courseId);
+	List<WatchRecord> findDeletedByStudentAndCourse(@Param("studentId") Integer studentId, @Param("courseId") Integer courseId);
 	
 	@Query(value = "select * from course_watch_record where student_id = :studentId and course_id = :courseId and deleted = 0", nativeQuery = true)
 	WatchRecord findByStudentAndCourse(@Param("studentId") Integer studentId, @Param("courseId") Integer courseId);

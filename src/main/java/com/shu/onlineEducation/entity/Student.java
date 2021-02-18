@@ -21,13 +21,11 @@ public class Student {
 	@Column(name = "user_id")
 	private Integer userId;
 	
-	@Column(name = "wechat_id")
-	private String wechatId;
-	
 	@Column(name = "nickname")
 	private String nickName;
 	
 	@Column(name = "phone_id", nullable = false, unique = true)
+	@JsonIgnore
 	private String phoneId;
 	
 	@Column
@@ -43,6 +41,7 @@ public class Student {
 	private String grade;
 	
 	@Column
+	@JsonIgnore
 	private String password;
 	
 	@Column(name = "is_vip")
