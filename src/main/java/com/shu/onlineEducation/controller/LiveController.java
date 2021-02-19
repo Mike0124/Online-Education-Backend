@@ -2,7 +2,9 @@ package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.common.dto.LiveDto;
 import com.shu.onlineEducation.dao.LiveJpaRepository;
+import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.LiveService;
+import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
@@ -10,10 +12,14 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.sql.Timestamp;
 
 @Slf4j
 @RestController
@@ -26,6 +32,9 @@ public class LiveController {
 	
 	@Autowired
 	LiveJpaRepository liveJpaRepository;
+
+	@Autowired
+	AppProperties appProperties;
 	
 	@PostMapping("/findArrangeIsValidInDay")
 	@ApiOperation(value = "查看当天的预约情况")
@@ -77,5 +86,46 @@ public class LiveController {
 	public Result findAllLiveByDate(@RequestParam("liveDate") Date liveDate, @RequestHeader("Authorization") String jwt) {
 		return Result.success(liveService.findAllLiveByDate(liveDate));
 	}
-	
+
+	@GetMapping("/findAllValidLive")
+	@ResponseBody
+	@ApiOperation(value = "查找所有直播")
+	public Result findAllValidLive(Integer page){
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page());
+		Timestamp timestamp = DateUtil.getNowTimeStamp();
+		Date liveDate = new Date(timestamp.getTime());
+		String[] time = DateUtil.timestampToString(timestamp).split("\\s+");
+		String[] hour = time[1].split(":");
+		Integer liveArrange = (Integer.valueOf(hour[0]) - 8) / 2 + 1;
+		return Result.success(liveService.findAllValidLive(pageable, liveDate, liveArrange));
+	}
+
+	@GetMapping("/findAllValidLiveNow")
+	@ResponseBody
+	@ApiOperation(value = "查找所有正在直播的课程")
+	public Result findAllValidLiveNow(Integer page){
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page());
+		Timestamp timestamp = DateUtil.getNowTimeStamp();
+		Date liveDate = new Date(timestamp.getTime());
+		String[] time = DateUtil.timestampToString(timestamp).split("\\s+");
+		String[] hour = time[1].split(":");
+		Integer liveArrange = (Integer.valueOf(hour[0]) - 8) / 2 + 1;
+		return Result.success(liveService.findAllValidLiveNow(pageable, liveDate, liveArrange));
+	}
+
+	@GetMapping("/findAllValidLiveFuture")
+	@ResponseBody
+	@ApiOperation(value = "查找所有即将直播的课程")
+	public Result findAllValidLiveFuture(Integer page){
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.ASC, "live_arrange"));
+		Timestamp timestamp = DateUtil.getNowTimeStamp();
+		Date liveDate = new Date(timestamp.getTime());
+		String[] time = DateUtil.timestampToString(timestamp).split("\\s+");
+		String[] hour = time[1].split(":");
+		Integer liveArrange = (Integer.valueOf(hour[0]) - 8) / 2 + 1;
+		return Result.success(liveService.findAllValidLiveFuture(pageable, liveDate, liveArrange));
+	}
 }

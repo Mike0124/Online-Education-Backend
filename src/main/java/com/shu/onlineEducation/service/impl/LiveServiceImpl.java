@@ -12,6 +12,8 @@ import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import org.hibernate.query.NativeQuery;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -91,5 +93,20 @@ public class LiveServiceImpl implements LiveService {
     @Override
     public List<Live> findAllLiveByDate(Date liveDate) {
         return liveJpaRepository.findAllByLiveDate(liveDate);
+    }
+
+    @Override
+    public Page<Live> findAllValidLive(Pageable pageable,Date liveDate, Integer liveArrange) {
+        return liveJpaRepository.findAllValidLive(pageable,liveDate,liveArrange);
+    }
+
+    @Override
+    public Page<Live> findAllValidLiveNow(Pageable pageable, Date liveDate, Integer liveArrange) {
+        return liveJpaRepository.findAllValidLiveNow(pageable, liveDate, liveArrange);
+    }
+
+    @Override
+    public Page<Live> findAllValidLiveFuture(Pageable pageable, Date liveDate, Integer liveArrange) {
+        return liveJpaRepository.findAllValidLiveFuture(pageable, liveDate, liveArrange);
     }
 }
