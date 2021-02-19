@@ -61,6 +61,6 @@ public class Course {
 	private Teacher teacher;
 	
 	public String getUploadTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(uploadTime);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(uploadTime);
 	}
 }

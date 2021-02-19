@@ -44,11 +44,11 @@ public class Task {
 	CourseChapter courseChapter;
 	
 	public String getStartTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(startTime);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(startTime);
 	}
 	
 	public String getEndTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(endTime);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(endTime);
 	}
 	
 }

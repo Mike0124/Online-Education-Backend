@@ -8,12 +8,15 @@ import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreferencePK;
 import com.shu.onlineEducation.service.CourseCommentService;
 import com.shu.onlineEducation.service.StudentService;
+import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 @Slf4j
@@ -50,12 +53,12 @@ public class StudentServiceImpl implements StudentService {
 	
 	@Override
 	public void addUser(String phoneId, String password) throws ExistedException {
-		Student student = new Student();
-		student.setPhoneId(phoneId);
-		student.setPassword(password);
 		if (studentJpaRepository.existsByPhoneId(phoneId)) {
 			throw new ExistedException(ResultCode.USER_HAS_EXISTED);
 		}
+		Student student = new Student();
+		student.setPhoneId(phoneId);
+		student.setPassword(password);
 		studentJpaRepository.save(student);
 	}
 	
@@ -148,5 +151,32 @@ public class StudentServiceImpl implements StudentService {
 	@Override
 	public List<StudentPreference> getAllPreferences(Integer userId) {
 		return studentPreferenceRepository.findAllByStudentId(userId);
+	}
+	
+	@Override
+	public String studentVip(Integer studentId, Integer type) throws NotFoundException, ParamErrorException {
+		Student student = studentJpaRepository.findByUserId(studentId);
+		if (student == null) {
+			throw new NotFoundException(ResultCode.USER_NOT_EXIST);
+		}
+		Date vipDate = DateUtil.stringToDate(student.getVipDate());
+		Date nowDate = DateUtil.getNowDate();
+		vipDate = nowDate.before(vipDate) ? vipDate : nowDate;
+		switch (type) {
+			case (1):
+				vipDate = DateUtil.getDateAddMonth(vipDate, 1);
+				break;
+			case (2):
+				vipDate = DateUtil.getDateAddMonth(vipDate, 6);
+				break;
+			case (3):
+				vipDate = DateUtil.getDateAddYear(vipDate, 1);
+				break;
+			default:
+				throw new IllegalStateException("Unexpected value: " + type);
+		}
+		student.setVipDate(DateUtil.dateToTimestamp(vipDate));
+		studentJpaRepository.saveAndFlush(student);
+		return new SimpleDateFormat("yyyy-MM-dd").format(vipDate);
 	}
 }

@@ -49,6 +49,6 @@ public class CourseComment {
 	private Course course;
 	
 	public String getTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(time);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(time);
 	}
 }

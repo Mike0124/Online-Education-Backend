@@ -148,6 +148,26 @@ public class CourseController {
 		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByTeacherId(pageable, teacherId)));
 	}
 	
+	@PostMapping("/getCourseByTeacherIdAndStatus")
+	@ApiOperation(value = "获取老师所有课程信息	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
+	@ResponseBody
+	public Result getCourseByTeacherIdAndStatus(Integer page, @RequestParam(required = false, defaultValue = "3") Integer sort, Integer teacherId) {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable;
+		switch (sort) {
+			case (1):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+				break;
+			case (2):
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseAvgMark"));
+				break;
+			case (3):
+			default:
+				pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "courseWatches"));
+		}
+		return Result.success(MapUtil.pageResponse(courseService.getAllCoursesByTeacherAndStatus(pageable, teacherId)));
+	}
+	
 	@PostMapping("/getCourseDisplay")
 	@ApiOperation(value = "获取课程展示信息")
 	@ResponseBody
@@ -200,7 +220,7 @@ public class CourseController {
 	@ApiOperation(value = "添加课程")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addCourse(@RequestBody CourseDto courseDto) throws NotFoundException {
+	public Result addCourse(@RequestBody CourseDto courseDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		courseService.addCourse(courseDto);
 		return Result.success();
 	}
@@ -209,7 +229,7 @@ public class CourseController {
 	@ApiOperation(value = "更新课程信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result completeCourseInfo(Integer courseId, @RequestBody CourseDto courseDto) throws NotFoundException {
+	public Result completeCourseInfo(Integer courseId, @RequestBody CourseDto courseDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		courseService.updateCourse(courseId, courseDto);
 		return Result.success();
 	}
@@ -219,7 +239,7 @@ public class CourseController {
 	@ApiOperation(value = "添加/修改课程章节")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addCourseChapter(Integer courseId, Integer chapterId, String intro) throws NotFoundException {
+	public Result addCourseChapter(Integer courseId, Integer chapterId, String intro, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		courseService.addCourseChapter(courseId, chapterId, intro);
 		return Result.success();
 	}
@@ -243,7 +263,7 @@ public class CourseController {
 	@ApiOperation(value = "添加/更新课程章节视频")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterVideoDto courseChapterVideoDto) throws NotFoundException {
+	public Result addCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestBody CourseChapterVideoDto courseChapterVideoDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		courseService.addCourseChapterVideo(courseId, chapterId, videoId, courseChapterVideoDto.getVideoUrl(), courseChapterVideoDto.getVideoName());
 		return Result.success();
 	}
@@ -252,7 +272,7 @@ public class CourseController {
 	@ApiOperation(value = "删除课程章节视频")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId) {
+	public Result deleteCourseChapterVideo(Integer courseId, Integer chapterId, Integer videoId, @RequestHeader("Authorization") String jwt) {
 		courseService.deleteCourseChapterVideo(courseId, chapterId, videoId);
 		return Result.success();
 	}
@@ -262,7 +282,7 @@ public class CourseController {
 	@ApiOperation(value = "更新课程状态")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result updateCourseStatus(Integer courseId, Integer status) throws NotFoundException {
+	public Result updateCourseStatus(Integer courseId, Integer status, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		courseService.updateCourseStatusById(courseId, status);
 		return Result.success();
 	}
@@ -271,7 +291,7 @@ public class CourseController {
 	@ApiOperation(value = "删除课程")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteCourseById(Integer courseId) {
+	public Result deleteCourseById(Integer courseId, @RequestHeader("Authorization") String jwt) {
 		courseService.deleteCourseById(courseId);
 		return Result.success();
 	}
@@ -280,7 +300,7 @@ public class CourseController {
 	@ApiOperation(value = "删除课程章节")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteCourseChapter(Integer courseId, Integer chapterId) {
+	public Result deleteCourseChapter(Integer courseId, Integer chapterId, @RequestHeader("Authorization") String jwt) {
 		courseService.deleteCourseChapter(courseId, chapterId);
 		return Result.success();
 	}

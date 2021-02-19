@@ -1,14 +1,13 @@
 package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 
 @Entity
 @Data
@@ -44,8 +43,8 @@ public class Student {
 	@JsonIgnore
 	private String password;
 	
-	@Column(name = "is_vip")
-	private boolean isVip;
+	@Column(name = "vip_date")
+	private Timestamp vipDate;
 	
 	@Column(name = "student_pic_url")
 	private String studentPicUrl;
@@ -53,6 +52,10 @@ public class Student {
 	@ManyToOne
 	@JoinColumn(name = "major_id", referencedColumnName = "major_id", insertable = false, updatable = false)
 	Major major;
+	
+	public String getVipDate() {
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(vipDate);
+	}
 }
 
 

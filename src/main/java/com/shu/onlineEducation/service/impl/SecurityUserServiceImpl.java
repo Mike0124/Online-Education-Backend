@@ -8,6 +8,7 @@ import com.shu.onlineEducation.service.AdminService;
 import com.shu.onlineEducation.service.SecurityUserService;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.service.TeacherService;
+import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.ExceptionUtil.ParamErrorException;
 import com.shu.onlineEducation.utils.Result.ResultCode;
@@ -38,7 +39,7 @@ public class SecurityUserServiceImpl implements SecurityUserService {
 				Student student = studentService.loginByPassword(securityUser.getPhoneId(), securityUser.getPassword());
 				List<String> studentRoles = new ArrayList<>();
 				studentRoles.add("ROLE_STUDENT");
-				if (student.isVip()) {//若学生是vip则授予vip权限
+				if (DateUtil.getNowDate().before(DateUtil.stringToDate(student.getVipDate()))) {//若学生是vip则授予vip权限
 					studentRoles.add("STUDENT_VIP");
 				}
 				securityUser.setRoles(studentRoles);

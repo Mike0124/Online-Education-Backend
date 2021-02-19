@@ -88,6 +88,11 @@ public class CourseServiceImpl implements CourseService {
 	
 	@Override
 	public Page<Course> getAllCoursesByTeacherId(Pageable pageable, int teacherId) {
+		return courseJpaRepository.findAllByTeacherId(pageable, teacherId);
+	}
+	
+	@Override
+	public Page<Course> getAllCoursesByTeacherAndStatus(Pageable pageable, int teacherId) {
 		return courseJpaRepository.findAllByTeacherIdAndStatus(pageable, teacherId, 1);
 	}
 	
@@ -117,6 +122,9 @@ public class CourseServiceImpl implements CourseService {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
 		Course course = courseJpaRepository.findByCourseId(courseId);
+		if (course == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
 		course.setName(courseDto.getName());
 		course.setPreferId(prefer.getPreferId());
 		course.setIntro(courseDto.getIntro());

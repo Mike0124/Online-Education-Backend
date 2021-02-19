@@ -32,4 +32,6 @@ public interface StudentService {
 	void collectPreference(Integer userId, Integer[] prefersId);
 	
 	List<StudentPreference> getAllPreferences(Integer userId);
+	
+	String studentVip(Integer studentId, Integer type) throws NotFoundException, ParamErrorException;
 }

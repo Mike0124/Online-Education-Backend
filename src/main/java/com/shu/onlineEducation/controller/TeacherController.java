@@ -48,7 +48,7 @@ public class TeacherController {
 	@ApiOperation(value = "获取当前教师信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result findById(@RequestParam("user_id") int userId) {
+	public Result findById(@RequestParam("user_id") int userId, @RequestHeader("Authorization") String jwt) {
 		return Result.success(teacherService.getTeacherById(userId));
 	}
 	
@@ -103,7 +103,7 @@ public class TeacherController {
 	@ApiOperation(value = "删除教师")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result delete(@RequestParam("user_id") int userId) {
+	public Result delete(@RequestParam("user_id") int userId, @RequestHeader("Authorization") String jwt) {
 		teacherService.deleteTeacherById(userId);
 		return Result.success();
 	}
@@ -112,7 +112,7 @@ public class TeacherController {
 	@ApiOperation(value = "完善教师信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody TeacherDto teacherDto) throws NotFoundException {
+	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody TeacherDto teacherDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		teacherService.completeTeacherInfo(userId, teacherDto);
 		return Result.success();
 	}
@@ -121,7 +121,7 @@ public class TeacherController {
 	@ApiOperation(value = "获取课程评论分析")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result analysisCommentByCourse(@RequestParam("course_id") Integer courseId) throws NotFoundException {
+	public Result analysisCommentByCourse(@RequestParam("course_id") Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		return Result.success(courseCommentService.analysisByCourse(courseId));
 	}
 	
@@ -129,7 +129,7 @@ public class TeacherController {
 	@ApiOperation(value = "正则搜索课程评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getCommentByCourseWithRegex(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam("course_id") Integer courseId, String query) throws NotFoundException {
+	public Result getCommentByCourseWithRegex(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam("course_id") Integer courseId, String query, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
 		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourseWithRegex(pageable, courseId, query)));

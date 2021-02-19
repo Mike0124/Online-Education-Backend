@@ -29,7 +29,7 @@ public class HomeworkController {
 	@ApiOperation(value = "根据任务和学生获取作业")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getByTaskIdAndStudentId(Integer taskId, Integer studentId) throws NotFoundException {
+	public Result getByTaskIdAndStudentId(Integer taskId, Integer studentId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		return Result.success(homeworkService.getByTaskAndStudent(taskId, studentId));
 	}
 	
@@ -37,7 +37,7 @@ public class HomeworkController {
 	@ApiOperation(value = "根据作业获取作业文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getFilesByHomework(Integer homeworkId) throws NotFoundException {
+	public Result getFilesByHomework(Integer homeworkId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		return Result.success(homeworkService.getFilesByHomework(homeworkId));
 	}
 	
@@ -45,7 +45,7 @@ public class HomeworkController {
 	@ApiOperation(value = "学生添加/修改作业")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result studentHomework(@RequestBody HomeworkDto homeworkDto) throws NotFoundException {
+	public Result studentHomework(@RequestBody HomeworkDto homeworkDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		homeworkService.studentHomework(homeworkDto);
 		return Result.success();
 	}
@@ -54,7 +54,7 @@ public class HomeworkController {
 	@ApiOperation(value = "老师批改/驳回作业")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result teacherHomework(@RequestBody CorrectDto correctDto) throws NotFoundException {
+	public Result teacherHomework(@RequestBody CorrectDto correctDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		homeworkService.teacherHomework(correctDto);
 		return Result.success();
 	}
@@ -63,7 +63,7 @@ public class HomeworkController {
 	@ApiOperation(value = "删除作业")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteHomework(Integer homeworkId) {
+	public Result deleteHomework(Integer homeworkId, @RequestHeader("Authorization") String jwt) {
 		homeworkService.deleteHomework(homeworkId);
 		return Result.success();
 	}
@@ -72,7 +72,7 @@ public class HomeworkController {
 	@ApiOperation(value = "添加作业文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addHomeworkFile(Integer homeworkId, String homeworkFileUrl) throws NotFoundException {
+	public Result addHomeworkFile(Integer homeworkId, String homeworkFileUrl, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		homeworkService.addHomeworkFile(homeworkId, homeworkFileUrl);
 		return Result.success();
 	}
@@ -81,7 +81,7 @@ public class HomeworkController {
 	@ApiOperation(value = "删除作业文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteHomeworkFile(Integer homeworkFileId) {
+	public Result deleteHomeworkFile(Integer homeworkFileId, @RequestHeader("Authorization") String jwt) {
 		homeworkService.deleteHomeworkFile(homeworkFileId);
 		return Result.success();
 	}
@@ -90,7 +90,7 @@ public class HomeworkController {
 	@ApiOperation(value = "根据任务获取作业，提交时间最新")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getByTaskId(Integer page, Integer taskId) throws NotFoundException {
+	public Result getByTaskId(Integer page, Integer taskId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commitTime"));
 		return Result.success(MapUtil.pageResponse(homeworkService.getByTask(pageable, taskId)));
@@ -100,7 +100,7 @@ public class HomeworkController {
 	@ApiOperation(value = "根据任务和任务状态获取作业，提交时间最新 未上传：0 已驳回：1 已上传：2 已批改：3")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getByTaskAndStatus(Integer page, Integer taskId, Integer status) throws NotFoundException {
+	public Result getByTaskAndStatus(Integer page, Integer taskId, Integer status, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "commitTime"));
 		return Result.success(MapUtil.pageResponse(homeworkService.getByTaskAndStatus(pageable, taskId, status)));

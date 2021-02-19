@@ -51,6 +51,6 @@ public class Homework {
 	private Task task;
 	
 	public String getCommitTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(commitTime);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(commitTime);
 	}
 }

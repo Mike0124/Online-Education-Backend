@@ -54,6 +54,6 @@ public class WatchRecord {
 	CourseChapterVideo courseChapterVideo;
 	
 	public String getWatchTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(watchTime);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(watchTime);
 	}
 }

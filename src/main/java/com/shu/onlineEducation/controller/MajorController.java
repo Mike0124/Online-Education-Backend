@@ -38,7 +38,7 @@ public class MajorController {
 	@ApiOperation("添加专业")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result addMajor(@RequestParam("major_content") String major) throws ExistedException {
+	public Result addMajor(@RequestParam("major_content") String major, @RequestHeader("Authorization") String jwt) throws ExistedException {
 		if (majorJpaRepository.existsByMajorContent(major)) {
 			throw new ExistedException(ResultCode.MAJOR_HAS_EXISTED);
 		}
@@ -52,7 +52,7 @@ public class MajorController {
 	@ApiOperation("删除专业")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteMajor(@RequestParam("major_id") int majorId) throws NotFoundException {
+	public Result deleteMajor(@RequestParam("major_id") int majorId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		if (!majorJpaRepository.existsByMajorId(majorId)) {
 			throw new NotFoundException(ResultCode.MAJOR_NOT_FOUND);
 		}
@@ -64,7 +64,7 @@ public class MajorController {
 	@ApiOperation("更新专业信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result updateMajor(@RequestBody MajorDto majorDto) throws NotFoundException {
+	public Result updateMajor(@RequestBody MajorDto majorDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		if (!majorJpaRepository.existsByMajorId(majorDto.getMajorId())) {
 			throw new NotFoundException(ResultCode.MAJOR_NOT_FOUND);
 		}
@@ -78,7 +78,7 @@ public class MajorController {
 	@ApiOperation("添加子专业")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result addPrefer(@RequestParam("major_id") Integer majorId, @RequestParam("prefer_content") String preferContent) throws ExistedException, NotFoundException {
+	public Result addPrefer(@RequestParam("major_id") Integer majorId, @RequestParam("prefer_content") String preferContent, @RequestHeader("Authorization") String jwt) throws ExistedException, NotFoundException {
 		Prefer prefer = preferJpaRepository.findByPreferContent(preferContent);
 		if (prefer != null) {
 			throw new ExistedException(ResultCode.PARAM_IS_INVALID);
@@ -98,7 +98,7 @@ public class MajorController {
 	@ApiOperation("删除子专业")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result deletePrefer(@RequestParam("prefer_id") int preferId) {
+	public Result deletePrefer(@RequestParam("prefer_id") int preferId, @RequestHeader("Authorization") String jwt) {
 		preferJpaRepository.deleteById(preferId);
 		return Result.success();
 	}
@@ -107,7 +107,7 @@ public class MajorController {
 	@ApiOperation("更新子专业信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result updatePrefer(@RequestParam("prefer_id") int preferId, @RequestParam("major_id") Integer majorId, @RequestParam("prefer_content") String preferContent) throws NotFoundException, ExistedException {
+	public Result updatePrefer(@RequestParam("prefer_id") int preferId, @RequestParam("major_id") Integer majorId, @RequestParam("prefer_content") String preferContent, @RequestHeader("Authorization") String jwt) throws NotFoundException, ExistedException {
 		Prefer prefer = preferJpaRepository.findByPreferId(preferId);
 		Major major = majorJpaRepository.findMajorByMajorId(majorId);
 		if (prefer == null || major == null) {

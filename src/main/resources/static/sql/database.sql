@@ -13,7 +13,7 @@ create table course
     course_id       int auto_increment
         primary key,
     name            varchar(20)                          not null,
-    intro           varchar(400)                         null,
+    intro           text                                 null,
     upload_time     datetime   default CURRENT_TIMESTAMP null,
     teacher_id      int                                  not null,
     prefer_id       int                                  not null,
@@ -71,16 +71,14 @@ create index student_id
 
 create table course_watch_record
 (
-    id          int auto_increment
+    id         int auto_increment
         primary key,
-    course_id   int                                not null,
-    student_id  int                                not null,
-    watch_time  datetime default CURRENT_TIMESTAMP null,
-    chapter_id  int                                null,
-    video_id    int                                not null,
-    deleted     int      default 0                 null,
-    pic_url     varchar(150)                       null,
-    course_name varchar(50)                        null
+    course_id  int                                not null,
+    student_id int                                not null,
+    watch_time datetime default CURRENT_TIMESTAMP null,
+    chapter_id int                                null,
+    video_id   int                                not null,
+    deleted    int      default 0                 null
 );
 
 create table homework
@@ -119,7 +117,7 @@ create table live
     live_id         int auto_increment
         primary key,
     live_name       varchar(20)  not null,
-    live_intro      varchar(100) not null,
+    live_intro      text         not null,
     live_date       date         not null,
     live_address_id int          not null,
     teacher_id      int          not null,
@@ -181,16 +179,15 @@ create table students
 (
     user_id         int auto_increment
         primary key,
-    wechat_id       varchar(20)          null,
-    nickname        varchar(20)          null,
-    phone_id        varchar(12)          not null,
-    sex             varchar(4)           null,
-    school          varchar(20)          null,
-    grade           varchar(20)          null,
-    password        varchar(20)          not null,
-    student_pic_url varchar(150)         null,
-    is_vip          tinyint(1) default 0 not null,
-    major_id        int                  null
+    nickname        varchar(20)                            null,
+    phone_id        varchar(12)                            not null,
+    sex             varchar(4)                             null,
+    school          varchar(20)                            null,
+    grade           varchar(20)                            null,
+    password        varchar(20)                            not null,
+    student_pic_url varchar(150)                           null,
+    major_id        int                                    null,
+    vip_date        datetime default '2000-01-01 00:00:00' null
 );
 
 create index students_major_major_id_fk
@@ -200,12 +197,12 @@ create table task
 (
     task_id    int auto_increment
         primary key,
-    course_id  int          not null,
-    content    varchar(200) not null,
-    task_name  varchar(20)  not null,
-    chapter_id int          not null,
-    start_time datetime     not null,
-    end_time   datetime     not null
+    course_id  int         not null,
+    content    text        not null,
+    task_name  varchar(20) not null,
+    chapter_id int         not null,
+    start_time datetime    not null,
+    end_time   datetime    not null
 );
 
 create index task_course_chapter_course_id_chapter_id_fk
@@ -226,12 +223,12 @@ create table teacher_comment
 (
     comment_id   int auto_increment
         primary key,
-    likes        int default 0 not null,
-    content      varchar(100)  not null,
-    time         date          not null,
-    student_id   int           not null,
-    teacher_id   int           not null,
-    comment_mark int           not null
+    likes        int      default 0                 not null,
+    content      varchar(250)                       not null,
+    time         datetime default CURRENT_TIMESTAMP not null,
+    student_id   int                                not null,
+    teacher_id   int                                not null,
+    comment_mark int                                not null
 );
 
 create index comment_ibfk_1
@@ -241,7 +238,6 @@ create table teachers
 (
     user_id         int auto_increment
         primary key,
-    wechat_id       varchar(20)          null,
     name            varchar(20)          null,
     phone_id        varchar(20)          not null,
     password        varchar(20)          not null,
@@ -249,7 +245,8 @@ create table teachers
     school          varchar(20)          null,
     major_id        int                  null,
     teacher_pic_url varchar(150)         null,
-    teacher_status  tinyint(1) default 0 null
+    teacher_status  tinyint(1) default 0 null,
+    intro           text                 null
 );
 
 create index teachers_major_major_id_fk

@@ -1,7 +1,9 @@
 package com.shu.onlineEducation.controller;
 
+import com.shu.onlineEducation.entity.Admin;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.entity.Teacher;
+import com.shu.onlineEducation.service.AdminService;
 import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.service.TeacherService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
@@ -20,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @Slf4j
@@ -34,6 +38,8 @@ public class VerifyController {
 	StudentService studentService;
 	@Autowired
 	TeacherService teacherService;
+	@Autowired
+	AdminService adminService;
 	
 	@PostMapping("/loginByJwt")
 	@ApiOperation(value = "通过JWT登录")
@@ -45,18 +51,28 @@ public class VerifyController {
 		Claims claims;
 		try {
 			claims = jwtUtil.getClaimByToken(jwt);
-		}catch(ExpiredJwtException ex) {//JWT过期
+		} catch (ExpiredJwtException ex) {//JWT过期
 			return Result.failure(ResultCode.PARAM_IS_INVALID);
 		}
 		String phone = (String) claims.get("phone");
 		String password = (String) claims.get("password");
-		switch ((String)claims.get("type")) {//判断用户类型选择service
+		Map<String, Object> map = new HashMap<>(2);
+		switch ((String) claims.get("type")) {//判断用户类型选择service
 			case ("student"):
 				Student student = studentService.loginByPassword(phone, password);
-				return Result.success(student);
+				map.put("role", "student");
+				map.put("info", student);
+				return Result.success(map);
 			case ("teacher"):
 				Teacher teacher = teacherService.loginByPassword(phone, password);
-				return Result.success(teacher);
+				map.put("role", "teacher");
+				map.put("info", teacher);
+				return Result.success(map);
+			case ("admin"):
+				Admin admin = adminService.loginByPassword(phone, password);
+				map.put("role", "admin");
+				map.put("info", admin);
+				return Result.success(map);
 			default:
 				throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}

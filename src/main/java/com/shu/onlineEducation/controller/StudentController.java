@@ -53,13 +53,13 @@ public class StudentController {
 	@ApiOperation(value = "获取当前学生信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_ADMIN')")
 	@ResponseBody
-	public Result findById(@RequestParam("user_id") int userId) {
+	public Result findById(@RequestParam("user_id") int userId, @RequestHeader("Authorization") String jwt) {
 		return Result.success(studentService.getStudentById(userId));
 	}
 	
 	@GetMapping("/getStudent")
 	@ApiOperation(value = "获取所有用户详情")
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+//	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Iterable<Student> findAll() {
 		return studentService.getAllStudents();
@@ -108,7 +108,7 @@ public class StudentController {
 	@ApiOperation(value = "删除学生")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
-	public Result delete(@RequestParam("user_id") Integer userId) throws NotFoundException {
+	public Result delete(@RequestParam("user_id") Integer userId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		studentService.deleteStudentById(userId);
 		log.info("删除用户：id=" + userId);
 		return Result.success();
@@ -118,7 +118,7 @@ public class StudentController {
 	@ApiOperation(value = "评价课程")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result comment(@RequestBody CourseCommentDto courseCommentDto) throws NotFoundException {
+	public Result comment(@RequestBody CourseCommentDto courseCommentDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		studentService.commentCourseByCourseId(courseCommentDto);
 		return Result.success();
 	}
@@ -135,7 +135,7 @@ public class StudentController {
 	@ApiOperation(value = "完善学生信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody StudentDto studentDto)
+	public Result complete(@RequestParam("user_id") Integer userId, @RequestBody StudentDto studentDto, @RequestHeader("Authorization") String jwt)
 			throws NotFoundException {
 		studentService.completeStudent(userId, studentDto);
 		log.info("完善学生信息：id=" + userId);
@@ -146,7 +146,7 @@ public class StudentController {
 	@ApiOperation(value = "收集学生偏好")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result collectPreference(@RequestParam("user_id") Integer userId, @RequestParam("prefers") Integer[] prefersId) {
+	public Result collectPreference(@RequestParam("user_id") Integer userId, @RequestParam("prefers") Integer[] prefersId, @RequestHeader("Authorization") String jwt) {
 		studentService.collectPreference(userId, prefersId);
 		return Result.success();
 	}
@@ -155,7 +155,7 @@ public class StudentController {
 	@ApiOperation(value = "获取所有当前学生的偏好")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result findAllPreferences(@RequestParam("user_id") Integer userId) {
+	public Result findAllPreferences(@RequestParam("user_id") Integer userId, @RequestHeader("Authorization") String jwt) {
 		log.info("test:" + SecurityContextHolder.getContext().getAuthentication().getAuthorities());
 		return Result.success(studentService.getAllPreferences(userId));
 	}
@@ -164,7 +164,7 @@ public class StudentController {
 	@ApiOperation(value = "获取当前学生的观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result findAllWatchRecords(Integer page, @RequestParam("user_id") Integer userId) throws NotFoundException {
+	public Result findAllWatchRecords(Integer page, @RequestParam("user_id") Integer userId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "watchTime"));
 		return Result.success(MapUtil.pageResponse(watchRecordService.getAllByStudent(pageable, userId)));
@@ -174,7 +174,7 @@ public class StudentController {
 	@ApiOperation(value = "获取当前学生该课程的观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getWatchRecordByStudentAndCourse(@RequestParam("user_id") Integer userId, Integer courseId) throws NotFoundException {
+	public Result getWatchRecordByStudentAndCourse(@RequestParam("user_id") Integer userId, Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		return Result.success(watchRecordService.getByStudentAndCourse(userId, courseId));
 	}
 	
@@ -182,7 +182,7 @@ public class StudentController {
 	@ApiOperation(value = "添加、修改观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addWatchRecords(@RequestBody WatchRecordDto watchRecordDto) throws NotFoundException {
+	public Result addWatchRecords(@RequestBody WatchRecordDto watchRecordDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		watchRecordService.addWatchRecords(watchRecordDto);
 		return Result.success();
 	}
@@ -191,7 +191,7 @@ public class StudentController {
 	@ApiOperation(value = "删除观看记录")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteWatchRecords(Integer watchRecordId) {
+	public Result deleteWatchRecords(Integer watchRecordId, @RequestHeader("Authorization") String jwt) {
 		watchRecordService.deleteWatchRecord(watchRecordId);
 		return Result.success();
 	}
@@ -200,7 +200,7 @@ public class StudentController {
 	@ApiOperation(value = "获取当前学生的点赞评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getLikeCommentByStudent(Integer page, @RequestParam("user_id") Integer userId) throws NotFoundException {
+	public Result getLikeCommentByStudent(Integer page, @RequestParam("user_id") Integer userId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		page = page < 1 ? 0 : page - 1;
 		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
 		return Result.success(MapUtil.pageResponse(likeService.getByStudent(pageable, userId)));
@@ -210,7 +210,7 @@ public class StudentController {
 	@ApiOperation(value = "点赞评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result likeComment(@RequestParam("user_id") Integer userId, Integer commentId) throws NotFoundException {
+	public Result likeComment(@RequestParam("user_id") Integer userId, Integer commentId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		likeService.addByStudentAndCourseComment(userId, commentId);
 		return Result.success();
 	}
@@ -219,7 +219,7 @@ public class StudentController {
 	@ApiOperation(value = "取消点赞评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result dislikeComment(@RequestParam("user_id") Integer userId, Integer commentId) throws NotFoundException {
+	public Result dislikeComment(@RequestParam("user_id") Integer userId, Integer commentId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		likeService.deleteByStudentAndCourseComment(userId, commentId);
 		return Result.success();
 	}
@@ -228,7 +228,15 @@ public class StudentController {
 	@ApiOperation(value = "获取当前学生是否点赞了这些评论")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result getStudentIsLikedComments(@RequestParam("user_id") Integer userId, @RequestBody Integer[] commentIds) throws NotFoundException {
+	public Result getStudentIsLikedComments(@RequestParam("user_id") Integer userId, @RequestBody Integer[] commentIds, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		return Result.success(likeService.getByStudentAndComments(userId, Arrays.asList(commentIds)));
+	}
+	
+	@PostMapping("/studentVip")
+	@ApiOperation(value = "授予学生Vip权限 1.一个月	 2.半年  3.一年")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result studentVip(@RequestParam("user_id") Integer userId, Integer type, @RequestHeader("Authorization") String jwt) throws NotFoundException, ParamErrorException {
+		return Result.success(studentService.studentVip(userId, type));
 	}
 }

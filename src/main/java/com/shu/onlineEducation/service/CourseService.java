@@ -30,6 +30,8 @@ public interface CourseService {
 	
 	Page<Course> getAllCoursesByTeacherId(Pageable pageable, int teacherId);//获取某老师的所有课程
 	
+	Page<Course> getAllCoursesByTeacherAndStatus(Pageable pageable, int teacherId);
+	
 	void addCourse(CourseDto courseDto) throws NotFoundException;
 	
 	void updateCourse(Integer courseId, CourseDto courseDto) throws NotFoundException;

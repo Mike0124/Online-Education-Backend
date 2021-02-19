@@ -39,7 +39,7 @@ public class TaskController {
 	@ApiOperation(value = "根据课程章节添加任务")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addTask(Integer courseId, Integer chapterId, @RequestBody TaskDto taskDto) throws NotFoundException, ParseException {
+	public Result addTask(Integer courseId, Integer chapterId, @RequestBody TaskDto taskDto, @RequestHeader("Authorization") String jwt) throws NotFoundException, ParseException {
 		taskService.addTask(courseId, chapterId, taskDto);
 		return Result.success();
 	}
@@ -48,7 +48,7 @@ public class TaskController {
 	@ApiOperation(value = "删除任务")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteTaskById(Integer taskId) {
+	public Result deleteTaskById(Integer taskId, @RequestHeader("Authorization") String jwt) {
 		taskService.deleteTask(taskId);
 		return Result.success();
 	}
@@ -57,7 +57,7 @@ public class TaskController {
 	@ApiOperation(value = "根据任务添加任务文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addTaskFile(Integer taskId, String taskFileUrl) throws NotFoundException {
+	public Result addTaskFile(Integer taskId, String taskFileUrl, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		taskService.addTaskFile(taskId, taskFileUrl);
 		return Result.success();
 	}
@@ -66,7 +66,7 @@ public class TaskController {
 	@ApiOperation(value = "删除任务文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result deleteTaskFileById(Integer taskFileId) {
+	public Result deleteTaskFileById(Integer taskFileId, @RequestHeader("Authorization") String jwt) {
 		taskService.deleteTaskFile(taskFileId);
 		return Result.success();
 	}

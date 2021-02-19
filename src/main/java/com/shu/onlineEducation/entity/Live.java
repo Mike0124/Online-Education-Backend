@@ -58,7 +58,7 @@ public class Live {
 	LiveAddress liveAddress;
 	
 	public String getStartTime() {
-		return new SimpleDateFormat("yyyy/MM/dd HH:mm:ss").format(liveDate);
+		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(liveDate);
 	}
 	
 }
