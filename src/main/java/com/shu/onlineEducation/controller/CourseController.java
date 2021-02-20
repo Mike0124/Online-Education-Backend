@@ -214,6 +214,15 @@ public class CourseController {
 		return Result.success(MapUtil.pageResponse(courseService.getCoursesWithRegex(pageable, query)));
 	}
 	
+	@PostMapping("/getCourseCommentWithRegex")
+	@ApiOperation(value = "正则搜索课程评论")
+	@ResponseBody
+	public Result getCourseCommentWithRegex(@RequestParam(required = false, defaultValue = "1") Integer page, Integer courseId, String query) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "likes"));
+		return Result.success(MapUtil.pageResponse(courseCommentService.getCommentsByCourseWithRegex(pageable, courseId, query)));
+	}
+	
 	//-----管理员、教师------
 	//课程
 	@PostMapping("/addCourse")

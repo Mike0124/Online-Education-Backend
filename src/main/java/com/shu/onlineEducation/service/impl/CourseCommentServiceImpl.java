@@ -3,8 +3,10 @@ package com.shu.onlineEducation.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.hanlp.tokenizer.StandardTokenizer;
+import com.shu.onlineEducation.dao.CommentAnalysisResultJpaRepository;
 import com.shu.onlineEducation.dao.CourseCommentJpaRepository;
 import com.shu.onlineEducation.dao.CourseJpaRepository;
+import com.shu.onlineEducation.entity.CommentAnalysisResult;
 import com.shu.onlineEducation.entity.Course;
 import com.shu.onlineEducation.entity.CourseComment;
 import com.shu.onlineEducation.service.CourseCommentService;
@@ -29,6 +31,8 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 	private CourseCommentJpaRepository courseCommentJpaRepository;
 	@Autowired
 	private CourseJpaRepository courseJpaRepository;
+	@Autowired
+	private CommentAnalysisResultJpaRepository commentAnalysisResultJpaRepository;
 	@Autowired
 	private PythonRunner pythonRunner;
 	
@@ -79,7 +83,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		sb.insert(0, ".*(");
 		sb.append(").*");
 		
-		Page<CourseComment> courseComments = courseCommentJpaRepository.findByCourseWithRegex(pageable, sb.toString(), courseId);
+		Page<CourseComment> courseComments = courseCommentJpaRepository.findByCourseWithRegex(pageable,courseId,sb.toString());
 		List<CourseComment> list = courseComments.getContent();
 		list.forEach(courseComment -> {
 			String newContent = courseComment.getContent().replaceAll(regex, "<font color='#409eff'>$0</font>");
@@ -88,8 +92,9 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		return courseComments;
 	}
 	
+	@Async
 	@Override
-	public JSON analysisByCourse(Integer courseId) throws NotFoundException {
+	public void analysisByCourse(Integer courseId) throws NotFoundException {
 		Course course = courseJpaRepository.findByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
@@ -100,6 +105,25 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 			sb.append(courseComment.getContent().replace("\t", " ".replace("\n", ""))).append("\t").append(courseComment.getCommentMark()).append("\n");
 		}
 		String result = PythonRunner.run("D:\\Projects\\Github\\Online-Education-Backend\\src\\main\\resources\\static\\python\\emotion_analysis.py", new String[]{sb.toString()});
-		return JSON.parseObject(result);
+		CommentAnalysisResult commentAnalysisResult = commentAnalysisResultJpaRepository.findByCourse(course);
+		if (commentAnalysisResult == null) {
+			commentAnalysisResult = new CommentAnalysisResult();
+			commentAnalysisResult.setCourseId(course.getCourseId());
+		}
+		commentAnalysisResult.setCommentResult(result);
+		commentAnalysisResultJpaRepository.save(commentAnalysisResult);
+	}
+	
+	@Override
+	public JSON getResultByCourse(Integer courseId) throws NotFoundException {
+		Course course = courseJpaRepository.findByCourseId(courseId);
+		if (course == null) {
+			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);
+		}
+		CommentAnalysisResult commentAnalysisResult = commentAnalysisResultJpaRepository.findByCourse(course);
+		if (commentAnalysisResult == null) {
+			return null;
+		}
+		return commentAnalysisResult.getCommentResult();
 	}
 }

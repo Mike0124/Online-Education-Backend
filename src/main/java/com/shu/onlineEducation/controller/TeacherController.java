@@ -122,7 +122,7 @@ public class TeacherController {
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result analysisCommentByCourse(@RequestParam("course_id") Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
-		return Result.success(courseCommentService.analysisByCourse(courseId));
+		return Result.success(courseCommentService.getResultByCourse(courseId));
 	}
 	
 	@PostMapping("/getCommentByCourseWithRegex")
