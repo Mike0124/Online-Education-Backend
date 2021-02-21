@@ -7,6 +7,7 @@ import com.shu.onlineEducation.service.LiveService;
 import com.shu.onlineEducation.utils.DateUtil;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
+import com.shu.onlineEducation.utils.MapUtil;
 import com.shu.onlineEducation.utils.Result.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -97,8 +98,8 @@ public class LiveController {
 		Date liveDate = new Date(timestamp.getTime());
 		String[] time = DateUtil.timestampToString(timestamp).split("\\s+");
 		String[] hour = time[1].split(":");
-		Integer liveArrange = (Integer.valueOf(hour[0]) - 8) / 2 + 1;
-		return Result.success(liveService.findAllValidLive(pageable, liveDate, liveArrange));
+		Integer liveArrange = (Integer.parseInt(hour[0]) - 8) / 2 + 1;
+		return Result.success(MapUtil.pageResponse(liveService.findAllValidLive(pageable, liveDate, liveArrange)));
 	}
 
 	@GetMapping("/findAllValidLiveNow")
@@ -111,8 +112,8 @@ public class LiveController {
 		Date liveDate = new Date(timestamp.getTime());
 		String[] time = DateUtil.timestampToString(timestamp).split("\\s+");
 		String[] hour = time[1].split(":");
-		Integer liveArrange = (Integer.valueOf(hour[0]) - 8) / 2 + 1;
-		return Result.success(liveService.findAllValidLiveNow(pageable, liveDate, liveArrange));
+		Integer liveArrange = (Integer.parseInt(hour[0]) - 8) / 2 + 1;
+		return Result.success(MapUtil.pageResponse(liveService.findAllValidLiveNow(pageable, liveDate, liveArrange)));
 	}
 
 	@GetMapping("/findAllValidLiveFuture")
@@ -125,7 +126,7 @@ public class LiveController {
 		Date liveDate = new Date(timestamp.getTime());
 		String[] time = DateUtil.timestampToString(timestamp).split("\\s+");
 		String[] hour = time[1].split(":");
-		Integer liveArrange = (Integer.valueOf(hour[0]) - 8) / 2 + 1;
-		return Result.success(liveService.findAllValidLiveFuture(pageable, liveDate, liveArrange));
+		Integer liveArrange = (Integer.parseInt(hour[0]) - 8) / 2 + 1;
+		return Result.success(MapUtil.pageResponse(liveService.findAllValidLiveFuture(pageable, liveDate, liveArrange)));
 	}
 }

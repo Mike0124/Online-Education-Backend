@@ -8,6 +8,16 @@ create table admin
         unique (phone_id)
 );
 
+create table comment_analysis_result
+(
+    id             int auto_increment
+        primary key,
+    course_id      int  null,
+    comment_result text null,
+    constraint comment_analysis_result_course_id_uindex
+        unique (course_id)
+);
+
 create table course
 (
     course_id       int auto_increment

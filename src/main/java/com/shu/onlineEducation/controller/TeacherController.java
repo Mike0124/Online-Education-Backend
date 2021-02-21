@@ -60,6 +60,16 @@ public class TeacherController {
 		return Result.success(teacherService.getAllTeachers());
 	}
 	
+	@PostMapping("/getTeacherByStatus0")
+	@ApiOperation(value = "获取待审核的教师信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ResponseBody
+	public Result findById(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestHeader("Authorization") String jwt) {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10);
+		return Result.success(MapUtil.pageResponse(teacherService.getTeacherByStatus(pageable,0)));
+	}
+	
 	@PostMapping("/checkByPhoneId")
 	@ApiImplicitParam(name = "phone_id", value = "手机号", required = true, paramType = "form", dataType = "String")
 	@ApiOperation(value = "验证手机号是否被注册，没被注册则发送验证码")
@@ -117,12 +127,21 @@ public class TeacherController {
 		return Result.success();
 	}
 	
+	@PostMapping("/updateTeacherStatus")
+	@ApiOperation(value = "认证/驳回教师状态 1.认证成功  2.驳回")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ResponseBody
+	public Result updateCourseStatus(@RequestParam("user_id") Integer userId, Integer status, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		teacherService.updateTeacherStatusById(userId, status);
+		return Result.success();
+	}
+	
 	@PostMapping("/analysisCommentByCourse")
 	@ApiOperation(value = "获取课程评论分析")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result analysisCommentByCourse(@RequestParam("course_id") Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
-		return Result.success(courseCommentService.analysisByCourse(courseId));
+		return Result.success(courseCommentService.getResultByCourse(courseId));
 	}
 	
 	@PostMapping("/getCommentByCourseWithRegex")

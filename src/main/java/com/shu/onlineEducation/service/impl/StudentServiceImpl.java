@@ -119,6 +119,7 @@ public class StudentServiceImpl implements StudentService {
 		courseCommentJpaRepository.save(courseComment);
 		course.setCourseAvgMark(courseCommentJpaRepository.getCommentMarkAvg(course.getCourseId()));
 		courseJpaRepository.save(course);
+		courseCommentService.analysisByCourse(courseCommentDto.getCourseId());
 		//每20条评论训练一次情感分析模型
 		if (courseComment.getCommentId() % 20 == 0) {
 			courseCommentService.trainLatest(courseComment.getCommentId());

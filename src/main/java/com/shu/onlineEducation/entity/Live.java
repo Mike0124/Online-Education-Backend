@@ -32,7 +32,7 @@ public class Live {
 	
 	@Column(name = "live_date")
 	@DateTimeFormat(pattern="yyyy-MM-dd")
-	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@JsonFormat(pattern="yyyy-MM-dd", timezone = "GMT+8")
 	Date liveDate;
 	
 	@Column(name = "live_address_id")
@@ -57,8 +57,7 @@ public class Live {
 	@JoinColumn(name = "live_address_id", referencedColumnName = "live_address_id", insertable = false, updatable = false)
 	LiveAddress liveAddress;
 	
-	public String getStartTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(liveDate);
+	public String getLiveDate() {
+		return new SimpleDateFormat("yyyy-MM-dd").format(liveDate);
 	}
-	
 }

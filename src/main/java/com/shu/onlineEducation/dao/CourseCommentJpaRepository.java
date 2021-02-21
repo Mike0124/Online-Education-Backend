@@ -22,7 +22,7 @@ public interface CourseCommentJpaRepository extends JpaRepository<CourseComment,
 	List<CourseComment> findByBetween(@Param("start") Integer start, @Param("end") Integer end);
 	
 	@Query(value = "select * from course_comment where course_id =:courseId and content regexp :regex", nativeQuery = true)
-	Page<CourseComment> findByCourseWithRegex(Pageable pageable, @Param("regex") String regex, @Param("courseId") Integer courseId);
+	Page<CourseComment> findByCourseWithRegex(Pageable pageable, @Param("courseId") Integer courseId, @Param("regex") String regex);
 	
 	Page<CourseComment> findByCourse(Pageable pageable, Course course);
 	
