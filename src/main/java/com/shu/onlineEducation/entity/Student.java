@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.shu.onlineEducation.utils.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,7 +45,7 @@ public class Student {
 	private String password;
 	
 	@Column(name = "vip_date")
-	private Timestamp vipDate;
+	private Timestamp vipDate = DateUtil.stringToTimestamp("2000-01-01 00:00:00");
 	
 	@Column(name = "student_pic_url")
 	private String studentPicUrl;
