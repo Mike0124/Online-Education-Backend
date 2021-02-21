@@ -54,7 +54,7 @@ public class LiveServiceImpl implements LiveService {
 
     @Override
     public List<liveArrangeDto> isValidInDay(Date liveDate) {
-        String sql = "select live_arrange, count(live_arrange) as liveCount from live where live_date = '" + liveDate.toString() + "' group by live_arrange";
+        String sql = "select live_arrange,live_address_id, count(live_arrange) as liveCount from live where live_date = '" + liveDate.toString() + "' group by live_arrange,live_address_id order by live_address_id";
         Query nativeQuery = entityManager.createNativeQuery(sql);
         //采用原生sql,采用自定义的结果转换器DefineResultTransformer
         nativeQuery.unwrap(NativeQuery.class).setResultTransformer(new DefineResultTransformer<>(liveArrangeDto.class));
