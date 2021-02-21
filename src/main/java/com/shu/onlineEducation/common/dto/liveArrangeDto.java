@@ -9,5 +9,6 @@ import lombok.ToString;
 @ToString
 public class liveArrangeDto {
     Integer liveArrange;
+    Integer liveAddressId;
     Integer liveCount;
 }
