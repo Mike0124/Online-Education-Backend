@@ -12,22 +12,28 @@ import java.sql.Date;
 import java.util.List;
 
 public interface LiveService {
-
-    void addLive(LiveDto liveDto) throws ExistedException;
-
-    List<liveArrangeDto> isValidInDay(Date liveDate);
-
-    void modifyLive(LiveDto liveDto, Integer liveId) throws NotFoundException;
-
-    void deleteLive(Integer liveId);
-
-    List<Live> findAllLiveByTeacherId(Integer teacherId);
-
-    List<Live> findAllLiveByDate(Date liveDate);
-
-    Page<Live> findAllValidLive(Pageable pageable, Date liveDate, Integer liveArrange);
-
-    Page<Live> findAllValidLiveNow(Pageable pageable, Date liveDate, Integer liveArrange);
-
-    Page<Live> findAllValidLiveFuture(Pageable pageable, Date liveDate, Integer liveArrange);
+	
+	void addLive(LiveDto liveDto) throws ExistedException;
+	
+	List<liveArrangeDto> isValidInDay(Date liveDate);
+	
+	void modifyLive(LiveDto liveDto, Integer liveId) throws NotFoundException;
+	
+	void modifyLiveAddress(Integer liveAddressId, String address) throws NotFoundException;
+	
+	void deleteLive(Integer liveId);
+	
+	List<Live> findAllLiveByTeacherId(Integer teacherId);
+	
+	List<Live> findAllLiveByDate(Date liveDate);
+	
+	Page<Live> findAllValidLive(Pageable pageable, Date liveDate, Integer liveArrange);
+	
+	Page<Live> findAllValidLiveNow(Pageable pageable, Date liveDate, Integer liveArrange);
+	
+	Page<Live> findAllValidLiveFuture(Pageable pageable, Date liveDate, Integer liveArrange);
+	
+	List<Live> findAllValidLiveNowByTeacher(Integer teacherId, Date liveDate, Integer liveArrange);
+	
+	List<Live> findAllValidLiveFutureByTeacher(Integer teacherId, Date liveDate, Integer liveArrange);
 }

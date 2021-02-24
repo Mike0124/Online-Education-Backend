@@ -19,6 +19,9 @@ public class TaskFile {
 	
 	@Column(name = "file_url")
 	String fileUrl;
+	
+	@Column(name = "file_name")
+	String fileName;
 
 	@ManyToOne
 	@JsonIgnore

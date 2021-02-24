@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import org.springframework.data.annotation.CreatedDate;
@@ -8,7 +9,6 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import javax.persistence.*;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
 
 @Data
 @Entity
@@ -27,7 +27,8 @@ public class Course {
 	private String intro;
 	
 	@CreatedDate
-	@Column
+	@JsonFormat(pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
+	@Column(name = "upload_time")
 	private Timestamp uploadTime;
 	
 	@Column(name = "prefer_id")
@@ -44,7 +45,7 @@ public class Course {
 	private String coursePic;
 	
 	@Column(name = "course_status")
-	private Integer status;
+	private Integer status = 0;
 	
 	@Column(name = "course_avg_mark")
 	private BigDecimal courseAvgMark;
@@ -59,8 +60,4 @@ public class Course {
 //	@JsonIgnore
 	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	private Teacher teacher;
-	
-	public String getUploadTime() {
-		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(uploadTime);
-	}
 }

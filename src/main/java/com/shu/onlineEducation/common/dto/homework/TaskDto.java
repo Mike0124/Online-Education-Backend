@@ -1,4 +1,4 @@
-package com.shu.onlineEducation.common.dto.course;
+package com.shu.onlineEducation.common.dto.homework;
 
 import lombok.Data;
 

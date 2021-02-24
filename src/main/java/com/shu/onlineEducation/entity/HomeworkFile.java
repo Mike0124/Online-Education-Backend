@@ -16,6 +16,9 @@ public class HomeworkFile {
 	
 	@Column(name = "file_url")
 	String fileUrl;
+	
+	@Column(name = "file_name")
+	String fileName;
 
 	@Column(name = "homework_id")
 	Integer homeworkId;

@@ -2,6 +2,7 @@ package com.shu.onlineEducation.service;
 
 import com.shu.onlineEducation.common.dto.homework.CorrectDto;
 import com.shu.onlineEducation.common.dto.homework.HomeworkDto;
+import com.shu.onlineEducation.common.dto.homework.HomeworkFileDto;
 import com.shu.onlineEducation.entity.Homework;
 import com.shu.onlineEducation.entity.HomeworkFile;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
@@ -21,11 +22,13 @@ public interface HomeworkService {
 	
 	void studentHomework(HomeworkDto homeworkDto) throws NotFoundException;
 	
+	Homework addHomework(Integer studentId, Integer taskId) throws NotFoundException;
+	
 	void teacherHomework(CorrectDto correctDto) throws NotFoundException;
 	
 	void deleteHomework(Integer homeworkId);
 	
-	void addHomeworkFile(Integer homeworkId, String homeworkFileUrl) throws NotFoundException;
+	void addHomeworkFile(HomeworkFileDto homeworkFileDto) throws NotFoundException;
 	
 	void deleteHomeworkFile(Integer homeworkId);
 }

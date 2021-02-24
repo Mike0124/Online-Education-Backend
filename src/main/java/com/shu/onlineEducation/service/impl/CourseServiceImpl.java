@@ -72,7 +72,17 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
-	public synchronized void updateCourseStatusById(int courseId, int status) throws NotFoundException {
+	public Page<Course> getCourseByStatus(Pageable pageable, Integer status) {
+		return courseJpaRepository.findAllByStatus(pageable, status);
+	}
+	
+	@Override
+	public Page<Course> getCourseByTeacherAndStatus(Pageable pageable, Integer teacherId, Integer status) {
+		return courseJpaRepository.findAllByTeacherIdAndStatus(pageable, teacherId, status);
+	}
+	
+	@Override
+	public void updateCourseStatusById(int courseId, int status) throws NotFoundException {
 		Course course = courseJpaRepository.findByCourseId(courseId);
 		if (course == null) {
 			throw new NotFoundException(ResultCode.COURSE_NOT_EXIST);

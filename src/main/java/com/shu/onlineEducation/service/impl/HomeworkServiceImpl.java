@@ -2,6 +2,7 @@ package com.shu.onlineEducation.service.impl;
 
 import com.shu.onlineEducation.common.dto.homework.CorrectDto;
 import com.shu.onlineEducation.common.dto.homework.HomeworkDto;
+import com.shu.onlineEducation.common.dto.homework.HomeworkFileDto;
 import com.shu.onlineEducation.dao.HomeworkFileJpaRepository;
 import com.shu.onlineEducation.dao.HomeworkJpaRepository;
 import com.shu.onlineEducation.dao.StudentJpaRepository;
@@ -80,11 +81,7 @@ public class HomeworkServiceImpl implements HomeworkService {
 		}
 		Homework homework = homeworkJpaRepository.findByTaskAndStudent(task, student);
 		if (homework == null) {
-			homework = new Homework();
-			homework.setStudentId(homeworkDto.getStudentId());
-			homework.setTaskId(homeworkDto.getTaskId());
-			homework.setStatus(0);
-			homework.setLikes(0);
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		} else {
 			//已批改过的作业不能修改
 			if (homework.getStatus() == HomeworkStatus.HAS_CORRECTED) {
@@ -97,6 +94,27 @@ public class HomeworkServiceImpl implements HomeworkService {
 		}
 		homework.setContent(homeworkDto.getContent());
 		homeworkJpaRepository.saveAndFlush(homework);
+	}
+	
+	@Override
+	public Homework addHomework(Integer studentId, Integer taskId) throws NotFoundException {
+		Task task = taskJpaRepository.findByTaskId(taskId);
+		Student student = studentJpaRepository.findByUserId(studentId);
+		if (student == null || task == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		Homework homework = homeworkJpaRepository.findByTaskAndStudent(task, student);
+		if (homework == null) {
+			homework = new Homework();
+			homework.setStudentId(studentId);
+			homework.setTaskId(taskId);
+			homework.setStatus(0);
+			homework.setLikes(0);
+		} else {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		homeworkJpaRepository.saveAndFlush(homework);
+		return homework;
 	}
 	
 	@Override
@@ -121,14 +139,15 @@ public class HomeworkServiceImpl implements HomeworkService {
 	}
 	
 	@Override
-	public void addHomeworkFile(Integer homeworkId, String homeworkFileUrl) throws NotFoundException {
-		Homework homework = homeworkJpaRepository.findByHomeworkId(homeworkId);
+	public void addHomeworkFile(HomeworkFileDto homeworkFileDto) throws NotFoundException {
+		Homework homework = homeworkJpaRepository.findByHomeworkId(homeworkFileDto.getHomeworkId());
 		if (homework == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
 		HomeworkFile homeworkFile = new HomeworkFile();
 		homeworkFile.setHomeworkId(homework.getHomeworkId());
-		homeworkFile.setFileUrl(homeworkFileUrl);
+		homeworkFile.setFileUrl(homeworkFileDto.getHomeworkFileUrl());
+		homeworkFile.setFileName(homeworkFileDto.getHomeworkFileName());
 		homeworkFileJpaRepository.saveAndFlush(homeworkFile);
 	}
 	

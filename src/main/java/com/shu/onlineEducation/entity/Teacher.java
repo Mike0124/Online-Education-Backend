@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Data
@@ -47,8 +45,8 @@ public class Teacher {
 	private String teacherPicUrl;
 	
 	@Column(name = "teacher_status")
-	private Integer teacherStatus;
-
+	private Integer teacherStatus = 0;
+	
 	@ManyToOne
 	@JoinColumn(name = "major_id", referencedColumnName = "major_id", updatable = false, insertable = false)
 	Major major;

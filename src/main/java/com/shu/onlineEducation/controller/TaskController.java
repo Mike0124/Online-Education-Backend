@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.controller;
 
-import com.shu.onlineEducation.common.dto.course.TaskDto;
+import com.shu.onlineEducation.common.dto.homework.TaskDto;
+import com.shu.onlineEducation.common.dto.homework.TaskFileDto;
 import com.shu.onlineEducation.service.TaskService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
 import com.shu.onlineEducation.utils.Result.Result;
@@ -27,6 +28,13 @@ public class TaskController {
 		return Result.success(taskService.getTaskByCourseChapter(courseId, chapterId));
 	}
 	
+	@PostMapping("getTaskById")
+	@ApiOperation(value = "获取当前任务信息")
+	@ResponseBody
+	public Result getTaskById(Integer taskId) {
+		return Result.success(taskService.getTaskById(taskId));
+	}
+	
 	@PostMapping("getTaskFileByTask")
 	@ApiOperation(value = "根据任务获取任务文件")
 	@ResponseBody
@@ -39,8 +47,16 @@ public class TaskController {
 	@ApiOperation(value = "根据课程章节添加任务")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addTask(Integer courseId, Integer chapterId, @RequestBody TaskDto taskDto, @RequestHeader("Authorization") String jwt) throws NotFoundException, ParseException {
-		taskService.addTask(courseId, chapterId, taskDto);
+	public Result addTask(Integer courseId, Integer chapterId, @RequestBody TaskDto taskDto, @RequestHeader("Authorization") String jwt) throws NotFoundException{
+		return Result.success(taskService.addTask(courseId, chapterId, taskDto));
+	}
+	
+	@PostMapping("/modifyTaskById")
+	@ApiOperation(value = "修改任务")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result modifyTaskById(Integer taskId, @RequestBody TaskDto taskDto, @RequestHeader("Authorization") String jwt) throws NotFoundException{
+		taskService.modifyTask(taskId, taskDto);
 		return Result.success();
 	}
 	
@@ -57,8 +73,19 @@ public class TaskController {
 	@ApiOperation(value = "根据任务添加任务文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addTaskFile(Integer taskId, String taskFileUrl, @RequestHeader("Authorization") String jwt) throws NotFoundException {
-		taskService.addTaskFile(taskId, taskFileUrl);
+	public Result addTaskFile(@RequestBody TaskFileDto taskFileDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		taskService.addTaskFile(taskFileDto);
+		return Result.success();
+	}
+	
+	@PostMapping("/addTaskFileByTasks")
+	@ApiOperation(value = "根据任务添加多个任务文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result addTaskFile(@RequestBody TaskFileDto[] taskFileDtos, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		for (TaskFileDto taskFileDto : taskFileDtos) {
+			taskService.addTaskFile(taskFileDto);
+		}
 		return Result.success();
 	}
 	

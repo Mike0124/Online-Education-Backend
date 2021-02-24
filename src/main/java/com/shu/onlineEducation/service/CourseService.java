@@ -24,6 +24,10 @@ public interface CourseService {
 	
 	Page<Course> getAllCoursesByNeedVipAndPreferId(Pageable pageable, boolean needVip, int preferId) throws NotFoundException;
 	
+	Page<Course> getCourseByStatus(Pageable pageable, Integer status);
+	
+	Page<Course> getCourseByTeacherAndStatus(Pageable pageable, Integer teacherId, Integer status);
+	
 	void updateCourseStatusById(int courseId, int status) throws NotFoundException;//更新课程状态
 	
 	void deleteCourseById(int courseId);

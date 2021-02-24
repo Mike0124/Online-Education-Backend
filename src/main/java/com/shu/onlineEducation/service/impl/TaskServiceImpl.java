@@ -1,6 +1,7 @@
 package com.shu.onlineEducation.service.impl;
 
-import com.shu.onlineEducation.common.dto.course.TaskDto;
+import com.shu.onlineEducation.common.dto.homework.TaskDto;
+import com.shu.onlineEducation.common.dto.homework.TaskFileDto;
 import com.shu.onlineEducation.dao.CourseChapterJpaRepository;
 import com.shu.onlineEducation.dao.TaskFileJpaRepository;
 import com.shu.onlineEducation.dao.TaskJpaRepository;
@@ -29,6 +30,11 @@ public class TaskServiceImpl implements TaskService {
 	CourseChapterJpaRepository courseChapterJpaRepository;
 	
 	@Override
+	public Task getTaskById(Integer taskId) {
+		return taskJpaRepository.findByTaskId(taskId);
+	}
+	
+	@Override
 	public List<Task> getTaskByCourseChapter(Integer courseId, Integer chapterId) throws NotFoundException {
 		CourseChapter courseChapter = courseChapterJpaRepository.findByCourseIdAndChapterId(courseId, chapterId);
 		if (courseChapter == null) {
@@ -43,7 +49,7 @@ public class TaskServiceImpl implements TaskService {
 	}
 	
 	@Override
-	public void addTask(Integer courseId, Integer chapterId, TaskDto taskDto) throws NotFoundException, ParseException {
+	public Task addTask(Integer courseId, Integer chapterId, TaskDto taskDto) throws NotFoundException{
 		CourseChapter courseChapter = courseChapterJpaRepository.findByCourseIdAndChapterId(courseId, chapterId);
 		if (courseChapter == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
@@ -56,17 +62,32 @@ public class TaskServiceImpl implements TaskService {
 		task.setStartTime(DateUtil.stringToTimestamp(taskDto.getStartTime()));
 		task.setEndTime(DateUtil.stringToTimestamp(taskDto.getEndTime()));
 		taskJpaRepository.saveAndFlush(task);
+		return task;
 	}
 	
 	@Override
-	public void addTaskFile(Integer taskId, String taskFileUrl) throws NotFoundException {
+	public void modifyTask(Integer taskId, TaskDto taskDto) throws NotFoundException {
 		Task task = taskJpaRepository.findByTaskId(taskId);
+		if (task == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		task.setTaskName(taskDto.getTaskName());
+		task.setContent(taskDto.getContent());
+		task.setStartTime(DateUtil.stringToTimestamp(taskDto.getStartTime()));
+		task.setEndTime(DateUtil.stringToTimestamp(taskDto.getEndTime()));
+		taskJpaRepository.saveAndFlush(task);
+	}
+	
+	@Override
+	public void addTaskFile(TaskFileDto taskFileDto) throws NotFoundException {
+		Task task = taskJpaRepository.findByTaskId(taskFileDto.getTaskId());
 		if (task == null) {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
 		TaskFile taskFile = new TaskFile();
 		taskFile.setTaskId(task.getTaskId());
-		taskFile.setFileUrl(taskFileUrl);
+		taskFile.setFileUrl(taskFileDto.getTaskFileUrl());
+		taskFile.setFileName(taskFileDto.getTaskFileName());
 		taskFileJpaRepository.saveAndFlush(taskFile);
 	}
 	

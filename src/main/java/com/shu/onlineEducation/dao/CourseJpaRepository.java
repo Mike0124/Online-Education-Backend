@@ -39,6 +39,10 @@ public interface CourseJpaRepository extends JpaRepository<Course, Integer>, Jpa
 	
 	Page<Course> findAllByTeacherId(Pageable pageable, int teacherId);
 	
+	Page<Course> findAllByStatus(Pageable pageable, int status);
+	
+	Page<Course> findAllByTeacherIdAndStatus(Pageable pageable, Integer teacherId, Integer status);
+	
 	@Transactional
 	void deleteByCourseId(int courseId);
 }

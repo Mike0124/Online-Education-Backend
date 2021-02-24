@@ -47,6 +47,26 @@ public class CourseController {
 		return Result.success(courseJpaRepository.findByCourseId(courseId));
 	}
 	
+	@PostMapping("/getCourseByStatus0")
+	@ApiOperation(value = "获取待审核的课程信息")
+	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ResponseBody
+	public Result getCourseByStatus0(@RequestParam(required = false, defaultValue = "1") Integer page, @RequestHeader("Authorization") String jwt) {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+		return Result.success(MapUtil.pageResponse(courseService.getCourseByStatus(pageable, 0)));
+	}
+	
+	@PostMapping("/getCourseByTeacherAndStatus")
+	@ApiOperation(value = "根据教师和课程状态获取课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getCourseByTeacherAndStatus(@RequestParam(required = false, defaultValue = "1") Integer page, Integer teacherId, Integer status, @RequestHeader("Authorization") String jwt) {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, appProperties.getMax_rows_in_one_page(), Sort.by(Sort.Direction.DESC, "uploadTime"));
+		return Result.success(MapUtil.pageResponse(courseService.getCourseByTeacherAndStatus(pageable, teacherId, status)));
+	}
+	
 	@PostMapping("/getCourseByMajorId")
 	@ApiOperation(value = "获取此专业的所有课程	1.按时间最新排序，2.按课程评分排序，3.按课程观看数量排序")
 	@ResponseBody
@@ -288,8 +308,8 @@ public class CourseController {
 	
 	//-----管理员------
 	@PostMapping("/updateCourseStatus")
-	@ApiOperation(value = "更新课程状态")
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@ApiOperation(value = "认证/驳回课程状态 1.认证成功  2.驳回")
+//	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
 	public Result updateCourseStatus(Integer courseId, Integer status, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		courseService.updateCourseStatusById(courseId, status);

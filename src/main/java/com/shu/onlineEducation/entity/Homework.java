@@ -38,7 +38,7 @@ public class Homework {
 	Timestamp commitTime;
 	
 	@Column
-	Integer status;
+	Integer status = 0;
 	
 	@ManyToOne
 	@JsonIgnore
@@ -51,6 +51,9 @@ public class Homework {
 	private Task task;
 	
 	public String getCommitTime() {
+		if (commitTime == null) {
+			return null;
+		}
 		return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(commitTime);
 	}
 }

@@ -2,6 +2,7 @@ package com.shu.onlineEducation.controller;
 
 import com.shu.onlineEducation.common.dto.homework.CorrectDto;
 import com.shu.onlineEducation.common.dto.homework.HomeworkDto;
+import com.shu.onlineEducation.common.dto.homework.HomeworkFileDto;
 import com.shu.onlineEducation.properties.AppProperties;
 import com.shu.onlineEducation.service.HomeworkService;
 import com.shu.onlineEducation.utils.ExceptionUtil.NotFoundException;
@@ -41,8 +42,16 @@ public class HomeworkController {
 		return Result.success(homeworkService.getFilesByHomework(homeworkId));
 	}
 	
+	@PostMapping("/addHomework")
+	@ApiOperation(value = "学生添加作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result addHomework(Integer studentId, Integer taskId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		return Result.success(homeworkService.addHomework(studentId, taskId));
+	}
+	
 	@PostMapping("/studentHomework")
-	@ApiOperation(value = "学生添加/修改作业")
+	@ApiOperation(value = "学生修改作业")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result studentHomework(@RequestBody HomeworkDto homeworkDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
@@ -72,8 +81,19 @@ public class HomeworkController {
 	@ApiOperation(value = "添加作业文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result addHomeworkFile(Integer homeworkId, String homeworkFileUrl, @RequestHeader("Authorization") String jwt) throws NotFoundException {
-		homeworkService.addHomeworkFile(homeworkId, homeworkFileUrl);
+	public Result addHomeworkFile(@RequestBody HomeworkFileDto homeworkFileDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		homeworkService.addHomeworkFile(homeworkFileDto);
+		return Result.success();
+	}
+	
+	@PostMapping("/addHomeworkFiles")
+	@ApiOperation(value = "添加多个作业文件")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result addHomeworkFile(@RequestBody HomeworkFileDto[] homeworkFileDtos, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		for (HomeworkFileDto homeworkFileDto : homeworkFileDtos) {
+			homeworkService.addHomeworkFile(homeworkFileDto);
+		}
 		return Result.success();
 	}
 	
