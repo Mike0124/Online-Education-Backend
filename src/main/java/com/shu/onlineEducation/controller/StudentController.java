@@ -239,4 +239,32 @@ public class StudentController {
 	public Result studentVip(@RequestParam("user_id") Integer userId, Integer type, @RequestHeader("Authorization") String jwt) throws NotFoundException, ParamErrorException {
 		return Result.success(studentService.studentVip(userId, type));
 	}
+	
+	@PostMapping("/getStudentLikedCourse")
+	@ApiOperation(value = "获取学生收藏的课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getStudentLikedCourse(Integer page, @RequestParam("user_id") Integer userId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "time"));
+		return Result.success(MapUtil.pageResponse(studentService.getStudentLikeCourse(pageable, userId)));
+	}
+	
+	@PostMapping("/likeCourse")
+	@ApiOperation(value = "收藏课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result likeCourse(@RequestParam("user_id") Integer userId, Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		studentService.likeCourse(userId, courseId);
+		return Result.success();
+	}
+	
+	@PostMapping("/cancelLikeCourse")
+	@ApiOperation(value = "取消收藏课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result cancelLikeCourse(@RequestParam("user_id") Integer userId, Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		studentService.cancelLikeCourse(userId, courseId);
+		return Result.success();
+	}
 }

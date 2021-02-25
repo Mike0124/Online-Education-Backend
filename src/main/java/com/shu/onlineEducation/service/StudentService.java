@@ -5,7 +5,10 @@ import com.shu.onlineEducation.common.dto.course.CourseCommentDto;
 import com.shu.onlineEducation.entity.CourseComment;
 import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.Student;
+import com.shu.onlineEducation.entity.StudentLikeCourse;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -34,4 +37,10 @@ public interface StudentService {
 	List<StudentPreference> getAllPreferences(Integer userId);
 	
 	String studentVip(Integer studentId, Integer type) throws NotFoundException, ParamErrorException;
+	
+	void likeCourse(Integer studentId, Integer courseId) throws NotFoundException;
+	
+	void cancelLikeCourse(Integer studentId, Integer courseId) throws NotFoundException;
+	
+	Page<StudentLikeCourse> getStudentLikeCourse(Pageable pageable, Integer studentId) throws NotFoundException;
 }

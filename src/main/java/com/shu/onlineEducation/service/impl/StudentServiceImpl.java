@@ -13,6 +13,8 @@ import com.shu.onlineEducation.utils.ExceptionUtil.*;
 import com.shu.onlineEducation.utils.Result.ResultCode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -33,6 +35,8 @@ public class StudentServiceImpl implements StudentService {
 	private CourseCommentJpaRepository courseCommentJpaRepository;
 	@Autowired
 	private MajorJpaRepository majorJpaRepository;
+	@Autowired
+	private StudentLikeCourseJpaRepository likeCourseJpaRepository;
 	@Autowired
 	private CourseCommentService courseCommentService;
 	
@@ -179,5 +183,42 @@ public class StudentServiceImpl implements StudentService {
 		student.setVipDate(DateUtil.dateToTimestamp(vipDate));
 		studentJpaRepository.saveAndFlush(student);
 		return new SimpleDateFormat("yyyy-MM-dd").format(vipDate);
+	}
+	
+	@Override
+	public void likeCourse(Integer studentId, Integer courseId) throws NotFoundException {
+		Course course = courseJpaRepository.findByCourseId(courseId);
+		Student student = studentJpaRepository.findByUserId(studentId);
+		if (student == null || course == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		StudentLikeCourse studentLikeCourse = likeCourseJpaRepository.findByStudentAndCourse(student, course);
+		if (studentLikeCourse != null) {
+			return;
+		} else {
+			studentLikeCourse = new StudentLikeCourse();
+			studentLikeCourse.setStudentId(student.getUserId());
+			studentLikeCourse.setCourseId(course.getCourseId());
+			likeCourseJpaRepository.saveAndFlush(studentLikeCourse);
+		}
+	}
+	
+	@Override
+	public void cancelLikeCourse(Integer studentId, Integer courseId) throws NotFoundException {
+		Course course = courseJpaRepository.findByCourseId(courseId);
+		Student student = studentJpaRepository.findByUserId(studentId);
+		if (student == null || course == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		likeCourseJpaRepository.deleteByStudentIdAndCourseId(student.getUserId(), course.getCourseId());
+	}
+	
+	@Override
+	public Page<StudentLikeCourse> getStudentLikeCourse(Pageable pageable, Integer studentId) throws NotFoundException {
+		Student student = studentJpaRepository.findByUserId(studentId);
+		if (student == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		return likeCourseJpaRepository.findByStudent(student, pageable);
 	}
 }

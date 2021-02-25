@@ -5,6 +5,7 @@ import com.shu.onlineEducation.entity.HomeworkFile;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import javax.transaction.Transactional;
@@ -17,5 +18,5 @@ public interface HomeworkFileJpaRepository extends JpaRepository<HomeworkFile, I
 	@Transactional
 	@Modifying
 	@Query(value = "delete from homework_file where homework_file_id = :homeworkFileId", nativeQuery = true)
-	void deleteByHomeworkFileId(Integer homeworkFileId);
+	void deleteByHomeworkFileId(@Param("homeworkFileId") Integer homeworkFileId);
 }

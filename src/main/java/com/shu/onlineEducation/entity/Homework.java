@@ -41,7 +41,7 @@ public class Homework {
 	Integer status = 0;
 	
 	@ManyToOne
-	@JsonIgnore
+//	@JsonIgnore
 	@JoinColumn(name = "student_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	private Student student;
 	
