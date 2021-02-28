@@ -22,8 +22,13 @@ public interface CourseJpaRepository extends JpaRepository<Course, Integer>, Jpa
 	@Query(value = "select * from course where prefer_id = :preferId and course_id != :courseId and course_status = 1 order by course_watches desc limit 5", nativeQuery = true)
 	List<Course> findRelatedCourses(@Param(value = "courseId") Integer courseId, @Param(value = "preferId") Integer preferId);
 	
+	List<Course> findAllOrderBy(Pageable pageable);
+	
 	@Query(value = "select distinct course_id, name,intro, upload_time, teacher_id, course.prefer_id , course_pic, need_vip, course_status, course_watches, course_avg_mark from course ,prefer where major_id = :majorId and course_status = 1", nativeQuery = true)
 	Page<Course> findByMajor(Pageable pageable, @Param("majorId") Integer majorId);
+	
+	@Query(value = "select distinct course_id, name,intro, upload_time, teacher_id, course.prefer_id , course_pic, need_vip, course_status, course_watches, course_avg_mark from course ,prefer where major_id = :majorId and course_status = 1 order by course_watches desc", nativeQuery = true)
+	List<Course> findByMajorOrderByWatches(@Param("majorId") Integer majorId);
 	
 	@Query(value = "select distinct course_id, name,intro, upload_time, teacher_id, course.prefer_id , course_pic, need_vip, course_status, course_watches, course_avg_mark from course ,prefer where major_id = :majorId and need_vip = :needVip and course_status = 1", nativeQuery = true)
 	Page<Course> findByMajorAndNeedVip(Pageable pageable, @Param("majorId") Integer majorId, @Param("needVip") boolean needVip);

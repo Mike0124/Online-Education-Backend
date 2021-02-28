@@ -1,5 +1,6 @@
 package com.shu.onlineEducation.controller;
 
+import com.mongodb.util.JSON;
 import com.shu.onlineEducation.common.dto.LoginDto;
 import com.shu.onlineEducation.common.dto.RegisterDto;
 import com.shu.onlineEducation.common.dto.StudentDto;
@@ -19,6 +20,7 @@ import com.shu.onlineEducation.service.StudentService;
 import com.shu.onlineEducation.utils.ExceptionUtil.ExistedException;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -104,7 +106,6 @@ public class StudentController {
 	}
 	
 	@PostMapping("/deleteStudentById")
-	@ApiImplicitParam(name = "user_id", value = "用户标识", required = true, paramType = "form", dataType = "String")
 	@ApiOperation(value = "删除学生")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
 	@ResponseBody
@@ -118,7 +119,7 @@ public class StudentController {
 	@ApiOperation(value = "评价课程")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result comment(@RequestBody CourseCommentDto courseCommentDto, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+	public Result comment(@RequestBody CourseCommentDto courseCommentDto, @RequestHeader("Authorization") String jwt) throws NotFoundException, TasteException {
 		studentService.commentCourseByCourseId(courseCommentDto);
 		return Result.success();
 	}
@@ -240,6 +241,14 @@ public class StudentController {
 		return Result.success(studentService.studentVip(userId, type));
 	}
 	
+	@PostMapping("/getLikeByStudentAndCourse")
+	@ApiOperation(value = "获取学生是否收藏了该课程")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getLikeByStudentAndCourse(@RequestParam("user_id") Integer userId, Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		return Result.success(studentService.getLikeByStudentAndCourse(userId, courseId));
+	}
+	
 	@PostMapping("/getStudentLikedCourse")
 	@ApiOperation(value = "获取学生收藏的课程")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
@@ -266,5 +275,13 @@ public class StudentController {
 	public Result cancelLikeCourse(@RequestParam("user_id") Integer userId, Integer courseId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		studentService.cancelLikeCourse(userId, courseId);
 		return Result.success();
+	}
+	
+	@PostMapping("/getStudentItemCF")
+	@ApiOperation(value = "获取当前学生的协同过滤推荐结果")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getStudentItemCF(@RequestParam("user_id") Integer userId, @RequestHeader("Authorization") String jwt) throws NotFoundException, TasteException {
+		return Result.success(JSON.parse(studentService.getStudentItemCfResult(userId)));
 	}
 }

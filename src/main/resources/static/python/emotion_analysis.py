@@ -13,8 +13,10 @@ def wc_and_analysis(list_):
     stopwords = [word.strip() for word in open(work_place + 'hit_stopwords.txt', encoding='UTF-8').readlines()]
     wc_dict = {}
     mark_distribution = {"pos": 0, "neu": 0, "neg": 0}
+    comment_mark_distribution = {0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0}
     worst_comment = []
     avg_mark = 0
+    avg_comment_mark = 0
     for arr in list_:
         if len(arr) < 2:
             continue
@@ -30,9 +32,12 @@ def wc_and_analysis(list_):
 
         # 情感分析
         s = SnowNLP(text)
-        score = s.sentiments * int(arr[1])
+        comment_mark = int(arr[1])
+        score = s.sentiments * comment_mark
+        avg_comment_mark += comment_mark
         avg_mark += score
         arr.append(score)
+        comment_mark_distribution[comment_mark] += 1
 
         if score < 1:
             worst_comment.append(arr)
@@ -46,7 +51,8 @@ def wc_and_analysis(list_):
     wcls.sort(key=lambda x: x[1], reverse=True)
     worst_comment.sort(key=lambda x: x[1])
     return {'word_cut': wcls[:20:], 'mark_distribution': mark_distribution, 'worst_comment': worst_comment[:10:],
-            "avg_mark": round(avg_mark / len(list_), 2)}
+            'comment_mark_distribution': comment_mark_distribution,
+            "avg_mark": round(avg_mark / len(list_), 2), "avg_comment_mark": round(avg_comment_mark / len(list_), 2)}
 
 
 if __name__ == '__main__':

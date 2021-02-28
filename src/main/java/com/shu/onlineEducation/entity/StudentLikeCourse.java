@@ -36,7 +36,6 @@ public class StudentLikeCourse {
 	private Student student;
 	
 	@ManyToOne
-	@JsonIgnore
 	@JoinColumn(name = "course_id", referencedColumnName = "course_id", insertable = false, updatable = false)
 	private Course course;
 	

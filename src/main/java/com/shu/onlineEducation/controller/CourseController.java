@@ -47,6 +47,14 @@ public class CourseController {
 		return Result.success(courseJpaRepository.findByCourseId(courseId));
 	}
 	
+	@PostMapping("/getAllCoursesOrderByWatches")
+	@ApiOperation(value = "默认推荐课程信息")
+	@ResponseBody
+	public Result getAllCoursesOrderByWatches() {
+		Pageable pageable = PageRequest.of(0, 4, Sort.by(Sort.Direction.DESC, "courseWatches"));
+		return Result.success(courseJpaRepository.findAllOrderBy(pageable));
+	}
+	
 	@PostMapping("/getCourseByStatus0")
 	@ApiOperation(value = "获取待审核的课程信息")
 	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")

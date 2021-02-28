@@ -52,6 +52,11 @@ public class CourseServiceImpl implements CourseService {
 	}
 	
 	@Override
+	public List<Course> getAllCoursesOrderByWatches(Pageable pageable) {
+		return courseJpaRepository.findAllOrderBy(pageable);
+	}
+	
+	@Override
 	public Page<Course> getAllCoursesByMajorId(Pageable pageable, int majorId) throws NotFoundException {
 		return courseJpaRepository.findByMajor(pageable, majorId);
 	}

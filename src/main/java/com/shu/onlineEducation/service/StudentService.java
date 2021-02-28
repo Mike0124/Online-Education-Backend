@@ -7,6 +7,7 @@ import com.shu.onlineEducation.entity.EmbeddedId.StudentPreference;
 import com.shu.onlineEducation.entity.Student;
 import com.shu.onlineEducation.entity.StudentLikeCourse;
 import com.shu.onlineEducation.utils.ExceptionUtil.*;
+import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -28,7 +29,7 @@ public interface StudentService {
 	void completeStudent(Integer userId, StudentDto studentDto) throws NotFoundException;       //完善学生信息
 	
 	//学生评论课程
-	void commentCourseByCourseId(CourseCommentDto courseCommentDto) throws NotFoundException;
+	void commentCourseByCourseId(CourseCommentDto courseCommentDto) throws NotFoundException, TasteException;
 	
 	CourseComment getCourseCommentByStudentAndCourse(Integer userId, Integer courseId) throws NotFoundException;
 	
@@ -42,5 +43,9 @@ public interface StudentService {
 	
 	void cancelLikeCourse(Integer studentId, Integer courseId) throws NotFoundException;
 	
+	StudentLikeCourse getLikeByStudentAndCourse(Integer studentId, Integer courseId) throws NotFoundException;
+	
 	Page<StudentLikeCourse> getStudentLikeCourse(Pageable pageable, Integer studentId) throws NotFoundException;
+	
+	String getStudentItemCfResult(Integer studentId) throws NotFoundException, TasteException;
 }

@@ -1,8 +1,8 @@
 package com.shu.onlineEducation.dao;
 
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapter;
-import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterPK;
 import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideo;
+import com.shu.onlineEducation.entity.EmbeddedId.CourseChapterVideoPK;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +10,8 @@ import org.springframework.data.jpa.repository.Query;
 import javax.transaction.Transactional;
 import java.util.List;
 
-public interface CourseChapterVideoJpaRepository extends JpaRepository<CourseChapterVideo, CourseChapterPK> {
+public interface CourseChapterVideoJpaRepository extends JpaRepository<CourseChapterVideo, CourseChapterVideoPK> {
+	
 	
 	List<CourseChapterVideo> findByCourseChapter(CourseChapter courseChapter);
 	

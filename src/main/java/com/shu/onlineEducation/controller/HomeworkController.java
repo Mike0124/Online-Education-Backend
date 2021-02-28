@@ -36,7 +36,7 @@ public class HomeworkController {
 	
 	@PostMapping("/getFilesByHomework")
 	@ApiOperation(value = "根据作业获取作业文件")
-	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result getFilesByHomework(Integer homeworkId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
 		return Result.success(homeworkService.getFilesByHomework(homeworkId));
