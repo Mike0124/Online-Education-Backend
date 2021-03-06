@@ -46,9 +46,9 @@ public class TeacherController {
 	
 	@PostMapping("/getTeacherById")
 	@ApiOperation(value = "获取当前教师信息")
-	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
+//	@PreAuthorize("hasAnyAuthority('ROLE_TEACHER', 'ROLE_ADMIN')")
 	@ResponseBody
-	public Result findById(@RequestParam("user_id") int userId, @RequestHeader("Authorization") String jwt) {
+	public Result findById(@RequestParam("user_id") int userId) {
 		return Result.success(teacherService.getTeacherById(userId));
 	}
 	

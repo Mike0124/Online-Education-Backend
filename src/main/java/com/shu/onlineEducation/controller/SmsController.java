@@ -33,10 +33,10 @@ public class SmsController {
 		String code = (String) redisUtil.get(phone);
 		if (!StringUtils.isEmpty(code)) {
 			log.info(phone + " : " + code + "已经存在，还没有过期！");
+		}else{
+			// 如果redis中无手机号对应验证码，则生成4位随机验证码
+			code = UUID.randomUUID().toString().substring(0, 4);
 		}
-		
-		// 如果redis中无手机号对应验证码，则生成4位随机验证码
-		code = UUID.randomUUID().toString().substring(0, 4);
 		
 		// 发送短信
 		Map<String, Object> codeMap = new HashMap<>(5);

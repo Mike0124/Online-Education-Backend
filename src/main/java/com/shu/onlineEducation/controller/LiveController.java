@@ -41,6 +41,14 @@ public class LiveController {
 	@Autowired
 	AppProperties appProperties;
 	
+	@PostMapping("/findLiveById")
+	@ApiOperation(value = "通过id查找直播")
+	@ResponseBody
+	public Result findLiveById(@RequestParam("liveId") Integer liveId) {
+		return Result.success(liveJpaRepository.findById(liveId));
+	}
+	
+	
 	@PostMapping("/findArrangeIsValidInDay")
 	@ApiOperation(value = "查看当天的预约情况")
 	@ResponseBody

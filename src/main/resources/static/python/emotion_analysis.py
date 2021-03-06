@@ -52,7 +52,7 @@ def wc_and_analysis(list_):
     worst_comment.sort(key=lambda x: x[1])
     return {'word_cut': wcls[:20:], 'mark_distribution': mark_distribution, 'worst_comment': worst_comment[:10:],
             'comment_mark_distribution': comment_mark_distribution,
-            "avg_mark": round(avg_mark / len(list_), 2), "avg_comment_mark": round(avg_comment_mark / len(list_), 2)}
+            "avg_mark": round(avg_mark / len(list_ - 1), 2), "avg_comment_mark": round(avg_comment_mark / len(list_ - 1), 2)}
 
 
 if __name__ == '__main__':

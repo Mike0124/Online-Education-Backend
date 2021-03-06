@@ -48,7 +48,6 @@ public class Live {
 	Integer liveArrange;
 	
 	@ManyToOne
-	@JsonIgnore
 	@JoinColumn(name = "teacher_id", referencedColumnName = "user_id", insertable = false, updatable = false)
 	Teacher teacher;
 

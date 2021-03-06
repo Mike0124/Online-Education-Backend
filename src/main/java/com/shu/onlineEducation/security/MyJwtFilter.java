@@ -1,8 +1,5 @@
 package com.shu.onlineEducation.security;
 
-import com.shu.onlineEducation.security.MyAuthenticationProvider;
-import com.shu.onlineEducation.security.MyAuthenticationToken;
-import com.shu.onlineEducation.security.MyJWT;
 import io.jsonwebtoken.ExpiredJwtException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
