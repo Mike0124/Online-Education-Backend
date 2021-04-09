@@ -34,6 +34,24 @@ public class HomeworkController {
 		return Result.success(homeworkService.getByTaskAndStudent(taskId, studentId));
 	}
 	
+	@PostMapping("/getById")
+	@ApiOperation(value = "根据id获取作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getById(Integer homeworkId, @RequestHeader("Authorization") String jwt) {
+		return Result.success(homeworkService.getById(homeworkId));
+	}
+	
+	@PostMapping("/getByStudent")
+	@ApiOperation(value = "根据学生获取作业")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
+	@ResponseBody
+	public Result getByStudentId(Integer page, Integer studentId, @RequestHeader("Authorization") String jwt) throws NotFoundException {
+		page = page < 1 ? 0 : page - 1;
+		Pageable pageable = PageRequest.of(page, 10, Sort.by(Sort.Direction.DESC, "homeworkId"));
+		return Result.success(MapUtil.pageResponse(homeworkService.getByStudent(pageable, studentId)));
+	}
+	
 	@PostMapping("/getFilesByHomework")
 	@ApiOperation(value = "根据作业获取作业文件")
 	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT','ROLE_TEACHER', 'ROLE_ADMIN')")
@@ -70,7 +88,7 @@ public class HomeworkController {
 	
 	@PostMapping("/deleteHomeWork")
 	@ApiOperation(value = "删除作业")
-	@PreAuthorize("hasAnyAuthority('ROLE_ADMIN')")
+	@PreAuthorize("hasAnyAuthority('ROLE_STUDENT', 'ROLE_ADMIN')")
 	@ResponseBody
 	public Result deleteHomework(Integer homeworkId, @RequestHeader("Authorization") String jwt) {
 		homeworkService.deleteHomework(homeworkId);

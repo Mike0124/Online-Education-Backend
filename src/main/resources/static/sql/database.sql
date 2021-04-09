@@ -116,11 +116,37 @@ create table homework_file
     homework_file_id int auto_increment
         primary key,
     homework_id      int          not null,
-    file_url         varchar(150) null
+    file_url         varchar(150) null,
+    file_name        varchar(300) null
 );
 
 create index homework_file_homework_homework_id_fk
     on homework_file (homework_id);
+
+create table item_based_cf
+(
+    id         int auto_increment
+        primary key,
+    student_id int    null,
+    course_id  int    null,
+    cf_mark    double null
+);
+
+create index item_based_cf_course_id_index
+    on item_based_cf (course_id);
+
+create index item_based_cf_student_id_index
+    on item_based_cf (student_id);
+
+create table item_based_cf_result
+(
+    id         int auto_increment
+        primary key,
+    student_id int  null,
+    result     text null,
+    constraint item_based_cf_result_student_id_uindex
+        unique (student_id)
+);
 
 create table live
 (
@@ -131,7 +157,7 @@ create table live
     live_date       date         not null,
     live_address_id int          not null,
     teacher_id      int          not null,
-    live_pic_url    varchar(100) null,
+    live_pic_url    varchar(300) null,
     live_arrange    int          not null
 );
 
@@ -185,6 +211,15 @@ create table stu_like_comment
 create index stu_like_comment_student_id_index
     on stu_like_comment (student_id);
 
+create table stu_like_course
+(
+    id         int auto_increment
+        primary key,
+    student_id int                                null,
+    course_id  int                                null,
+    time       datetime default CURRENT_TIMESTAMP null
+);
+
 create table students
 (
     user_id         int auto_increment
@@ -222,27 +257,13 @@ create table task_file
 (
     task_file_id int auto_increment
         primary key,
-    file_url     varchar(150) null,
-    task_id      int          not null
+    file_url     varchar(300) null,
+    task_id      int          not null,
+    file_name    varchar(300) null
 );
 
 create index task_file_task_task_id_fk
     on task_file (task_id);
-
-create table teacher_comment
-(
-    comment_id   int auto_increment
-        primary key,
-    likes        int      default 0                 not null,
-    content      varchar(250)                       not null,
-    time         datetime default CURRENT_TIMESTAMP not null,
-    student_id   int                                not null,
-    teacher_id   int                                not null,
-    comment_mark int                                not null
-);
-
-create index comment_ibfk_1
-    on teacher_comment (student_id);
 
 create table teachers
 (

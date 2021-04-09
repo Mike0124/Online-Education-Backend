@@ -36,7 +36,6 @@ public class Task {
 	Integer chapterId;
 
 	@ManyToOne
-	@JsonIgnore
 	@JoinColumns({
 			@JoinColumn(name = "course_id", referencedColumnName = "course_id", updatable = false, insertable = false),
 			@JoinColumn(name = "chapter_id", referencedColumnName = "chapter_id", updatable = false, insertable = false)

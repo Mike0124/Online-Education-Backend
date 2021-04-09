@@ -92,7 +92,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		return courseComments;
 	}
 	
-	@Async
+//	@Async
 	@Override
 	public void analysisByCourse(Integer courseId) throws NotFoundException {
 		Course course = courseJpaRepository.findByCourseId(courseId);
@@ -104,6 +104,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		for (CourseComment courseComment : commentList) {
 			sb.append(courseComment.getContent().replace("\t", " ".replace("\n", ""))).append("\t").append(courseComment.getCommentMark()).append("\n");
 		}
+		
 		String result = PythonRunner.run("D:\\Projects\\Github\\Online-Education-Backend\\src\\main\\resources\\static\\python\\emotion_analysis.py", new String[]{sb.toString()});
 		CommentAnalysisResult commentAnalysisResult = commentAnalysisResultJpaRepository.findByCourse(course);
 		if (commentAnalysisResult == null) {
@@ -122,6 +123,7 @@ public class CourseCommentServiceImpl implements CourseCommentService {
 		}
 		CommentAnalysisResult commentAnalysisResult = commentAnalysisResultJpaRepository.findByCourse(course);
 		if (commentAnalysisResult == null) {
+			analysisByCourse(courseId);
 			return null;
 		}
 		return commentAnalysisResult.getCommentResult();

@@ -10,9 +10,14 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface HomeworkService {
 	Homework getByTaskAndStudent(Integer taskId, Integer studentId) throws NotFoundException;
+	
+	Page<Homework> getByStudent(Pageable pageable, Integer studentId) throws NotFoundException;
+	
+	Optional<Homework> getById(Integer homeworkId);
 	
 	Page<Homework> getByTask(Pageable pageable, Integer taskId) throws NotFoundException;
 	

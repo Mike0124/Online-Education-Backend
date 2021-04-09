@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 @Slf4j
 @RestController
 @RequestMapping("/api/Admin")
-@Api(tags = "3-管理员模块")
+@Api(tags = "管理员模块")
 public class AdminController {
 	@Autowired
 	private AdminService adminService;

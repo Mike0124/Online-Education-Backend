@@ -16,6 +16,8 @@ public interface HomeworkJpaRepository extends JpaRepository<Homework, Integer> 
 	
 	Homework findByTaskAndStudent(Task task, Student student);
 	
+	Page<Homework> findByStudent(Pageable pageable, Student student);
+	
 	Page<Homework> findByTask(Pageable pageable, Task task);
 	
 	Page<Homework> findByTaskAndStatus(Pageable pageable, Task task, Integer status);

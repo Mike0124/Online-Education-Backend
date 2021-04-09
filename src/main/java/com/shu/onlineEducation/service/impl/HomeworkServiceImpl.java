@@ -22,10 +22,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
-public class HomeworkServiceImpl implements HomeworkService {
+public
+class HomeworkServiceImpl implements HomeworkService {
 	@Autowired
 	private HomeworkJpaRepository homeworkJpaRepository;
 	@Autowired
@@ -43,6 +45,20 @@ public class HomeworkServiceImpl implements HomeworkService {
 			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
 		}
 		return homeworkJpaRepository.findByTaskAndStudent(task, student);
+	}
+	
+	@Override
+	public Page<Homework> getByStudent(Pageable pageable, Integer studentId) throws NotFoundException {
+		Student student = studentJpaRepository.findByUserId(studentId);
+		if (student == null) {
+			throw new NotFoundException(ResultCode.PARAM_IS_INVALID);
+		}
+		return homeworkJpaRepository.findByStudent(pageable, student);
+	}
+	
+	@Override
+	public Optional<Homework> getById(Integer homeworkId) {
+		return homeworkJpaRepository.findById(homeworkId);
 	}
 	
 	@Override

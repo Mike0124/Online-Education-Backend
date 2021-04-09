@@ -39,7 +39,7 @@ def wc_and_analysis(list_):
         arr.append(score)
         comment_mark_distribution[comment_mark] += 1
 
-        if score < 1:
+        if score < 2:
             worst_comment.append(arr)
             mark_distribution['neg'] += 1
         elif score > 2:
@@ -52,12 +52,12 @@ def wc_and_analysis(list_):
     worst_comment.sort(key=lambda x: x[1])
     return {'word_cut': wcls[:20:], 'mark_distribution': mark_distribution, 'worst_comment': worst_comment[:10:],
             'comment_mark_distribution': comment_mark_distribution,
-            "avg_mark": round(avg_mark / len(list_ - 1), 2), "avg_comment_mark": round(avg_comment_mark / len(list_ - 1), 2)}
+            "avg_mark": round(avg_mark / len(list_), 2), "avg_comment_mark": round(avg_comment_mark / len(list_), 2)}
 
 
 if __name__ == '__main__':
     text_list = []
-    string = sys.argv[1]
+    string = sys.argv[1].rstrip('\n')
     for line in string.split("\n"):
         text_list.append(list(line.split("\t")))
     print(json.dumps(wc_and_analysis(text_list), ensure_ascii=False))

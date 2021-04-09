@@ -18,6 +18,7 @@ import org.apache.mahout.cf.taste.common.TasteException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
@@ -110,7 +111,6 @@ public class StudentServiceImpl implements StudentService {
 		stu.setStudentPicUrl(studentDto.getPicUrl());
 		studentJpaRepository.save(stu);
 	}
-	
 	
 	@Override
 	public void commentCourseByCourseId(CourseCommentDto courseCommentDto) throws NotFoundException, TasteException {
